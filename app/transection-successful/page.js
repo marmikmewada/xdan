@@ -1,4 +1,5 @@
 "use client"
+import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function PaymentSuccess() {
@@ -6,7 +7,8 @@ export default function PaymentSuccess() {
 
   useEffect(()=>{
 const hanldeEmptyCart=async()=>{
-  await fetch("/api/emptycart")
+  await fetch("/api/emptycart",{ method: 'DELETE'})
+  await fetch("/api/change-payment-status")
 }
 hanldeEmptyCart()
   },[])

@@ -81,6 +81,7 @@ export default function PackagePage() {
 
       if (result.success) {
         setCartCount(cartCount + 1)
+        router.refresh()
       } else {
       }
     } catch (error) {

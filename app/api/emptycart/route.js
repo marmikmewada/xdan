@@ -1,52 +1,59 @@
-// app/api/cart/route.js (DELETE)
 import { NextResponse } from "next/server";
-// import {connectToDatabase,cartTable} from "@/db"
-import { connectToDatabase, 
-    // cartTable, productTable, packageTable,
-    dbmodels } from "@/db";
-    import mongoose from 'mongoose';
+import { connectToDatabase, dbmodels } from "@/db";
+import mongoose from 'mongoose';
 import { auth } from "@/auth";
 
 export async function DELETE(req) {
     try {
-        // const { userId } = await req.json();
         const session = await auth();  // Assuming you have an auth method to get session data
-        const userId = session?.user?.id;
+        await connectToDatabase(mongoose);
+        const { cartTable, userTable } = dbmodels(mongoose);
 
-        if (!userId) {
-            return NextResponse.json({
-                success: false,
-                message: "User ID is required."
-            }, { status: 400 });
+        // Fetch user details to validate the session
+        const userDetails = await userTable.findOne({ _id: session?.user?.id }).exec();
+        if (!userDetails) {
+            return NextResponse.json(
+                {
+                    success: false,
+                    message: "Unauthorized",
+                },
+                { status: 401 }
+            );
         }
 
-        await connectToDatabase(mongoose);
-        const { cartTable, } = dbmodels(mongoose);
-
-        const cart = await cartTable.findOne({ userRef: userId });
+        const cart = await cartTable.findOne({ userRef: userDetails?._id });
+        console.log("cart", cart);
 
         if (!cart) {
             return NextResponse.json({
                 success: false,
-                message: "Cart not found."
+                message: "Cart not found.",
             }, { status: 404 });
         }
 
-        // Empty the cart
-        cart.items = [];
-        cart.cartTotal = 0;
+        // Use `updateOne` to empty the items array directly
+        const result = await cartTable.updateOne(
+            { _id: cart._id },
+            { $set: { items: [] } }
+        );
 
-        await cart.save();
+        if (result.nModified === 0) {
+            return NextResponse.json({
+                success: false,
+                message: "No changes made to the cart.",
+            }, { status: 400 });
+        }
 
         return NextResponse.json({
             success: true,
-            message: "Cart emptied successfully"
+            message: "Cart emptied successfully",
         }, { status: 200 });
 
     } catch (error) {
+        console.log("error", error);
         return NextResponse.json({
             success: false,
-            message: error.message || "Error while emptying the cart"
+            message: error.message || "Error while emptying the cart",
         }, { status: 500 });
     }
 }

@@ -73,6 +73,7 @@ export default function ProductPage() {
 
       if (result.success) {
         setCartCount(cartCount + 1)
+        router.refresh()
       } else {
       }
     } catch (error) {

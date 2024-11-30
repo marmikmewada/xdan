@@ -71,6 +71,7 @@ export default function Page() {
       const result = await response.json();
       if (result.success) {
         setCartCount(prev => prev + 1);
+        router.refresh()
       }
     } catch (error) {
       console.error("Error adding item to cart:", error);

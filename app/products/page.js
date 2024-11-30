@@ -70,6 +70,7 @@ export default function ProductsPage() {
 
       if (result.success) {
         setCartCount(cartCount + 1)
+        router.refresh()
       } else {
       }
     } catch (error) {

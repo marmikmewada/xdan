@@ -52,11 +52,11 @@ export default function Nav({ server_session_data }) {
       try {
         const response = await fetch("/api/getcart",);
         const data = await response.json();
-        // console.log("data",data)
 
         if (data.success) {
+          const totalQuantity = data.data.items.reduce((total, item) => total + item.quantity, 0);
           // console.log("data.data.items.length",data.data.items.length)
-          setCartCount(data.data.items.length); // Update cart item count
+          setCartCount(totalQuantity); // Update cart item count
         } else {
           console.log("Failed to fetch cart:", data.message || "Unknown error");
         }

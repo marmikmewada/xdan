@@ -112,6 +112,10 @@ export async function POST(req) {
       deliveryAddress,  // Only set if delivery is chosen
       deliveryCharges: deliveryCharges, // Add this field to track delivery charges
     };
+
+    const newOrder = new orderTable(orderData);
+    await newOrder.save();
+
     const stripe_session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -150,11 +154,14 @@ export async function POST(req) {
           quantity: 1,
         }] : [])
       ],
+      metadata: {
+        orderId: newOrder._id.toString(),
+      },
       mode: "payment",
       success_url: `${process.env.NEXT_PUBLIC_API_URL}/transection-successful?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
     });
-console.log("stripe_session.status",stripe_session.status)
+console.log("stripe_session.status",stripe_session)
     // if (orderData.paymentStatus === "paid"&&){
     //   await cartTable.updateOne(
     //     { userRef: userDetails._id },  // Match the user by userRef
@@ -162,8 +169,7 @@ console.log("stripe_session.status",stripe_session.status)
     //   );
     // }
     // Save the new order to the database
-    const newOrder = new orderTable(orderData);
-    await newOrder.save();
+    
 
     // Return the success response with order details
     return NextResponse.json(

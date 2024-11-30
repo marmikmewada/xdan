@@ -35,7 +35,7 @@ export default function CartPage() {
                 console.log(result.message || "Failed to fetch cart.");
             } else {
                 console.log("result.data.items.length",result.data.items.length)
-                setCartCount(result.data.items.length)
+                // setCartCount(result.data.items.length)
                 setCartItems(result.data.items || []);
                 setCartTotal(result.data.cartTotal || 0);
             }
@@ -60,6 +60,7 @@ export default function CartPage() {
                 console.log(result.message || "Failed to increase quantity.");
             } else {
                 fetchCart(); // Refresh cart
+                router.refresh()
                 console.log("Quantity increased.");
         
             }
@@ -83,6 +84,7 @@ export default function CartPage() {
             } else {
                 fetchCart(); // Refresh cart
                 console.log("Quantity decreased.");
+                router.refresh()
             }
         } catch (error) {
             console.error("Error decreasing quantity:", error);
@@ -104,6 +106,7 @@ export default function CartPage() {
             } else {
                 fetchCart(); // Refresh cart
                 console.log("Item removed.");
+                router.refresh()
             }
         } catch (error) {
             console.error("Error removing item:", error);
@@ -123,6 +126,7 @@ export default function CartPage() {
                 console.log(result.message || "Failed to empty cart.");
             } else {
                 fetchCart(); // Refresh cart
+                router.refresh()
                 console.log("Cart emptied.");
             }
         } catch (error) {
