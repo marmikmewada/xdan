@@ -1,25 +1,38 @@
-import clientPromise from "@/db-old";
+// import { connectToDatabase, userTable } from "@/db";
+import { connectToDatabase, 
+  // cartTable, productTable, packageTable,
+  dbmodels } from "@/db";
+  import mongoose from 'mongoose';
+import { sendPasswordResetEmail } from "@/utils/send-mail";
 import { NextResponse } from "next/server";
 
 //http://localhost:3001/api/auth/forgot-password
+// body={
+//   email: "abc@gmail.com"
+// }
+// response={
+//   "success": true,
+//   "message": "mail sent please check you mail box"
+// }
 export async function POST(req, res) {
   try {
-    const { email, password, new_password } = await req.json();
+    const { email } = await req.json();
 
-    if (!email || !password || !new_password) {
+    if (!email) {
       return NextResponse.json(
         {
           success: false,
-          message: "All fields ( email, password, new_password) are required.",
+          message: "email is required.",
         },
         { status: 400 }
       );
     }
 
-    const client = await clientPromise;
-    const db = client.db("e-com");
+    await connectToDatabase(mongoose);
+    const { userTable} = dbmodels(mongoose);
 
-    const existingUser = await db.collection("users").findOne({ email });
+    // Find the existing user by email
+    const existingUser = await userTable.findOne({ email }).exec();
     if (!existingUser) {
       return NextResponse.json(
         {
@@ -29,23 +42,16 @@ export async function POST(req, res) {
         { status: 400 }
       );
     }
-    const { password: user_password } = existingUser || {};
-    if (password === user_password) {
-      await db.collection("users").findOneAndUpdate(
-        {
-          email,
-        },
-        {
-          $set: { password: new_password },
-        }
-      );
-    }
+
+    const encryptedEmail = Buffer.from(email).toString('base64'); //on frontend we have to decrypt this email using Buffer.from(encodedText, 'base64').toString('utf-8')
+    const resetPasswordUrl = `http://localhost:3000/api/auth/reset-password?email=${encryptedEmail}`;
+
+    await sendPasswordResetEmail(existingUser.email, existingUser.name, resetPasswordUrl);
 
     return NextResponse.json(
       {
         success: true,
-        message: "password updated",
-        data: existingUser,
+        message: "mail sent please check you mail box",
       },
       { status: 200 }
     );

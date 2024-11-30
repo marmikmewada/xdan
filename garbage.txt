@@ -1,0 +1,34 @@
+Store-time 9AM to 8PM
+
+user
+get all stores --- kira
+get all dates --- kira
+
+(check if unavaialble dates and display avaiable and unavaiabledates),
+get all slots (9am to 8pm na vache na){show unavaiable and available slots - but allow booking of only avaiable slot}. book an appointment/ (mark that slot depending upon store, date and slot as unavaiable);
+
+
+staff
+staff can mark unavaialble Days
+staff can mark unavaiable slots
+staff can see all bookings for that specific store
+
+admin
+admin can explore all the stores, select one of them and then
+-get store, create store, get all stores, delete store ---kira
+admin can mark unavaiable Days
+-mark unavailableday - (get all store, get calander )
+admin can mark unavialble slots for a specific day
+-mark unavlableslots - (get all stores, get all slots{9am-8pm}, get calander)
+
+
+create coupon, use coupon, delete coupon
+
+get cart, add product to cart, increase quanity of product in cart, decrease quanity of product in cart, remove product from cart, empty cart
+
+
+
+package problem from dan is pending still
+
+
+name-bronze & uti studios

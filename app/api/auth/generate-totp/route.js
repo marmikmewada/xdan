@@ -29,7 +29,7 @@ export async function GET(req) {
         const otpauthUrl = speakeasy.otpauthURL({
             secret: secret.base32,
             label: email,
-            issuer: 'NextAuthApp',
+            issuer: 'Dan',
             encoding: 'base32',
             algorithm: 'sha1',
             period: 30 // Google Authenticator uses 30-second intervals by default

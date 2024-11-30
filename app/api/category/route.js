@@ -1,26 +1,33 @@
-import clientPromise from "@/db-old";
+// import { categoryTable, connectToDatabase } from "@/db";
+import { connectToDatabase, 
+  // cartTable, productTable, packageTable,
+  dbmodels } from "@/db";
+  import mongoose from 'mongoose';
 import { NextResponse } from "next/server";
 
 //http://localhost:3001/api/category
 export async function POST(req, res) {
   try {
-    const { name, created_by } = await req.json();
+    const { name, description } = await req.json();
 
-    if (!name || !created_by) {
+    if (!name || !description) {
       return NextResponse.json(
         {
           success: false,
-          message: "All fields (name, created_by ) are required.",
+          message: "All fields (name, description ) are required.",
         },
         { status: 400 }
       );
     }
 
-    const client = await clientPromise;
-    const db = client.db("e-com");
+    await connectToDatabase(mongoose);
+    const { categoryTable} = dbmodels(mongoose);
 
-    const existingUser = await db.collection("category").findOne({ name });
-    if (existingUser) {
+    const category = await categoryTable.findOne({
+      name,
+    });
+
+    if (category) {
       return NextResponse.json(
         {
           success: false,
@@ -29,16 +36,17 @@ export async function POST(req, res) {
         { status: 400 }
       );
     }
-    const newUser = await db.collection("category").insertOne({
+
+    const created_category = await categoryTable.create({
       name,
-      created_by,
+      description
     });
 
     return NextResponse.json(
       {
         success: true,
         message: "category created",
-        data: newUser,
+        data: created_category,
       },
       { status: 200 }
     );
@@ -48,6 +56,41 @@ export async function POST(req, res) {
       {
         success: false,
         message: error.message || "Error while creating category",
+      },
+      {
+        status: 500,
+      }
+    );
+  }
+}
+
+
+export async function GET(req, res) {
+  try {
+    await connectToDatabase(mongoose);
+    const { categoryTable} = dbmodels(mongoose);
+
+    const categories = await categoryTable.find();
+    if (!categories.length) {
+      return NextResponse.json({
+        success: true,
+        message: "No categories found",
+        data: []
+      })
+    }
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Categories found",
+        data: categories
+      },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: error.message || "Error while fetching category",
       },
       {
         status: 500,

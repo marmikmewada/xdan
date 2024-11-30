@@ -1,6 +1,38 @@
-import { connectToDatabase, userTable } from "@/db";
+// import { connectToDatabase, userTable } from "@/db";
+import { connectToDatabase, 
+    // cartTable, productTable, packageTable,
+    dbmodels } from "@/db";
 import { NextResponse } from "next/server";
-
+import mongoose from 'mongoose';
+//http://localhost:3000/api/auth/register
+// body={
+//     "name": "John",
+//     "lastName": "Doe",
+//     "email": "john@mailinator.com",
+//     "phone": 9999999999,
+//     "password": "John@123",
+//     "dob": "02/11/2000"
+// }
+// response:{
+//     "success": true,
+//     "message": "User registered successfully",
+//     "user": {
+//         "name": "John",
+//         "lastName": "Doe",
+//         "dob": "2000-02-10T18:30:00.000Z",
+//         "email": "john@mailinator.com",
+//         "password": "John@123",
+//         "phone": "9999999999",
+//         "twofa": true,
+//         "newsletter": false,
+//         "couponUsage": [],
+//         "role": "user",
+//         "_id": "672f76a07547cf71219e2e6b",
+//         "createdAt": "2024-11-09T14:50:08.377Z",
+//         "updatedAt": "2024-11-09T14:50:08.377Z",
+//         "__v": 0
+//     }
+// }
 export async function POST(req) {
     try {
         // Destructure the request body to get the required fields
@@ -18,7 +50,8 @@ export async function POST(req) {
         }
 
         // Connect to the database
-        await connectToDatabase();
+        await connectToDatabase(mongoose);
+        const { userTable} = dbmodels(mongoose);
 
         // Check if the user already exists
         const existingUser = await userTable.findOne({ email }).exec();

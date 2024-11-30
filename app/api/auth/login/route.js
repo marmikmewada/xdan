@@ -1,7 +1,26 @@
-import { connectToDatabase, userTable } from "@/db";
+// import { connectToDatabase, userTable } from "@/db";
+import { connectToDatabase, 
+  // cartTable, productTable, packageTable,
+  dbmodels } from "@/db";
 import { NextResponse } from "next/server";
 import { signIn } from "@/auth"; // Adjust this import based on your file structure
-
+import mongoose from 'mongoose';
+// http://localhost:3000/api/auth/login
+// body={
+//   "email": "john@mailinator.com",
+//   "password": "John@123"
+// }
+// response={
+//   "success": true,
+//   "message": "Logged in successfully",
+//   "data": {
+//       "id": "672f76a07547cf71219e2e6b",
+//       "name": "John",
+//       "email": "john@mailinator.com",
+//       "twofa": true
+//   },
+//   "redirectTo": "/2fa-setup"
+// }
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
@@ -17,7 +36,9 @@ export async function POST(req) {
     }
 
     // Connect to the database
-    await connectToDatabase();
+    await connectToDatabase(mongoose);
+    const { userTable, storeTable} = dbmodels(mongoose);
+
 
     // Find the existing user by email
     const existingUser = await userTable.findOne({ email }).exec();
@@ -43,19 +64,23 @@ export async function POST(req) {
       );
     }
 
-    // Use NextAuth's signIn function directly
-    const loginResponse = await signIn('credentials', {
-      redirect: false, // Do not redirect, just return the response
-      email: existingUser.email,
-      password,
-    });
+  //  cutted from here 
+  //  Use NextAuth's signIn function directly
+   const loginResponse = await signIn("credentials", {
+    redirect: false, // Do not redirect, just return the response
+    email: existingUser.email,
+    password,
+  });
 
-    if (loginResponse.error) {
-      return NextResponse.json({
+  if (loginResponse.error) {
+    return NextResponse.json(
+      {
         success: false,
         message: loginResponse.error,
-      }, { status: 400 });
-    }
+      },
+      { status: 400 }
+    );
+  }
 
     const responseData = {
       success: true,
@@ -72,12 +97,12 @@ export async function POST(req) {
     if (existingUser.twofa) {
       return NextResponse.json({
         ...responseData,
-        redirectTo: '/2fa-setup',
+        redirectTo: "/2fa-setup",
       });
     } else {
       return NextResponse.json({
         ...responseData,
-        redirectTo: '/home',
+        redirectTo: "/home",
       });
     }
   } catch (error) {
