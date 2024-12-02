@@ -7,7 +7,7 @@ const ProfilePage = () => {
   const [userData, setUserData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-
+console.log("userData",userData)
   // Fetch user details and orders data
   useEffect(() => {
     const fetchUserData = async () => {
@@ -52,6 +52,7 @@ console.log("data of user profile",data)
           <h2 className="text-xl font-semibold mb-4">Profile Details</h2>
           <div>
             <p><strong>Name:</strong> {userData.name} {userData.lastName}</p>
+            <p><strong>Minutes:</strong> {userData.minutes || "Not provided"}</p>
             <p><strong>Email:</strong> {userData.email}</p>
             <p><strong>Phone:</strong> {userData.phone}</p>
             <p><strong>Date of Birth:</strong> {new Date(userData.dob).toLocaleDateString()}</p>

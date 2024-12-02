@@ -43,9 +43,18 @@ export const dbmodels = (mongoose) => {
         { type: mongoose.Schema.Types.ObjectId, ref: "DiscountCoupon" },
       ],
       role: { type: String, enum: ["admin", "user", "staff"], default: "user" },
+      minutes: {type: Number, default:0},
     },
     { timestamps: true }
   );
+  const bannerSchema = new mongoose.Schema({
+    banners: [
+      {
+        name: { type: String, required: true },
+        url: { type: String, required: true },
+      }
+    ],
+  });
 
   // Define the Product schema
   const productSchema = new mongoose.Schema({
@@ -216,7 +225,8 @@ export const dbmodels = (mongoose) => {
     unavailableDayTable:
       mongoose.models?.UnavailableDay ||
       mongoose.model("UnavailableDay", unavailableDaySchema),
-
+      bannerTable:
+      mongoose.models?.Banner || mongoose.model("Banner", bannerSchema),  // New model for banners
     // Add other models here like:
     // packageTable, discountCouponTable, orderTable, etc.
   };

@@ -15,12 +15,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET, {
 export async function POST(req) {
   try {
     const { paymentMethod, orderType, deliveryAddress } = await req.json();
-    console.log(" ~ POST ~ deliveryAddress:", deliveryAddress)
 
     // Connect to the database
     await connectToDatabase(mongoose);
 
-    const { userTable, cartTable, productTable, packageTable, orderTable } = dbmodels(mongoose); // Assuming orderTable is your order model
+    const { userTable, cartTable, productTable, packageTable, orderTable } = dbmodels(mongoose);
     const session = await auth();
 
     // Check if the session is valid
@@ -56,28 +55,34 @@ export async function POST(req) {
       _id: { $in: userCart.items },
     });
 
-
     const packageItems = await packageTable.find({
       _id: { $in: userCart.items },
     });
-
 
     // Initialize the fields for the new order
     const productRefs = [];
     const packageRefs = [];
     let totalAmount = 0;
 
-    // Add products to order fields and calculate total amount
-    for (const product of productItems) {
-      productRefs.push(product._id);
-      totalAmount += product.price;  // Assuming each product has a 'price' field
-    }
+    // Handle product references and calculate total amount
+    productItems.forEach((product) => {
+      // Count how many times this product appears in the cart
+      const quantity = userCart.items.filter((item) => item.toString() === product._id.toString()).length;
+      for (let i = 0; i < quantity; i++) {
+        productRefs.push(product._id); // Add the product reference multiple times
+        totalAmount += product.price;  // Multiply price by quantity (just adding price per unit since we handle quantity above)
+      }
+    });
 
-    // Add packages to order fields and calculate total amount
-    for (const pkg of packageItems) {
-      packageRefs.push(pkg._id);
-      totalAmount += pkg.price;  // Assuming each package has a 'price' field
-    }
+    // Handle package references and calculate total amount
+    packageItems.forEach((pkg) => {
+      // Count how many times this package appears in the cart
+      const quantity = userCart.items.filter((item) => item.toString() === pkg._id.toString()).length;
+      for (let i = 0; i < quantity; i++) {
+        packageRefs.push(pkg._id); // Add the package reference multiple times
+        totalAmount += pkg.price;  // Multiply price by quantity (just adding price per unit since we handle quantity above)
+      }
+    });
 
     // If the cart is empty, return an error
     if (productRefs.length === 0 && packageRefs.length === 0) {
@@ -89,33 +94,30 @@ export async function POST(req) {
     }
 
     // Handle payment details (This can be customized based on your requirements)
-    // const paymentMethod = req.body.paymentMethod || 'pay-on-pickup';  // Default to 'pay-on-pickup' if not provided
-    // const orderType = req.body.orderType || 'pickup';  // Default to 'pickup'
-    // const deliveryAddress = req.body.deliveryAddress || null;  // Optional, only required if 'delivery' is chosen
-
-    // First, calculate the delivery charges based on orderType
+    // Calculate the delivery charges based on orderType
     const deliveryCharges = orderType === 'delivery' ? 7.5 : 0;
 
     // Update the totalAmount to include delivery charges
     totalAmount += deliveryCharges;
 
-    // Create the order document
+    // Create the order document with updated productRefs, packageRefs, and totalAmount
     const orderData = {
       userRef: userDetails._id,
-      productRef: productRefs,
-      packageRef: packageRefs,
+      productRef: productRefs,  // Array of product references, including duplicates
+      packageRef: packageRefs,  // Array of package references, including duplicates
       totalAmount,
       orderType,  // pickup or delivery
       statusForUser: 'placed',  // Initial status is 'placed'
       paymentMethod,
       paymentStatus: 'pending',  // Payment status starts as 'pending'
       deliveryAddress,  // Only set if delivery is chosen
-      deliveryCharges: deliveryCharges, // Add this field to track delivery charges
+      deliveryCharges, // Add this field to track delivery charges
     };
 
     const newOrder = new orderTable(orderData);
     await newOrder.save();
 
+    // Create Stripe checkout session with the correct quantity of items
     const stripe_session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: [
@@ -128,7 +130,7 @@ export async function POST(req) {
             },
             unit_amount: Math.round(product.price * 100), // Convert to cents and ensure it's an integer
           },
-          quantity: 1,
+          quantity: userCart.items.filter(item => item.toString() === product._id.toString()).length, // Pass the correct quantity from cart
         })),
         ...packageItems.map(pkg => ({
           price_data: {
@@ -139,7 +141,7 @@ export async function POST(req) {
             },
             unit_amount: Math.round(pkg.price * 100), // Convert to cents and ensure it's an integer
           },
-          quantity: 1,
+          quantity: userCart.items.filter(item => item.toString() === pkg._id.toString()).length, // Pass the correct quantity from cart
         })),
         // Add delivery charges as a separate line item if applicable
         ...(orderType === 'delivery' ? [{
@@ -152,7 +154,7 @@ export async function POST(req) {
             unit_amount: 750, // £7.50 in pence
           },
           quantity: 1,
-        }] : [])
+        }] : []),
       ],
       metadata: {
         orderId: newOrder._id.toString(),
@@ -161,15 +163,6 @@ export async function POST(req) {
       success_url: `${process.env.NEXT_PUBLIC_API_URL}/transection-successful?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
     });
-console.log("stripe_session.status",stripe_session)
-    // if (orderData.paymentStatus === "paid"&&){
-    //   await cartTable.updateOne(
-    //     { userRef: userDetails._id },  // Match the user by userRef
-    //     { $set: { items: [] } }  // Set the items array to empty
-    //   );
-    // }
-    // Save the new order to the database
-    
 
     // Return the success response with order details
     return NextResponse.json(
@@ -194,6 +187,205 @@ console.log("stripe_session.status",stripe_session)
     );
   }
 }
+
+// import { auth } from "@/auth";
+// import { NextResponse } from "next/server";
+// import {
+//   connectToDatabase,
+//   dbmodels,
+// } from "@/db";
+// import mongoose from "mongoose";
+// import Stripe from "stripe";
+
+// // Initialize Stripe with your secret key
+// const stripe = new Stripe(process.env.STRIPE_SECRET, {
+//   apiVersion: "2022-11-15", // Ensure you're using a valid API version
+// });
+
+// export async function POST(req) {
+//   try {
+//     const { paymentMethod, orderType, deliveryAddress } = await req.json();
+
+//     // Connect to the database
+//     await connectToDatabase(mongoose);
+
+//     const { userTable, cartTable, productTable, packageTable, orderTable } = dbmodels(mongoose); // Assuming orderTable is your order model
+//     const session = await auth();
+
+//     // Check if the session is valid
+//     if (!session) {
+//       return NextResponse.json(
+//         { success: false, message: "Unauthorized" },
+//         { status: 401 }
+//       );
+//     }
+
+//     // Get user details from the database
+//     const userDetails = await userTable.findOne({ _id: session?.user?.id }).exec();
+
+//     if (!userDetails) {
+//       return NextResponse.json(
+//         { success: false, message: "User not found" },
+//         { status: 404 }
+//       );
+//     }
+
+//     // Find the user's cart
+//     const userCart = await cartTable.findOne({ userRef: userDetails._id }).exec();
+
+//     if (!userCart) {
+//       return NextResponse.json(
+//         { success: false, message: "Cart not found" },
+//         { status: 404 }
+//       );
+//     }
+
+//     // Fetch product and package details based on cart items
+//     const productItems = await productTable.find({
+//       _id: { $in: userCart.items },
+//     });
+
+
+//     const packageItems = await packageTable.find({
+//       _id: { $in: userCart.items },
+//     });
+
+
+//     // Initialize the fields for the new order
+//     const productRefs = [];
+//     const packageRefs = [];
+//     let totalAmount = 0;
+
+//     // Add products to order fields and calculate total amount
+//     for (const product of productItems) {
+//       productRefs.push(product._id);
+//       totalAmount += product.price; 
+//       console.log("productRefs",productRefs) // Assuming each product has a 'price' field
+//     }
+
+//     // Add packages to order fields and calculate total amount
+//     for (const pkg of packageItems) {
+//       packageRefs.push(pkg._id);
+//       totalAmount += pkg.price;
+//       console.log("packageRefs",packageRefs)  // Assuming each package has a 'price' field
+//     }
+
+//     // If the cart is empty, return an error
+//     if (productRefs.length === 0 && packageRefs.length === 0) {
+//       console.log("Cart is empty, no items found.");
+//       return NextResponse.json(
+//         { success: false, message: "Cart is empty" },
+//         { status: 400 }
+//       );
+//     }
+
+//     // Handle payment details (This can be customized based on your requirements)
+//     // const paymentMethod = req.body.paymentMethod || 'pay-on-pickup';  // Default to 'pay-on-pickup' if not provided
+//     // const orderType = req.body.orderType || 'pickup';  // Default to 'pickup'
+//     // const deliveryAddress = req.body.deliveryAddress || null;  // Optional, only required if 'delivery' is chosen
+
+//     // First, calculate the delivery charges based on orderType
+//     const deliveryCharges = orderType === 'delivery' ? 7.5 : 0;
+
+//     // Update the totalAmount to include delivery charges
+//     totalAmount += deliveryCharges;
+
+//     // Create the order document
+//     const orderData = {
+//       userRef: userDetails._id,
+//       productRef: productRefs,
+//       packageRef: packageRefs,
+//       totalAmount,
+//       orderType,  // pickup or delivery
+//       statusForUser: 'placed',  // Initial status is 'placed'
+//       paymentMethod,
+//       paymentStatus: 'pending',  // Payment status starts as 'pending'
+//       deliveryAddress,  // Only set if delivery is chosen
+//       deliveryCharges: deliveryCharges, // Add this field to track delivery charges
+//     };
+
+//     const newOrder = new orderTable(orderData);
+//     await newOrder.save();
+//     console.log("newOrder",newOrder)
+
+//     const stripe_session = await stripe.checkout.sessions.create({
+//       payment_method_types: ["card"],
+//       line_items: [
+//         ...productItems.map(product => ({
+//           price_data: {
+//             currency: "gbp",
+//             product_data: {
+//               name: product.name,
+//               description: product.description || '',
+//             },
+//             unit_amount: Math.round(product.price * 100), // Convert to cents and ensure it's an integer
+//           },
+//           quantity: 1,
+//         })),
+//         ...packageItems.map(pkg => ({
+//           price_data: {
+//             currency: "gbp",
+//             product_data: {
+//               name: pkg.name,
+//               description: pkg.description || '',
+//             },
+//             unit_amount: Math.round(pkg.price * 100), // Convert to cents and ensure it's an integer
+//           },
+//           quantity: 1,
+//         })),
+//         // Add delivery charges as a separate line item if applicable
+//         ...(orderType === 'delivery' ? [{
+//           price_data: {
+//             currency: "gbp",
+//             product_data: {
+//               name: "Delivery Charges",
+//               description: "Standard delivery fee",
+//             },
+//             unit_amount: 750, // £7.50 in pence
+//           },
+//           quantity: 1,
+//         }] : [])
+//       ],
+//       metadata: {
+//         orderId: newOrder._id.toString(),
+//       },
+//       mode: "payment",
+//       success_url: `${process.env.NEXT_PUBLIC_API_URL}/transection-successful?session_id={CHECKOUT_SESSION_ID}`,
+//       cancel_url: `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
+//     });
+// console.log("stripe_session.status",stripe_session)
+//     // if (orderData.paymentStatus === "paid"&&){
+//     //   await cartTable.updateOne(
+//     //     { userRef: userDetails._id },  // Match the user by userRef
+//     //     { $set: { items: [] } }  // Set the items array to empty
+//     //   );
+//     // }
+//     // Save the new order to the database
+    
+
+//     // Return the success response with order details
+//     return NextResponse.json(
+//       {
+//         success: true,
+//         message: "Order placed successfully",
+//         order: {
+//           ...newOrder.toObject(),
+//           stripeUrl: stripe_session.url // Include the checkout URL
+//         },
+//       },
+//       { status: 200 }
+//     );
+//   } catch (error) {
+//     console.error("Checkout error:", error); // Log error for debugging
+//     return NextResponse.json(
+//       {
+//         success: false,
+//         message: error.message || "Error while processing checkout",
+//       },
+//       { status: 500 }
+//     );
+//   }
+// }
 
 // import { auth } from "@/auth";
 // import { NextResponse } from "next/server";
