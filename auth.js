@@ -32,7 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials) {
         try {
           // Make a POST request to the /api/authorizepost API with the user's email and password
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/authorizepost`, {
+          const response = await fetch(`/api/authorizepost`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -86,7 +86,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         // Make an API call to /api/getuserdata to get the user data based on the email
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/getuserdata?email=${user.email}`,
+          `/api/getuserdata?email=${user.email}`,
           {
             method: "GET",
             headers: {
