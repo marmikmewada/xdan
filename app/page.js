@@ -34,10 +34,10 @@ export default function Page() {
       try {
         const [storeData, productData, packageData, categoryData] =
           await Promise.all([ 
-            fetch(`${baseUrl}/api/store`).then((res) => res.json()), 
-            fetch(`${baseUrl}/api/product`).then((res) => res.json()), 
-            fetch(`${baseUrl}/api/package`).then((res) => res.json()), 
-            fetch(`${baseUrl}/api/category`).then((res) => res.json()), 
+            fetch(`/api/store`).then((res) => res.json()), 
+            fetch(`/api/product`).then((res) => res.json()), 
+            fetch(`/api/package`).then((res) => res.json()), 
+            fetch(`/api/category`).then((res) => res.json()), 
           ]);
 
         console.log("productData", productData?.data);

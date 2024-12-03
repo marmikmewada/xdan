@@ -89,7 +89,7 @@ export default function SingleCategoryPage() {
     }
     try {
       setLoadingItemId(itemId);
-      const response = await fetch(`${baseUrl}/api/addproductcart`, {
+      const response = await fetch(`/api/addproductcart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -34,21 +34,21 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const storeRes = await fetch(`${baseUrl}/api/store`);
+        const storeRes = await fetch(`/api/store`);
         const storeData = await storeRes.json();
         setStores(storeData?.data || []);
 
-        const productRes = await fetch(`${baseUrl}/api/product`);
+        const productRes = await fetch(`/api/product`);
         const productData = await productRes.json();
         // console.log(productData);
         setProducts(productData?.data || []);
 
-        const packageRes = await fetch(`${baseUrl}/api/package`);
+        const packageRes = await fetch(`/api/package`);
         const packageData = await packageRes.json();
         // console.log(packageData);
         setPackages(packageData?.data || []);
 
-        const categoryRes = await fetch(`${baseUrl}/api/category`);
+        const categoryRes = await fetch(`/api/category`);
         const categoryData = await categoryRes.json();
         setCategories(categoryData?.data || []);
       } catch (error) {
@@ -74,7 +74,7 @@ export default function Home() {
     }
     try {
       setLoadingItemId(itemId); // Set loading state for this button
-      const response = await fetch(`${baseUrl}/api/addproductcart`, {
+      const response = await fetch(`/api/addproductcart`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

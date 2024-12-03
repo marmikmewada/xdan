@@ -24,7 +24,7 @@ const CheckoutPage = () => {
     const fetchCart = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`${baseUrl}/api/getcart`, {
+        const response = await fetch(`/api/getcart`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

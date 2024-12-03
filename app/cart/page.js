@@ -22,7 +22,7 @@ export default function CartPage() {
     const fetchCart = async () => {
         setLoading(true);
         try {
-            const response = await fetch(`${baseUrl}/api/getcart`, {
+            const response = await fetch(`/api/getcart`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
@@ -49,7 +49,7 @@ export default function CartPage() {
     // Handle Increase Quantity
     const handleIncreaseQuantity = async (itemId) => {
         try {
-            const response = await fetch(`${baseUrl}/api/increasecart`, {
+            const response = await fetch(`/api/increasecart`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ itemId }),
@@ -72,7 +72,7 @@ export default function CartPage() {
     // Handle Decrease Quantity
     const handleDecreaseQuantity = async (itemId) => {
         try {
-            const response = await fetch(`${baseUrl}/api/decreasecart`, {
+            const response = await fetch(`/api/decreasecart`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ itemId }),
@@ -94,7 +94,7 @@ export default function CartPage() {
     // Handle Remove Item
     const handleRemoveItem = async (itemId) => {
         try {
-            const response = await fetch(`${baseUrl}/api/removeitemfromcart`, {
+            const response = await fetch(`/api/removeitemfromcart`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ itemId }),
@@ -116,7 +116,7 @@ export default function CartPage() {
     // Handle Empty Cart
     const handleEmptyCart = async () => {
         try {
-            const response = await fetch(`${baseUrl}/api/emptycart`, {
+            const response = await fetch(`/api/emptycart`, {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
             });

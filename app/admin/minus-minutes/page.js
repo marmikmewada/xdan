@@ -12,7 +12,7 @@ export default function UserDetailsTable() {
   // Fetch users data
   useEffect(() => {
     const fetchData = async () => {
-      const userData = await fetch(`${baseUrl}/api/getallusers`).then((res) => res.json());
+      const userData = await fetch(`/api/getallusers`).then((res) => res.json());
       setUsers(userData);
     };
     fetchData();
@@ -28,7 +28,7 @@ export default function UserDetailsTable() {
   const handleUpdateMinutes = async (id, newMinutes) => {
     setLoading(true);
     try {
-      const response = await fetch(`${baseUrl}/api/update-minutes`, {
+      const response = await fetch(`/api/update-minutes`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ minutes: newMinutes,userId:id }),
