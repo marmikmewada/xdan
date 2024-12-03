@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import useStore from "../app/store/useStore";
-// import Image from "next/image";
 
 export default function Page() {
   const router = useRouter();
@@ -28,7 +27,7 @@ export default function Page() {
   const [categories, setCategories] = useState([]);
   const [loadingItemId, setLoadingItemId] = useState(null);
 
-  const carouselRef = useRef(null);
+  const categoriesRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -93,441 +92,790 @@ export default function Page() {
     }
   };
 
-  const scrollCarousel = (direction) => {
-    if (carouselRef.current) {
-      const scrollAmount = direction === "left" ? -200 : 200;
-      carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
-    }
-  };
-
   const bgColor = selectedMode === "dark" ? "bg-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-  const cardBg = selectedMode === "dark" ? "bg-black" : "bg-white";
+  const buttonBgColor = selectedMode === "dark" ? "bg-white" : "bg-black";
+  const buttonTextColor = selectedMode === "dark" ? "text-black" : "text-white";
+  const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hover:bg-gray-800";
+
+  const HeroSection = ({ title, description, image, buttons }) => (
+    <section className="relative h-screen overflow-hidden">
+      <div
+        className="absolute inset-0 transition-opacity duration-1000 ease-out"
+        style={{
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-60" />
+      </div>
+      <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+        <div className="max-w-2xl">
+          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white leading-tight">
+            {title}
+          </h1>
+          <p className="text-lg md:text-xl text-gray-200 mb-8">
+            {description}
+          </p>
+          <div className="flex flex-wrap gap-4">
+            {buttons.map((button, index) => (
+              <button
+                key={index}
+                onClick={button.onClick}
+                className={`px-6 py-3 ${button.primary ? `${buttonBgColor} ${buttonTextColor}` : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'} font-semibold text-lg transition-all duration-300 ${buttonHoverBgColor}`}
+              >
+                {button.text}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  const BannerSection = ({ title, description, image }) => (
+    <section className="relative h-screen overflow-hidden">
+      <div
+        className="absolute inset-0 transition-opacity duration-1000 ease-out"
+        style={{
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-60" />
+      </div>
+      <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-center text-center">
+        <div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
+            {title}
+          </h2>
+          <p className="text-xl md:text-2xl text-gray-200">
+            {description}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+
+  const CategoriesSection = () => {
+    const scrollLeft = () => {
+      if (categoriesRef.current) {
+        categoriesRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+      }
+    };
+
+    const scrollRight = () => {
+      if (categoriesRef.current) {
+        categoriesRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      }
+    };
+
+    return (
+      <section className={`py-5 ${bgColor}`}>
+        <div className="max-w-7xl mx-auto px-4">
+          <h2 className={`text-3xl font-bold mb-6 text-center ${textColor}`}>Categories</h2>
+          <div className="relative">
+            <button onClick={scrollLeft} className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-10 ${buttonBgColor} ${buttonTextColor} p-2 rounded-full ${buttonHoverBgColor}`}>
+              &lt;
+            </button>
+            <div ref={categoriesRef} className="flex overflow-x-auto space-x-4 py-4 no-scrollbar">
+              {categories.map((category) => (
+                <Link key={category._id} href={`/categories/${category._id}`} className={`flex-shrink-0 px-4 py-2 rounded-full ${buttonBgColor} ${buttonTextColor} ${buttonHoverBgColor} transition-all duration-300`}>
+                  {category.name}
+                </Link>
+              ))}
+            </div>
+            <button onClick={scrollRight} className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 ${buttonBgColor} ${buttonTextColor} p-2 rounded-full ${buttonHoverBgColor}`}>
+              &gt;
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  };
 
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
       {/* Hero Section */}
-      <section className="relative h-screen overflow-hidden">
-        <div
-          className="absolute inset-0 transition-opacity duration-1000 ease-out"
-          style={{
-            backgroundImage: `url(${heroImages[currentImageIndex]})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        >
-          <div className="absolute inset-0 bg-black bg-opacity-60" />
-        </div>
-        <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
-          <div className="max-w-2xl">
-            <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white leading-tight">
-              Glow Up at Bronze & Beauty
-            </h1>
-            <p className="text-lg md:text-xl text-gray-200 mb-8">
-              Experience the best tanning services in the UK with our state-of-the-art facilities
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <button
-                onClick={() => router.push("/locations")}
-                className="px-6 py-3 bg-white text-black font-semibold text-lg transition-all duration-300 hover:bg-gray-200"
-              >
-                Book Your Session
-              </button>
-              <button
-                onClick={() => router.push("/services")}
-                className="px-6 py-3 bg-transparent border border-white text-white font-semibold text-lg transition-all duration-300 hover:bg-white hover:text-black"
-              >
-                View Services
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
+      <HeroSection
+        title="Glow Up at Bronze & Beauty"
+        description="Experience the best tanning services in the UK with our state-of-the-art facilities"
+        image={heroImages[currentImageIndex]}
+        buttons={[
+          { text: "Book Your Session", onClick: () => router.push("/locations"), primary: true },
+          { text: "View Services", onClick: () => router.push("/services"), primary: false },
+        ]}
+      />
 
       {/* Categories Section */}
-      <section className={`py-8 ${bgColor}`}>
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-4xl font-bold mb-6 text-center">Explore Categories</h2>
-
-    <div className="relative">
-      {/* Scroll Indicators */}
-      <div className="absolute inset-y-0 left-0 flex items-center justify-center z-10">
-        <button
-          onClick={() => scrollCarousel("left")}
-          className={`${
-            selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"
-          } text-2xl p-2 rounded-full shadow-lg hover:opacity-75 transition-all`}
-          aria-label="Scroll left"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-      </div>
-      <div className="absolute inset-y-0 right-0 flex items-center justify-center z-10">
-        <button
-          onClick={() => scrollCarousel("right")}
-          className={`${
-            selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"
-          } text-2xl p-2 rounded-full shadow-lg hover:opacity-75 transition-all`}
-          aria-label="Scroll right"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
-      </div>
-
-      {/* Category Links Carousel */}
-      <div
-        ref={carouselRef}
-        className="flex overflow-x-auto gap-8 pb-8 scrollbar-hidden"
-      >
-        {categories.map((category) => (
-          <div
-            key={category._id}
-            className={`flex-shrink-0 w-32 h-16 ${
-              selectedMode === "dark" ? "bg-black" : "bg-white"
-            } flex items-center justify-center text-lg font-semibold text-center text-${selectedMode === "dark" ? "white" : "black"} rounded-lg hover:scale-105 transition-all`}
-          >
-            <Link href={`/categories/${category._id}`} className="block">
-              <span className="capitalize">{category.name}</span>
-            </Link>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-
-  {/* Custom Scrollbar Styles */}
-  <style jsx>{`
-    .scrollbar-hidden::-webkit-scrollbar {
-      height: 8px;
-    }
-
-    .scrollbar-hidden::-webkit-scrollbar-thumb {
-      background-color: ${selectedMode === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)"};
-      border-radius: 999px;
-      transition: background-color 0.3s ease;
-    }
-
-    .scrollbar-hidden::-webkit-scrollbar-thumb:hover {
-      background-color: ${selectedMode === "dark" ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)"};
-    }
-
-    .scrollbar-hidden::-webkit-scrollbar-track {
-      background: transparent;
-    }
-  `}</style>
-</section>
-
-
-
-
+      <CategoriesSection />
 
       {/* Products Section */}
-<section className={`py-12 ${bgColor}`}>
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-3xl font-bold mb-6 text-center">Premium Tanning Products</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {products.map((product) => (
-        <div
-          key={product._id}
-          className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
-        >
-          <Link href={`/products/${product._id}`} className="block">
-            <div className="relative h-48 w-full group-hover:opacity-75 transition-all duration-300">
-              {product.imageUrl && product.imageUrl[0] ? (
-                <Image
-                  src={product.imageUrl[0]}
-                  alt={product.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-all duration-300 group-hover:scale-110"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                  No image
-                </div>
-              )}
-            </div>
-
-            {/* Product Details */}
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-              {/* Description with hover effect */}
-              <p
-                className={`text-sm mb-3 text-gray-600 group-hover:text-gray-800 transition-all duration-300`}
-              >
-                {product.description.substring(0, 100)}...
-              </p>
-              <p className="text-xl font-bold mb-3">£{product.price.toFixed(2)}</p>
-
-              {/* Add to Cart Button */}
-              <button
-                onClick={(e) => {
+      {products.map((product, index) => (
+        <div key={product._id}>
+          <HeroSection
+            title={product.name}
+            description={product.description}
+            image={product.imageUrl && product.imageUrl[0] ? product.imageUrl[0] : heroImages[0]}
+            buttons={[
+              { 
+                text: loadingItemId === product._id ? "Adding..." : "Add to Cart", 
+                onClick: (e) => {
                   e.preventDefault();
                   addToCart(product._id);
-                }}
-                disabled={loadingItemId === product._id}
-                className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
-                  loadingItemId === product._id
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-800"
-                }`}
-              >
-                {loadingItemId === product._id ? "Adding..." : "Add to Cart"}
-              </button>
-            </div>
-          </Link>
+                },
+                primary: true
+              },
+              { 
+                text: `£${product.price.toFixed(2)}`, 
+                onClick: (e) => {
+                  e.preventDefault();
+                  addToCart(product._id);
+                }, 
+                primary: false 
+              },
+            ]}
+          />
+          {index === products.length - 1 && (
+            <BannerSection
+              title="Limited Time Offer!"
+              description="Get 20% off on all tanning products when you book a session today."
+              image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+            />
+          )}
         </div>
       ))}
-    </div>
-  </div>
-</section>
 
-
-
-<section className="py-12 text-center">
-  {/* Banner Text */}
-  <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
-  <p className="mt-4">Get 20% off on all tanning products when you book a session today.</p>
-
-  {/* Banner Image based on light or dark mode */}
-  <div className="mt-8">
-    {selectedMode === "dark" ? (
-      <div className="w-full h-auto relative">
-        <Image 
-          src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
-          alt="Limited Time Offer - Dark Mode" 
-          layout="responsive"
-          width={640}
-          height={286}
-        />
-      </div>
-    ) : (
-      <div className="w-full h-auto relative">
-        <Image 
-          src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
-          alt="Limited Time Offer - Light Mode" 
-          layout="responsive"
-          width={640}
-          height={286}
-        />
-      </div>
-    )}
-  </div>
-</section>
-
-
-
-
-{/* Packages Section */}
-<section className={`py-12 ${bgColor}`}>
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-3xl font-bold mb-6 text-center">Exclusive Packages</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {packages.map((pkg) => (
-        <div
-          key={pkg._id}
-          className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
-        >
-          <Link href={`/packages/${pkg._id}`} className="block">
-            <div className="relative h-48 w-full group-hover:opacity-75 transition-all duration-300">
-              {pkg.imageUrl && pkg.imageUrl[0] ? (
-                <Image
-                  src={pkg.imageUrl[0]}
-                  alt={pkg.name}
-                  layout="fill"
-                  objectFit="cover"
-                  className="transition-all duration-300 group-hover:scale-110"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                  No image
-                </div>
-              )}
-            </div>
-
-            {/* Package Details */}
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{pkg.name}</h3>
-              {/* Description with hover effect */}
-              <p
-                className={`text-sm mb-3 text-gray-600 group-hover:text-gray-800 transition-all duration-300`}
-              >
-                {pkg.description.substring(0, 100)}...
-              </p>
-              <p className="text-lg font-semibold mb-2">{pkg.minutes} minutes</p>
-              <p className="text-xl font-bold mb-3">£{pkg.price.toFixed(2)}</p>
-
-              {/* Add to Cart Button */}
-              <button
-                onClick={(e) => {
+      {/* Packages Section */}
+      {packages.map((pkg, index) => (
+        <div key={pkg._id}>
+          <HeroSection
+            title={pkg.name}
+            description={`${pkg.description} - ${pkg.minutes} minutes`}
+            image={pkg.imageUrl && pkg.imageUrl[0] ? pkg.imageUrl[0] : heroImages[1]}
+            buttons={[
+              { 
+                text: loadingItemId === pkg._id ? "Adding..." : "Add to Cart", 
+                onClick: (e) => {
                   e.preventDefault();
                   addToCart(pkg._id);
-                }}
-                disabled={loadingItemId === pkg._id}
-                className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
-                  loadingItemId === pkg._id
-                    ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                    : "bg-black text-white hover:bg-gray-800"
-                }`}
-              >
-                {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
-              </button>
-            </div>
-          </Link>
+                },
+                primary: true
+              },
+              { 
+                text: `£${pkg.price.toFixed(2)}`, 
+                onClick: (e) => {
+                  e.preventDefault();
+                  addToCart(pkg._id);
+                }, 
+                primary: false 
+              },
+            ]}
+          />
+          {index === packages.length - 1 && (
+            <BannerSection
+              title="Limited Time Offer!"
+              description="Get 20% off on all tanning products when you book a session today."
+              image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+            />
+          )}
         </div>
       ))}
-    </div>
-  </div>
-</section>
-
-<section className="py-12 text-center">
-  {/* Banner Text */}
-  <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
-  <p className="mt-4">Get 20% off on all tanning products when you book a session today.</p>
-
-  {/* Banner Image based on light or dark mode */}
-  <div className="mt-8">
-    {selectedMode === "dark" ? (
-      <div className="w-full h-auto relative">
-        <Image 
-          src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
-          alt="Limited Time Offer - Dark Mode" 
-          layout="responsive"
-          width={640}
-          height={286}
-        />
-      </div>
-    ) : (
-      <div className="w-full h-auto relative">
-        <Image 
-          src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
-          alt="Limited Time Offer - Light Mode" 
-          layout="responsive"
-          width={640}
-          height={286}
-        />
-      </div>
-    )}
-  </div>
-</section>
-
 
       {/* Locations Section */}
-      <section className={`py-12 ${bgColor}`}>
-  <div className="max-w-7xl mx-auto px-4">
-    <h2 className="text-3xl font-bold mb-6 text-center">Our Locations</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {stores.map((store) => (
-        <div
-          key={store._id}
-          className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
-        >
-          <Link href={`/locations/${store?._id}`}>
-            {/* Map Section */}
-            <div className="relative h-48 w-full">
+      {stores.map((store, index) => (
+        <div key={store._id}>
+          <section className="relative h-screen overflow-hidden">
+            <div className="absolute inset-0">
               {store.coordinates ? (
-                <div className="relative h-full w-full">
-                  <iframe
-                    src={`${store.coordinates}${
-                      selectedMode === "dark"
-                        ? "&style=feature:all|element:geometry|color:0x212121"
-                        : ""
-                    }`} // Custom dark/light style for the map
-                    width="100%"
-                    height="100%"
-                    frameBorder="0"
-                    style={{ border: 0 }}
-                    allowFullScreen=""
-                    aria-hidden="false"
-                    tabIndex="0"
-                    className="absolute inset-0 group-hover:scale-105 transition-all duration-300"
-                  />
-                  {/* Tooltip on Hover */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-60 text-white p-4 text-center">
-                    <h3 className="text-lg font-semibold">{store.name}</h3>
-                    {/* Additional Details can go here */}
-                  </div>
-                </div>
+                <iframe
+                  src={`${store.coordinates}${
+                    selectedMode === "dark"
+                      ? "&style=feature:all|element:geometry|color:0x212121"
+                      : ""
+                  }`}
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  aria-hidden="false"
+                  tabIndex="0"
+                />
               ) : (
                 <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
                   No map available
                 </div>
               )}
             </div>
-
-            {/* Location Details */}
-            <div className="p-4">
-              <p
-                className={`text-sm mb-2 ${
-                  selectedMode === "dark" ? "text-gray-300" : "text-gray-600"
-                }`}
-              >
-                {store.address}
-              </p>
-              <p
-                className={`text-sm mb-3 ${
-                  selectedMode === "dark" ? "text-gray-300" : "text-gray-600"
-                }`}
-              >
-                Phone: {store.phone}
-              </p>
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(`/booking/${store._id}`);
-                }}
-                className="w-full py-2 px-4 bg-black text-white text-sm font-semibold transition-all duration-300 hover:bg-gray-800"
-              >
-                Book Appointment
-              </button>
+            <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+              <div className="max-w-2xl bg-black bg-opacity-70 p-8 rounded-lg">
+                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
+                  {store.address}
+                </h1>
+                <p className="text-lg md:text-xl text-gray-200 mb-8">
+                  Phone: {store.phone}
+                </p>
+                <button
+                  onClick={() => router.push(`/booking/${store._id}`)}
+                  className={`px-6 py-3 ${buttonBgColor} ${buttonTextColor} font-semibold text-lg transition-all duration-300 ${buttonHoverBgColor}`}
+                >
+                  Book Appointment
+                </button>
+              </div>
             </div>
-          </Link>
+          </section>
+          {index === stores.length - 1 && (
+            <BannerSection
+              title="Limited Time Offer!"
+              description="Get 20% off on all tanning products when you book a session today."
+              image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+            />
+          )}
         </div>
       ))}
-    </div>
-  </div>
-</section>
-
-
-<section className="py-12 text-center">
-  {/* Banner Text */}
-  <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
-  <p className="mt-4">Get 20% off on all tanning products when you book a session today.</p>
-
-  {/* Banner Image based on light or dark mode */}
-  <div className="mt-8">
-    {selectedMode === "dark" ? (
-      <div className="w-full h-auto relative">
-        <Image 
-          src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
-          alt="Limited Time Offer - Dark Mode" 
-          layout="responsive"
-          width={640}
-          height={286}
-        />
-      </div>
-    ) : (
-      <div className="w-full h-auto relative">
-        <Image 
-          src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
-          alt="Limited Time Offer - Light Mode" 
-          layout="responsive"
-          width={640}
-          height={286}
-        />
-      </div>
-    )}
-  </div>
-</section>
-
-
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+// "use client"
+// import { useState, useEffect, useRef } from "react";
+// import { useRouter } from "next/navigation";
+// import Image from "next/image";
+// import { useSession } from "next-auth/react";
+// import Link from "next/link";
+// import useStore from "../app/store/useStore";
+// // import Image from "next/image";
+
+// export default function Page() {
+//   const router = useRouter();
+//   const { data: session } = useSession();
+//   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+//   const [cartCount, setCartCount] = useState(0);
+//   const { selectedMode } = useStore();
+
+//   const heroImages = [
+//     "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80",
+//     "https://images.unsplash.com/photo-1607008829749-c0f284074b61?auto=format&fit=crop&q=80",
+//     "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80",
+//     "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80",
+//   ];
+
+//   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+//   const [stores, setStores] = useState([]);
+//   const [products, setProducts] = useState([]);
+//   const [packages, setPackages] = useState([]);
+//   const [categories, setCategories] = useState([]);
+//   const [loadingItemId, setLoadingItemId] = useState(null);
+
+//   const carouselRef = useRef(null);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const [storeData, productData, packageData, categoryData] =
+//           await Promise.all([ 
+//             fetch(`${baseUrl}/api/store`).then((res) => res.json()), 
+//             fetch(`${baseUrl}/api/product`).then((res) => res.json()), 
+//             fetch(`${baseUrl}/api/package`).then((res) => res.json()), 
+//             fetch(`${baseUrl}/api/category`).then((res) => res.json()), 
+//           ]);
+
+//         setStores(storeData?.data || []);
+//         setProducts(productData?.data || []);
+//         setPackages(packageData?.data || []);
+//         setCategories(categoryData?.data || []);
+//       } catch (error) {
+//         console.error("Error fetching data:", error);
+//       }
+//     };
+
+//     fetchData();
+
+//     const intervalId = setInterval(() => {
+//       setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+//     }, 5000);
+
+//     return () => clearInterval(intervalId);
+//   }, [baseUrl]);
+
+//   useEffect(() => {
+//     if (selectedMode === "dark") {
+//       document.documentElement.classList.add("dark");
+//     } else {
+//       document.documentElement.classList.remove("dark");
+//     }
+//   }, [selectedMode]);
+
+//   const addToCart = async (itemId) => {
+//     if (!session) {
+//       router.push("/login");
+//       return;
+//     }
+
+//     try {
+//       setLoadingItemId(itemId);
+//       const response = await fetch(`${baseUrl}/api/addproductcart`, {
+//         method: "POST",
+//         headers: { "Content-Type": "application/json" },
+//         body: JSON.stringify({ itemId }),
+//       });
+
+//       const result = await response.json();
+//       if (result.success) {
+//         setCartCount((prev) => prev + 1);
+//         router.refresh();
+//       }
+//     } catch (error) {
+//       console.error("Error adding item to cart:", error);
+//     } finally {
+//       setLoadingItemId(null);
+//     }
+//   };
+
+//   const scrollCarousel = (direction) => {
+//     if (carouselRef.current) {
+//       const scrollAmount = direction === "left" ? -200 : 200;
+//       carouselRef.current.scrollBy({ left: scrollAmount, behavior: "smooth" });
+//     }
+//   };
+
+//   const bgColor = selectedMode === "dark" ? "bg-black" : "bg-white";
+//   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
+//   const cardBg = selectedMode === "dark" ? "bg-black" : "bg-white";
+
+//   return (
+//     <main className={`min-h-screen ${bgColor} ${textColor}`}>
+//       {/* Hero Section */}
+//       <section className="relative h-screen overflow-hidden">
+//         <div
+//           className="absolute inset-0 transition-opacity duration-1000 ease-out"
+//           style={{
+//             backgroundImage: `url(${heroImages[currentImageIndex]})`,
+//             backgroundSize: "cover",
+//             backgroundPosition: "center",
+//           }}
+//         >
+//           <div className="absolute inset-0 bg-black bg-opacity-60" />
+//         </div>
+//         <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+//           <div className="max-w-2xl">
+//             <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white leading-tight">
+//               Glow Up at Bronze & Beauty
+//             </h1>
+//             <p className="text-lg md:text-xl text-gray-200 mb-8">
+//               Experience the best tanning services in the UK with our state-of-the-art facilities
+//             </p>
+//             <div className="flex flex-wrap gap-4">
+//               <button
+//                 onClick={() => router.push("/locations")}
+//                 className="px-6 py-3 bg-white text-black font-semibold text-lg transition-all duration-300 hover:bg-gray-200"
+//               >
+//                 Book Your Session
+//               </button>
+//               <button
+//                 onClick={() => router.push("/services")}
+//                 className="px-6 py-3 bg-transparent border border-white text-white font-semibold text-lg transition-all duration-300 hover:bg-white hover:text-black"
+//               >
+//                 View Services
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Categories Section */}
+//       <section className={`py-8 ${bgColor}`}>
+//   <div className="max-w-7xl mx-auto px-4">
+//     <h2 className="text-4xl font-bold mb-6 text-center">Explore Categories</h2>
+
+//     <div className="relative">
+//       {/* Scroll Indicators */}
+//       <div className="absolute inset-y-0 left-0 flex items-center justify-center z-10">
+//         <button
+//           onClick={() => scrollCarousel("left")}
+//           className={`${
+//             selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"
+//           } text-2xl p-2 rounded-full shadow-lg hover:opacity-75 transition-all`}
+//           aria-label="Scroll left"
+//         >
+//           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+//           </svg>
+//         </button>
+//       </div>
+//       <div className="absolute inset-y-0 right-0 flex items-center justify-center z-10">
+//         <button
+//           onClick={() => scrollCarousel("right")}
+//           className={`${
+//             selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"
+//           } text-2xl p-2 rounded-full shadow-lg hover:opacity-75 transition-all`}
+//           aria-label="Scroll right"
+//         >
+//           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-6 h-6">
+//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+//           </svg>
+//         </button>
+//       </div>
+
+//       {/* Category Links Carousel */}
+//       <div
+//         ref={carouselRef}
+//         className="flex overflow-x-auto gap-8 pb-8 scrollbar-hidden"
+//       >
+//         {categories.map((category) => (
+//           <div
+//             key={category._id}
+//             className={`flex-shrink-0 w-32 h-16 ${
+//               selectedMode === "dark" ? "bg-black" : "bg-white"
+//             } flex items-center justify-center text-lg font-semibold text-center text-${selectedMode === "dark" ? "white" : "black"} rounded-lg hover:scale-105 transition-all`}
+//           >
+//             <Link href={`/categories/${category._id}`} className="block">
+//               <span className="capitalize">{category.name}</span>
+//             </Link>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   </div>
+
+//   {/* Custom Scrollbar Styles */}
+//   <style jsx>{`
+//     .scrollbar-hidden::-webkit-scrollbar {
+//       height: 8px;
+//     }
+
+//     .scrollbar-hidden::-webkit-scrollbar-thumb {
+//       background-color: ${selectedMode === "dark" ? "rgba(255, 255, 255, 0.4)" : "rgba(0, 0, 0, 0.4)"};
+//       border-radius: 999px;
+//       transition: background-color 0.3s ease;
+//     }
+
+//     .scrollbar-hidden::-webkit-scrollbar-thumb:hover {
+//       background-color: ${selectedMode === "dark" ? "rgba(255, 255, 255, 0.6)" : "rgba(0, 0, 0, 0.6)"};
+//     }
+
+//     .scrollbar-hidden::-webkit-scrollbar-track {
+//       background: transparent;
+//     }
+//   `}</style>
+// </section>
+
+
+
+
+
+//       {/* Products Section */}
+//       <section className={`py-0 ${bgColor}`}>
+//   <div className="relative w-full h-screen overflow-hidden">
+//     <div className="absolute inset-0 flex items-center justify-center z-10 bg-black bg-opacity-50">
+//       <h2 className="text-5xl font-bold text-white mb-6">Premium Tanning Products</h2>
+//     </div>
+//     <div className="relative w-full h-full overflow-hidden">
+//       <div className="flex h-full overflow-x-auto gap-6 pb-8 items-center justify-center">
+//         {products.map((product) => (
+//           <div
+//             key={product._id}
+//             className={`relative w-full min-w-[100vw] h-[100vh] ${cardBg} overflow-hidden shadow-md transition-all duration-300 group`}
+//           >
+//             <div className="relative w-full h-3/4">
+//               {/* Product Image as Background */}
+//               {product.imageUrl && product.imageUrl[0] ? (
+//                 <Image
+//                   src={product.imageUrl[0]}
+//                   alt={product.name}
+//                   layout="fill"
+//                   objectFit="cover"
+//                   className="absolute inset-0 group-hover:scale-110 transition-all duration-300"
+//                 />
+//               ) : (
+//                 <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+//                   No image
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Product Details Overlaid */}
+//             <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center p-6">
+//               <h3 className="text-3xl font-semibold text-white mb-4">{product.name}</h3>
+//               <p className="text-lg text-gray-200 mb-4">
+//                 {product.description.substring(0, 100)}...
+//               </p>
+//               <p className="text-xl font-bold text-white mb-6">£{product.price.toFixed(2)}</p>
+
+//               {/* Add to Cart Button */}
+//               <button
+//                 onClick={(e) => {
+//                   e.preventDefault();
+//                   addToCart(product._id);
+//                 }}
+//                 disabled={loadingItemId === product._id}
+//                 className={`w-full py-3 px-6 text-lg font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
+//                   loadingItemId === product._id
+//                     ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+//                     : "bg-white text-black hover:bg-gray-200"
+//                 }`}
+//               >
+//                 {loadingItemId === product._id ? "Adding..." : "Add to Cart"}
+//               </button>
+//             </div>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   </div>
+// </section>
+
+
+
+
+// <section className="py-12 text-center">
+//   {/* Banner Text */}
+//   <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
+//   <p className="mt-4">Get 20% off on all tanning products when you book a session today.</p>
+
+//   {/* Banner Image based on light or dark mode */}
+//   <div className="mt-8">
+//     {selectedMode === "dark" ? (
+//       <div className="w-full h-auto relative">
+//         <Image 
+//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
+//           alt="Limited Time Offer - Dark Mode" 
+//           layout="responsive"
+//           width={640}
+//           height={286}
+//         />
+//       </div>
+//     ) : (
+//       <div className="w-full h-auto relative">
+//         <Image 
+//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
+//           alt="Limited Time Offer - Light Mode" 
+//           layout="responsive"
+//           width={640}
+//           height={286}
+//         />
+//       </div>
+//     )}
+//   </div>
+// </section>
+
+
+
+
+// {/* Packages Section */}
+// <section className={`py-12 ${bgColor}`}>
+//   <div className="max-w-7xl mx-auto px-4">
+//     <h2 className="text-3xl font-bold mb-6 text-center">Exclusive Packages</h2>
+//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//       {packages.map((pkg) => (
+//         <div
+//           key={pkg._id}
+//           className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
+//         >
+//           <Link href={`/packages/${pkg._id}`} className="block">
+//             <div className="relative h-48 w-full group-hover:opacity-75 transition-all duration-300">
+//               {pkg.imageUrl && pkg.imageUrl[0] ? (
+//                 <Image
+//                   src={pkg.imageUrl[0]}
+//                   alt={pkg.name}
+//                   layout="fill"
+//                   objectFit="cover"
+//                   className="transition-all duration-300 group-hover:scale-110"
+//                 />
+//               ) : (
+//                 <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+//                   No image
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Package Details */}
+//             <div className="p-4">
+//               <h3 className="text-lg font-semibold mb-2">{pkg.name}</h3>
+//               {/* Description with hover effect */}
+//               <p
+//                 className={`text-sm mb-3 text-gray-600 group-hover:text-gray-800 transition-all duration-300`}
+//               >
+//                 {pkg.description.substring(0, 100)}...
+//               </p>
+//               <p className="text-lg font-semibold mb-2">{pkg.minutes} minutes</p>
+//               <p className="text-xl font-bold mb-3">£{pkg.price.toFixed(2)}</p>
+
+//               {/* Add to Cart Button */}
+//               <button
+//                 onClick={(e) => {
+//                   e.preventDefault();
+//                   addToCart(pkg._id);
+//                 }}
+//                 disabled={loadingItemId === pkg._id}
+//                 className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
+//                   loadingItemId === pkg._id
+//                     ? "bg-gray-300 text-gray-600 cursor-not-allowed"
+//                     : "bg-black text-white hover:bg-gray-800"
+//                 }`}
+//               >
+//                 {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
+//               </button>
+//             </div>
+//           </Link>
+//         </div>
+//       ))}
+//     </div>
+//   </div>
+// </section>
+
+// <section className="py-12 text-center">
+//   {/* Banner Text */}
+//   <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
+//   <p className="mt-4">Get 20% off on all tanning products when you book a session today.</p>
+
+//   {/* Banner Image based on light or dark mode */}
+//   <div className="mt-8">
+//     {selectedMode === "dark" ? (
+//       <div className="w-full h-auto relative">
+//         <Image 
+//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
+//           alt="Limited Time Offer - Dark Mode" 
+//           layout="responsive"
+//           width={640}
+//           height={286}
+//         />
+//       </div>
+//     ) : (
+//       <div className="w-full h-auto relative">
+//         <Image 
+//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
+//           alt="Limited Time Offer - Light Mode" 
+//           layout="responsive"
+//           width={640}
+//           height={286}
+//         />
+//       </div>
+//     )}
+//   </div>
+// </section>
+
+
+// <section className={`py-12 ${bgColor}`}>
+//   <div className="max-w-7xl mx-auto px-4">
+//     <h2 className="text-3xl font-bold mb-6 text-center">Our Locations</h2>
+//     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+//       {stores.map((store) => (
+//         <div
+//           key={store._id}
+//           className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
+//         >
+//           <Link href={`/locations/${store?._id}`}>
+//             {/* Map Section */}
+//             <div className="relative h-48 w-full">
+//               {store.coordinates ? (
+//                 <div className="relative h-full w-full">
+//                   <iframe
+//                     src={`${store.coordinates}${
+//                       selectedMode === "dark"
+//                         ? "&style=feature:all|element:geometry|color:0x212121"
+//                         : ""
+//                     }`} // Custom dark/light style for the map
+//                     width="100%"
+//                     height="100%"
+//                     frameBorder="0"
+//                     style={{ border: 0 }}
+//                     allowFullScreen=""
+//                     aria-hidden="false"
+//                     tabIndex="0"
+//                     className="absolute inset-0 group-hover:scale-105 transition-all duration-300"
+//                   />
+//                 </div>
+//               ) : (
+//                 <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+//                   No map available
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Location Details */}
+//             <div className="p-4">
+//               <p
+//                 className={`text-sm mb-2 ${
+//                   selectedMode === "dark" ? "text-gray-300" : "text-gray-600"
+//                 }`}
+//               >
+//                 {store.address}
+//               </p>
+//               <p
+//                 className={`text-sm mb-3 ${
+//                   selectedMode === "dark" ? "text-gray-300" : "text-gray-600"
+//                 }`}
+//               >
+//                 Phone: {store.phone}
+//               </p>
+//               <button
+//                 onClick={(e) => {
+//                   e.preventDefault();
+//                   router.push(`/booking/${store._id}`);
+//                 }}
+//                 className="w-full py-2 px-4 bg-black text-white text-sm font-semibold transition-all duration-300 hover:bg-gray-800"
+//               >
+//                 Book Appointment
+//               </button>
+//             </div>
+//           </Link>
+//         </div>
+//       ))}
+//     </div>
+//   </div>
+// </section>
+
+
+
+// <section className="py-12 text-center">
+//   {/* Banner Text */}
+//   <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
+//   <p className="mt-4">Get 20% off on all tanning products when you book a session today.</p>
+
+//   {/* Banner Image based on light or dark mode */}
+//   <div className="mt-8">
+//     {selectedMode === "dark" ? (
+//       <div className="w-full h-auto relative">
+//         <Image 
+//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
+//           alt="Limited Time Offer - Dark Mode" 
+//           layout="responsive"
+//           width={640}
+//           height={286}
+//         />
+//       </div>
+//     ) : (
+//       <div className="w-full h-auto relative">
+//         <Image 
+//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
+//           alt="Limited Time Offer - Light Mode" 
+//           layout="responsive"
+//           width={640}
+//           height={286}
+//         />
+//       </div>
+//     )}
+//   </div>
+// </section>
+
+
+//     </main>
+//   );
+// }
 
 // "use client";
 
