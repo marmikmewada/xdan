@@ -87,9 +87,44 @@ export default function ProductsPage() {
   const bgColor = selectedMode === "dark" ? "bg-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
   const cardBg = selectedMode === "dark" ? "bg-black" : "bg-white";
+  const BannerSection = ({ title, description, image }) => (
+    <section className="relative h-screen overflow-hidden">
+      <div
+        className="absolute inset-0 transition-opacity duration-1000 ease-out"
+        style={{
+          backgroundImage: `url(${image})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-black bg-opacity-60" />
+      </div>
+      <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-center text-center">
+        <div>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
+            {title}
+          </h2>
+          <p className="text-xl sm:text-2xl md:text-3xl text-gray-200">
+            {description}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
 
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
+      {/* Banner Section */}
+
+      <BannerSection
+        title="Limited Time Offer!"
+        description="Get 20% off on all tanning products when you book a session today."
+        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+      />
+    
+
+
+
       <header className={`${bgColor} shadow`}>
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold">Our Products</h1>
@@ -234,70 +269,69 @@ export default function ProductsPage() {
         </section>
 
         {/* Stores Section */}
-        <section className={`py-12 ${bgColor}`}>
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Stores Locations</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {stores.map((store) => (
-              <div
-                key={store._id}
-                className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
-              >
-                <Link href={`/locations/${store?._id}`}>
-                  {/* Map Section */}
-                  <div className="relative h-48 w-full">
-                    {store.coordinates ? (
-                      <div className="relative h-full w-full">
-                        <iframe
-                          src={`${store.coordinates}${
-                            selectedMode === "dark"
-                              ? "&style=feature:all|element:geometry|color:0x212121"
-                              : ""
-                          }`}
-                          width="100%"
-                          height="100%"
-                          frameBorder="0"
-                          style={{ border: 0 }}
-                          allowFullScreen=""
-                          aria-hidden="false"
-                          tabIndex="0"
-                          className="absolute inset-0 group-hover:scale-105 transition-all duration-300"
-                        />
-                        {/* Tooltip on Hover */}
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black bg-opacity-60 text-white p-4 text-center">
-                          <h3 className="text-lg font-semibold">{store.name}</h3>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                        No map available
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Location Details */}
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{store.name}</h3>
-                    <p className={`text-sm mb-2 ${selectedMode === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                      {store.address}
-                    </p>
-                    <p className={`text-sm mb-3 ${selectedMode === "dark" ? "text-gray-400" : "text-gray-600"}`}>
-                      Phone: {store.phone}
-                    </p>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        router.push(`/booking/${store._id}`);
-                      }}
-                      className={`w-full py-2 px-4 ${selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"} text-sm font-semibold transition-all duration-300 hover:bg-gray-800 hover:text-white`}
-                    >
-                      Book Appointment
-                    </button>
-                  </div>
-                </Link>
+        {/* Stores Section */}
+<section className={`py-12 ${bgColor}`}>
+  <h2 className="text-3xl font-bold mb-6 text-center">Our Stores Locations</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    {stores.map((store, index) => (
+      <div key={store._id} className="w-full">
+        <section className="relative pb-8">
+          {/* Map Section */}
+          <div className="w-full h-[400px]">
+            {store.coordinates ? (
+              <iframe
+                src={`${store.coordinates}${selectedMode === "dark" ? "&style=feature:all|element:geometry|color:0x212121" : ""}`}
+                width="100%"
+                height="100%"
+                frameBorder="0"
+                style={{ border: 0 }}
+                allowFullScreen
+                aria-hidden="false"
+                tabIndex="0"
+              />
+            ) : (
+              <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                No map available
               </div>
-            ))}
+            )}
+          </div>
+
+          {/* Store Details Section - Card Layout */}
+          <div
+            className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${selectedMode === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
+            style={{
+              boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.1)",
+              borderRadius: "10px 10px 0 0",
+            }}
+          >
+            <div className="text-center">
+              <h1 className="text-2xl sm:text-3xl font-semibold mb-2">{store.name}</h1>
+              <p className="text-base sm:text-lg mb-4">{store.address}</p>
+              <p className="text-base sm:text-lg mb-6">{store.phone}</p>
+
+              <button
+                onClick={() => router.push(`/locations/${store._id}`)}
+                className={`px-6 py-3 ${selectedMode === "dark" ? "bg-white text-black hover:bg-gray-200" : "bg-black text-white hover:bg-gray-800"} font-semibold text-lg transition-all duration-300`}
+              >
+                Book Appointment
+              </button>
+            </div>
           </div>
         </section>
+
+        {/* Banner Section */}
+        {index === stores.length - 1 && (
+          <BannerSection
+            title="Limited Time Offer!"
+            description="Get 20% off on all tanning products when you book a session today."
+            image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+          />
+        )}
+      </div>
+    ))}
+  </div>
+</section>
+
       </div>
     </main>
   );

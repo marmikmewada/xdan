@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
+import { X } from 'lucide-react'
 
 import ImageKit from "imagekit";
 
@@ -91,6 +92,14 @@ export default function CreateProductPage() {
             setIsLoading(false);
         }
     };
+
+    const handleRemoveImage = (indexToRemove) => {
+        setFormData(prevData => ({
+            ...prevData,
+            imageUrl: prevData.imageUrl.filter((_, index) => index !== indexToRemove)
+        }))
+    }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -206,13 +215,26 @@ export default function CreateProductPage() {
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     />
                 </div>
-                {formData.imageUrl.length > 0 && (
+                {formData.imageUrl && formData.imageUrl.length > 0 && (
                     <div className="mb-4">
-                        <p className="block text-gray-700 text-sm font-bold mb-2">Uploaded Images:</p>
-                        <div className="grid grid-cols-3 gap-2">
+                        <p className="block text-gray-700 text-sm font-bold mb-2">Current Images:</p>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             {formData.imageUrl.map((url, index) => (
-                                <div key={index} className="relative aspect-w-1 aspect-h-1">
-                                    <Image src={url} alt={`Uploaded image ${index + 1}`} layout="fill" objectFit="cover" />
+                                <div key={index} className="relative h-40 w-full">
+                                    <Image
+                                        src={url}
+                                        alt={`Product image ${index + 1}`}
+                                        fill
+                                        className="rounded object-cover"
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveImage(index)}
+                                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-700"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
                                 </div>
                             ))}
                         </div>

@@ -12,7 +12,8 @@ export async function GET() {
     const { userTable } = dbmodels(mongoose);
 
     // Fetch users with only the basic fields
-    const users = await userTable.find({}, 'name lastName email phone role selectedMode newsletter'); // Only fetch the necessary fields
+    const users = await userTable.find({}, 'name lastName email phone role selectedMode newsletter minutes'); // Only fetch the necessary fields
+    console.log("users",users)
 
     // Structure the data without sensitive or extra fields
     const result = users.map(user => ({
@@ -24,6 +25,7 @@ export async function GET() {
       role: user.role,
       selectedMode: user.selectedMode,
       newsletter: user.newsletter,
+      minutes:user?.minutes
     }));
 
     // Return the user data in the response

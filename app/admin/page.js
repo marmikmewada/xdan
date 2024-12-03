@@ -65,6 +65,7 @@ export default function AdminDashboard() {
     { title: 'Assign Staff', url: '/admin/assignstaff', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 12h-2v1a3 3 0 01-6 0v-1H5m14-5H5m14 0h-2m-2 0h-6a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z" /></DashboardIcon> },
     { title: 'Assign Category', url: '/admin/assigncategory', icon: <AssignCategoryIcon /> },
     { title: 'All Users', url: '/admin/getallusers', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
+    { title: 'Minus minutes', url: '/admin/minus-minutes', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
   ];
 
   return (

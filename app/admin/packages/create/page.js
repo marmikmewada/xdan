@@ -3,6 +3,15 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
+import { X } from 'lucide-react'
+
+import ImageKit from "imagekit";
+
+const imagekit = new ImageKit({
+    publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
+    privateKey: "private_KqUF8hy7OdWsOVnfZt//RA1O9k0=",
+    urlEndpoint: "https://ik.imagekit.io/2o9y0v10p",
+});
 
 export default function CreatePackagePage() {
     const router = useRouter()
@@ -25,28 +34,40 @@ export default function CreatePackagePage() {
     }
 
     const handleImageUpload = async (e) => {
-        const file = e.target.files[0]
-        if (!file) return
+        const files = Array.from(e.target.files);
 
         setIsLoading(true)
         try {
-            const formData = new FormData()
-            formData.append('file', file)
+            const uploadPromises = files.map((file) => {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = async (event) => {
+                        try {
+                            const result = await imagekit.upload({
+                                file: event.target.result,
+                                fileName: file.name,
+                                folder: `dan-studio/products`,
+                            });
+                            if (result.url) {
+                                resolve(result.url);
+                            } else {
+                                reject(new Error("Failed to upload image to ImageKit"));
+                            }
+                        } catch (error) {
+                            reject(error);
+                        }
+                    };
+                    reader.onerror = (error) => reject(error);
+                    reader.readAsDataURL(file);
+                });
+            });
 
-            const response = await fetch('/api/upload', {
-                method: 'POST',
-                body: formData
-            })
-
-            if (!response.ok) {
-                throw new Error('Failed to upload image')
-            }
-
-            const data = await response.json()
-            setFormData(prevData => ({
+            const imageUrls = await Promise.all(uploadPromises);
+            console.log("imageUrls",imageUrls)
+            setFormData((prevData) => ({
                 ...prevData,
-                imageUrl: data.url
-            }))
+                imageUrl: [...prevData.imageUrl, ...imageUrls],
+            }));
         } catch (err) {
             setError(err.message)
         } finally {
@@ -77,6 +98,13 @@ export default function CreatePackagePage() {
             setIsLoading(false)
         }
     }
+    const handleRemoveImage = (indexToRemove) => {
+        setFormData(prevData => ({
+            ...prevData,
+            imageUrl: prevData.imageUrl.filter((_, index) => index !== indexToRemove)
+        }))
+    }
+
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -147,13 +175,34 @@ export default function CreatePackagePage() {
                         id="image"
                         name="image"
                         onChange={handleImageUpload}
+                        multiple
                         className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                         accept="image/*"
                     />
                 </div>
-                {formData.imageUrl && (
+                {formData.imageUrl && formData.imageUrl.length > 0 && (
                     <div className="mb-4">
-                        <Image src={formData.imageUrl} alt="Package image" width={200} height={200} objectFit="cover" />
+                        <p className="block text-gray-700 text-sm font-bold mb-2">Current Images:</p>
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            {formData.imageUrl.map((url, index) => (
+                                <div key={index} className="relative h-40 w-full">
+                                    <Image
+                                        src={url}
+                                        alt={`Product image ${index + 1}`}
+                                        fill
+                                        className="rounded object-cover"
+                                        sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => handleRemoveImage(index)}
+                                        className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full hover:bg-red-700"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 )}
                 {error && <p className="text-red-500 mb-4">{error}</p>}

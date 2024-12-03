@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -40,6 +40,8 @@ export default function Page() {
             fetch(`${baseUrl}/api/category`).then((res) => res.json()), 
           ]);
 
+        console.log("productData", productData?.data);
+        console.log("packageData", packageData?.data);
         setStores(storeData?.data || []);
         setProducts(productData?.data || []);
         setPackages(packageData?.data || []);
@@ -92,11 +94,16 @@ export default function Page() {
     }
   };
 
-  const bgColor = selectedMode === "dark" ? "bg-black" : "bg-white";
-  const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-  const buttonBgColor = selectedMode === "dark" ? "bg-white" : "bg-black";
-  const buttonTextColor = selectedMode === "dark" ? "text-black" : "text-white";
-  const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hover:bg-gray-800";
+  const bgColor = selectedMode === "dark" 
+  ? "bg-gradient-to-b from-black to-gray-900" // Dark gradient
+  : "bg-gradient-to-b from-white to-gray-100"; // Light gradient
+
+const textColor = selectedMode === "dark" ? "text-white" : "text-black";
+const buttonBgColor = selectedMode === "dark" ? "bg-white" : "bg-black";
+const buttonTextColor = selectedMode === "dark" ? "text-black" : "text-white";
+const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hover:bg-gray-800";
+
+
 
   const HeroSection = ({ title, description, image, buttons }) => (
     <section className="relative h-screen overflow-hidden">
@@ -112,10 +119,10 @@ export default function Page() {
       </div>
       <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
         <div className="max-w-2xl">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-white leading-tight">
             {title}
           </h1>
-          <p className="text-lg md:text-xl text-gray-200 mb-8">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8">
             {description}
           </p>
           <div className="flex flex-wrap gap-4">
@@ -123,7 +130,7 @@ export default function Page() {
               <button
                 key={index}
                 onClick={button.onClick}
-                className={`px-6 py-3 ${button.primary ? `${buttonBgColor} ${buttonTextColor}` : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'} font-semibold text-lg transition-all duration-300 ${buttonHoverBgColor}`}
+                className={`px-6 py-3 ${button.primary ? `${buttonBgColor} ${buttonTextColor}` : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'} font-semibold text-lg sm:text-xl transition-all duration-300 ${buttonHoverBgColor}`}
               >
                 {button.text}
               </button>
@@ -148,53 +155,16 @@ export default function Page() {
       </div>
       <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-center text-center">
         <div>
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
             {title}
           </h2>
-          <p className="text-xl md:text-2xl text-gray-200">
+          <p className="text-xl sm:text-2xl md:text-3xl text-gray-200">
             {description}
           </p>
         </div>
       </div>
     </section>
   );
-
-  const CategoriesSection = () => {
-    const scrollLeft = () => {
-      if (categoriesRef.current) {
-        categoriesRef.current.scrollBy({ left: -200, behavior: 'smooth' });
-      }
-    };
-
-    const scrollRight = () => {
-      if (categoriesRef.current) {
-        categoriesRef.current.scrollBy({ left: 200, behavior: 'smooth' });
-      }
-    };
-
-    return (
-      <section className={`py-5 ${bgColor}`}>
-        <div className="max-w-7xl mx-auto px-4">
-          <h2 className={`text-3xl font-bold mb-6 text-center ${textColor}`}>Categories</h2>
-          <div className="relative">
-            <button onClick={scrollLeft} className={`absolute left-0 top-1/2 transform -translate-y-1/2 z-10 ${buttonBgColor} ${buttonTextColor} p-2 rounded-full ${buttonHoverBgColor}`}>
-              &lt;
-            </button>
-            <div ref={categoriesRef} className="flex overflow-x-auto space-x-4 py-4 no-scrollbar">
-              {categories.map((category) => (
-                <Link key={category._id} href={`/categories/${category._id}`} className={`flex-shrink-0 px-4 py-2 rounded-full ${buttonBgColor} ${buttonTextColor} ${buttonHoverBgColor} transition-all duration-300`}>
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-            <button onClick={scrollRight} className={`absolute right-0 top-1/2 transform -translate-y-1/2 z-10 ${buttonBgColor} ${buttonTextColor} p-2 rounded-full ${buttonHoverBgColor}`}>
-              &gt;
-            </button>
-          </div>
-        </div>
-      </section>
-    );
-  };
 
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
@@ -209,34 +179,27 @@ export default function Page() {
         ]}
       />
 
-      {/* Categories Section */}
-      <CategoriesSection />
-
       {/* Products Section */}
       {products.map((product, index) => (
         <div key={product._id}>
           <HeroSection
             title={product.name}
-            description={product.description}
-            image={product.imageUrl && product.imageUrl[0] ? product.imageUrl[0] : heroImages[0]}
+            description={product.description + ' ' + product.description}
+            image={product.imageUrl && product.imageUrl.length > 0 ? product.imageUrl[0] : heroImages[0]}
             buttons={[
               { 
                 text: loadingItemId === product._id ? "Adding..." : "Add to Cart", 
-                onClick: (e) => {
-                  e.preventDefault();
-                  addToCart(product._id);
-                },
-                primary: true
+                onClick: (e) => { e.preventDefault(); addToCart(product._id); },
+                primary: true,
+                className: "cart-button"
               },
               { 
                 text: `£${product.price.toFixed(2)}`, 
-                onClick: (e) => {
-                  e.preventDefault();
-                  addToCart(product._id);
-                }, 
+                onClick: (e) => { e.preventDefault(); addToCart(product._id); },
                 primary: false 
               },
             ]}
+            images={product.imageUrl}
           />
           {index === products.length - 1 && (
             <BannerSection
@@ -253,23 +216,17 @@ export default function Page() {
         <div key={pkg._id}>
           <HeroSection
             title={pkg.name}
-            description={`${pkg.description} - ${pkg.minutes} minutes`}
+            description={`${pkg.minutes} minutes`}
             image={pkg.imageUrl && pkg.imageUrl[0] ? pkg.imageUrl[0] : heroImages[1]}
             buttons={[
               { 
                 text: loadingItemId === pkg._id ? "Adding..." : "Add to Cart", 
-                onClick: (e) => {
-                  e.preventDefault();
-                  addToCart(pkg._id);
-                },
+                onClick: (e) => { e.preventDefault(); addToCart(pkg._id); },
                 primary: true
               },
               { 
                 text: `£${pkg.price.toFixed(2)}`, 
-                onClick: (e) => {
-                  e.preventDefault();
-                  addToCart(pkg._id);
-                }, 
+                onClick: (e) => { e.preventDefault(); addToCart(pkg._id); },
                 primary: false 
               },
             ]}
@@ -286,56 +243,65 @@ export default function Page() {
 
       {/* Locations Section */}
       {stores.map((store, index) => (
-        <div key={store._id}>
-          <section className="relative h-screen overflow-hidden">
-            <div className="absolute inset-0">
-              {store.coordinates ? (
-                <iframe
-                  src={`${store.coordinates}${
-                    selectedMode === "dark"
-                      ? "&style=feature:all|element:geometry|color:0x212121"
-                      : ""
-                  }`}
-                  width="100%"
-                  height="100%"
-                  frameBorder="0"
-                  style={{ border: 0 }}
-                  allowFullScreen=""
-                  aria-hidden="false"
-                  tabIndex="0"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                  No map available
-                </div>
-              )}
-            </div>
-            <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
-              <div className="max-w-2xl bg-black bg-opacity-70 p-8 rounded-lg">
-                <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
-                  {store.address}
-                </h1>
-                <p className="text-lg md:text-xl text-gray-200 mb-8">
-                  Phone: {store.phone}
-                </p>
-                <button
-                  onClick={() => router.push(`/booking/${store._id}`)}
-                  className={`px-6 py-3 ${buttonBgColor} ${buttonTextColor} font-semibold text-lg transition-all duration-300 ${buttonHoverBgColor}`}
-                >
-                  Book Appointment
-                </button>
-              </div>
-            </div>
-          </section>
-          {index === stores.length - 1 && (
-            <BannerSection
-              title="Limited Time Offer!"
-              description="Get 20% off on all tanning products when you book a session today."
-              image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-            />
-          )}
+  <div key={store._id} className="w-full">
+    <section className="relative pb-8">
+      {/* Map Section */}
+      <div className="w-full h-[400px]">
+        {store.coordinates ? (
+          <iframe
+            src={`${store.coordinates}${selectedMode === "dark" ? "&style=feature:all|element:geometry|color:0x212121" : ""}`}
+            width="100%"
+            height="100%"
+            frameBorder="0"
+            style={{ border: 0 }}
+            allowFullScreen
+            aria-hidden="false"
+            tabIndex="0"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+            No map available
+          </div>
+        )}
+      </div>
+
+      {/* Store Details Section - Card Layout */}
+      <div
+        className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${
+          selectedMode === "dark" ? "bg-black text-white" : "bg-white text-black"
+        }`}
+        style={{
+          boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.1)",
+          borderRadius: "10px 10px 0 0",
+        }}
+      >
+        <div className="text-center">
+          <h1 className="text-2xl sm:text-3xl font-semibold mb-2">{store.name}</h1>
+          <p className="text-base sm:text-lg mb-4">{store.address}</p>
+          <p className="text-base sm:text-lg mb-6">{store.phone}</p>
+
+          <button
+            onClick={() => router.push(`/locations/${store._id}`)}
+            className={`px-6 py-3 ${selectedMode === "dark" ? "bg-white text-black hover:bg-gray-200" : "bg-black text-white hover:bg-gray-800"} font-semibold text-lg transition-all duration-300`}
+          >
+            Book Appointment
+          </button>
         </div>
-      ))}
+      </div>
+    </section>
+
+    {/* Banner Section */}
+    {index === stores.length - 1 && (
+      <BannerSection
+        title="Limited Time Offer!"
+        description="Get 20% off on all tanning products when you book a session today."
+        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+      />
+    )}
+  </div>
+))}
+
+
     </main>
   );
 }
