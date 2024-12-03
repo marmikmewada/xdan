@@ -31,6 +31,7 @@ export default function Nav({ server_session_data }) {
 
         if (data.success && data.data?.selectedMode) {
           setSelectedMode(data.data.selectedMode);
+          console.log("from nav", selectedMode)
         } else {
           console.error(
             "Failed to fetch mode:",
@@ -47,6 +48,7 @@ export default function Nav({ server_session_data }) {
   useEffect(() => {
     if (selectedMode === "dark") {
       document.documentElement.classList.add("dark");
+
     } else {
       document.documentElement.classList.remove("dark");
     }
