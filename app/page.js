@@ -185,7 +185,7 @@ export default function Page() {
           },
           {
             text: "View Products",
-            onClick: () => router.push("/services"),
+            onClick: () => router.push("/products"),
             primary: false,
           },
         ]}
