@@ -3,6 +3,8 @@
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import useStore from "@/app/store/useStore";  // Import useStore to get selectedMode
+// Import BannerSection if needed
+// import BannerSection from './BannerSection';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -96,7 +98,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <strong className={textColor}>What are the benefits of tanning?</strong>
-                <p className={textColor}>Tanning can help improve your skin's appearance by giving it a healthy, sun-kissed glow.</p>
+                <p className={textColor}>Tanning can help improve your skin&apos;s appearance by giving it a healthy, sun-kissed glow.</p>
               </li>
               <li>
                 <strong className={textColor}>How often should I tan?</strong>
