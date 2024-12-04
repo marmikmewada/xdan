@@ -276,13 +276,7 @@ export default function PackagePage() {
     </section>
 
     {/* Banner Section - Only on the last store */}
-    {index === stores.length - 1 && (
-      <BannerSection
-        title="Limited Time Offer!"
-        description="Get 20% off on all tanning products when you book a session today."
-        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-      />
-    )}
+    
   </div>
 ))}
       </main>
