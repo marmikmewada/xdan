@@ -267,7 +267,8 @@ export default function ProductsPage() {
         </section>
       </div>
       {/* Locations Section */}
-      {stores.map((store, index) => (
+       {/* Locations Section */}
+       {stores.map((store, index) => (
   <div key={store._id} className="w-full mb-8">
     <section className="relative pb-8">
       {/* Map Section - Increase map size and add shadow */}

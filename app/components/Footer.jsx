@@ -1,7 +1,7 @@
 "use client";
 
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube, FaEnvelope, FaPhoneAlt } from 'react-icons/fa';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useStore from "@/app/store/useStore";  // Import useStore to get selectedMode
 
 export default function Footer() {

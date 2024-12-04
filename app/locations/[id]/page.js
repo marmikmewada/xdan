@@ -88,10 +88,17 @@ export default function ViewStorePage() {
     return <div className="flex justify-center items-center h-screen text-lg text-gray-500">Store not found</div>;
   }
 
+  // Dynamic styling for dark and light modes
+  const gradientClass = selectedMode === 'dark' ? 'bg-gradient-to-r from-gray-800 to-black' : 'bg-gradient-to-r from-white to-gray-200';
+  const textColor = selectedMode === 'dark' ? 'text-white' : 'text-black';
+  const inputBg = selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800';
+  const buttonBg = selectedMode === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-white text-gray-800 hover:bg-gray-200';
+  const linkColor = selectedMode === 'dark' ? 'text-blue-400 hover:text-blue-500' : 'text-blue-500 hover:text-blue-700';
+
   return (
-    <div className={`container mx-auto px-6 py-10 ${selectedMode === 'dark' ? 'bg-black text-white' : 'bg-white text-black'}`}>
+    <div className={`container mx-auto px-6 py-10 ${gradientClass} ${textColor}`}>
       <div className="mb-8">
-        <Link href="/admin/locations" className="text-blue-500 hover:text-blue-700 font-semibold">
+        <Link href="/admin/locations" className={`font-semibold ${linkColor}`}>
           &larr; Back to Stores
         </Link>
       </div>
