@@ -1,12 +1,11 @@
 "use client";
-
 import { useSession, signOut } from "next-auth/react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import useStore from "../store/useStore";
 import { SunIcon, MoonIcon, MenuIcon, XIcon } from "lucide-react";
-import { FaShoppingCart } from "react-icons/fa"; // Import cart icon from react-icons
+import { FaShoppingCart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 export default function Nav({ server_session_data }) {
@@ -31,7 +30,6 @@ export default function Nav({ server_session_data }) {
 
         if (data.success && data.data?.selectedMode) {
           setSelectedMode(data.data.selectedMode);
-          console.log("from nav", selectedMode)
         } else {
           console.error(
             "Failed to fetch mode:",
@@ -45,10 +43,10 @@ export default function Nav({ server_session_data }) {
 
     fetchMode();
   }, [setSelectedMode]);
+
   useEffect(() => {
     if (selectedMode === "dark") {
       document.documentElement.classList.add("dark");
-
     } else {
       document.documentElement.classList.remove("dark");
     }
@@ -123,23 +121,33 @@ export default function Nav({ server_session_data }) {
 
   const isLoginPage = pathname === "/login";
 
-  const navLinkClass = `text-sm font-medium transition-colors duration-300 ease-in-out transform ${
+  const navLinkClass = `text-lg font-semibold transition-colors duration-300 ease-in-out transform ${
     selectedMode === "dark"
-      ? "text-white hover:text-gray-300"
-      : "text-black hover:text-gray-700"
+      ? "text-white hover:text-gray-300 hover:underline"
+      : "text-black hover:text-gray-700 hover:underline"
   }`;
+
+  const closeMenu = () => setIsMenuOpen(false); // New function to close menu on link click
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 ${
-        selectedMode === "dark" ? "bg-black text-white" : "bg-white text-black"
-      } shadow-lg transition-colors duration-300 ease-in-out`}
+        selectedMode === "dark"
+          ? "bg-gradient-to-b from-gray-800 to-black"
+          : "bg-gradient-to-b from-white to-gray-200"
+      } text-white shadow-lg transition-colors duration-300 ease-in-out`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold">MySite</span>
+              <span
+                className={`text-3xl font-extrabold ${
+                  selectedMode === "dark" ? "text-white" : "text-black"
+                }`}
+              >
+                MySite
+              </span>
             </Link>
           </div>
 
@@ -166,9 +174,9 @@ export default function Nav({ server_session_data }) {
 
             {session && (
               <Link href="/cart" className={`${navLinkClass} relative`}>
-                <FaShoppingCart className="w-5 h-5" />
+                <FaShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                     {cartCount}
                   </span>
                 )}
@@ -211,16 +219,15 @@ export default function Nav({ server_session_data }) {
               }`}
             >
               {selectedMode === "dark" ? (
-                <MoonIcon className="w-5 h-5 text-white" />
+                <MoonIcon className="w-6 h-6 text-white" />
               ) : (
-                <SunIcon className="w-5 h-5 text-black" />
+                <SunIcon className="w-6 h-6 text-black" />
               )}
             </button>
           </div>
 
-          {/* Cart Icon for Mobile */}
+          {/* Mobile Menu */}
           <div className="flex items-center sm:hidden">
-            {/* Light/Dark Mode Toggle for Mobile */}
             <button
               onClick={toggleMode}
               className={`p-2 rounded-full focus:outline-none transition-colors duration-300 ease-in-out mr-2 ${
@@ -230,16 +237,19 @@ export default function Nav({ server_session_data }) {
               }`}
             >
               {selectedMode === "dark" ? (
-                <MoonIcon className="w-5 h-5 text-white" />
+                <MoonIcon className="w-6 h-6 text-white" />
               ) : (
-                <SunIcon className="w-5 h-5 text-black" />
+                <SunIcon className="w-6 h-6 text-black" />
               )}
             </button>
 
-            <Link  href="/cart" className="relative  text-gray-800 dark:text-white">
+            <Link
+              href="/cart"
+              className="relative text-gray-800 dark:text-white"
+            >
               <FaShoppingCart className="w-6 h-6 text-gray-800 dark:text-white" />
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -255,9 +265,9 @@ export default function Nav({ server_session_data }) {
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
-                <XIcon className="block h-6 w-6" aria-hidden="true" />
+                <XIcon className="block h-8 w-8" aria-hidden="true" />
               ) : (
-                <MenuIcon className="block h-6 w-6" aria-hidden="true" />
+                <MenuIcon className="block h-8 w-8" aria-hidden="true" />
               )}
             </button>
           </div>
@@ -265,96 +275,113 @@ export default function Nav({ server_session_data }) {
       </div>
 
       {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="sm:hidden">
-          <div
-            className={`px-2 pt-2 pb-3 space-y-1 ${
-              selectedMode === "dark" ? "bg-black" : "bg-white"
-            }`}
-          >
-            <Link
-              href="/"
-              className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-            >
-              Home
-            </Link>
-            <Link
-              href="/products"
-              className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-            >
-              Products
-            </Link>
-            <Link
-              href="/packages"
-              className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-            >
-              Packages
-            </Link>
-            <Link
-              href="/locations"
-              className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-            >
-              Locations
-            </Link>
-            <Link
-              href="/about"
-              className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-            >
-              About
-            </Link>
-            <Link
-              href="/reviews"
-              className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-            >
-              Customer Reviews
-            </Link>
-           
-            {session && session.user.role === "staff" && (
-              <Link
-                href={`/staff/${session.user.id}`}
-                className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-              >
-                Staff Panel
-              </Link>
-            )}
-            {session && session.user.role === "admin" && (
-              <Link
-                href="/admin"
-                className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-              >
-                Admin Panel
-              </Link>
-            )}
-            {!session && !isLoginPage && (
-              <Link
-                href="/login"
-                className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-              >
-                Login
-              </Link>
-            )}
-            {session &&
-              !isLoginPage &&
-              session.user.role !== "staff" &&
-              session.user.role !== "admin" && (
-                <Link
-                  href="/profile"
-                  className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-                >
-                  {session.user.name}
-                </Link>
-              )}
-            {session && !isLoginPage && (
-              <button
-                onClick={handleLogout}
-                className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium w-full text-left`}
-              >
-                Logout
-              </button>
-            )}
-          </div>
-        </div>
+        {/* Mobile Menu */}
+{isMenuOpen && (
+  <div className="sm:hidden">
+    <div
+      className={`px-2 pt-2 pb-3 space-y-1 ${
+        selectedMode === "dark"
+          ? "bg-gradient-to-b from-gray-800 to-black" // Gradient for dark mode
+          : "bg-gradient-to-b from-white to-gray-200" // Gradient for light mode
+      }`}
+    >
+      <Link
+        href="/"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        Home
+      </Link>
+      <Link
+        href="/products"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        Products
+      </Link>
+      <Link
+        href="/packages"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        Packages
+      </Link>
+      <Link
+        href="/locations"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        Locations
+      </Link>
+      <Link
+        href="/about"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        About
+      </Link>
+      <Link
+        href="/reviews"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        Customer Reviews
+      </Link>
+
+      {session && session.user.role === "staff" && (
+        <Link
+          href={`/staff/${session.user.id}`}
+          onClick={closeMenu}
+          className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+        >
+          Staff Panel
+        </Link>
       )}
+      {session && session.user.role === "admin" && (
+        <Link
+          href="/admin"
+          onClick={closeMenu}
+          className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+        >
+          Admin Panel
+        </Link>
+      )}
+      {!session && !isLoginPage && (
+        <Link
+          href="/login"
+          onClick={closeMenu}
+          className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+        >
+          Login
+        </Link>
+      )}
+      {session &&
+        !isLoginPage &&
+        session.user.role !== "staff" &&
+        session.user.role !== "admin" && (
+          <Link
+            href="/profile"
+            onClick={closeMenu}
+            className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+          >
+            {session.user.name}
+          </Link>
+        )}
+      {session && !isLoginPage && (
+        <button
+          onClick={() => {
+            handleLogout();
+            closeMenu(); // Close the menu after logging out
+          }}
+          className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium w-full text-left`}
+        >
+          Logout
+        </button>
+      )}
+    </div>
+  </div>
+)}
+
     </nav>
   );
 }

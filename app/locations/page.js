@@ -123,8 +123,7 @@ export default function LocationsPage() {
 
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
-
-<BannerSection
+      <BannerSection
         title="Limited Time Offer!"
         description="Get 20% off on all tanning products when you book a session today."
         image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
@@ -141,7 +140,11 @@ export default function LocationsPage() {
           <input
             type="text"
             placeholder="Search locations, products, or packages..."
-            className={`w-full p-2 border ${selectedMode === "dark" ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-white"} rounded-md`}
+            className={`w-full p-2 border ${
+              selectedMode === "dark"
+                ? "border-gray-700 bg-gray-800"
+                : "border-gray-300 bg-white"
+            } rounded-md`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -149,74 +152,93 @@ export default function LocationsPage() {
 
         {/* Locations Section */}
         {/* Stores Section */}
-<section className={`py-12 ${bgColor}`}>
-  <h2 className="text-3xl font-bold mb-6 text-center">Our Stores Locations</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {stores.map((store, index) => (
-      <div key={store._id} className="w-full">
-        <section className="relative pb-8">
-          {/* Map Section */}
-          <div className="w-full h-[400px]">
-            {store.coordinates ? (
-              <iframe
-                src={`${store.coordinates}${selectedMode === "dark" ? "&style=feature:all|element:geometry|color:0x212121" : ""}`}
-                width="100%"
-                height="100%"
-                frameBorder="0"
-                style={{ border: 0 }}
-                allowFullScreen
-                aria-hidden="false"
-                tabIndex="0"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                No map available
+        <section className={`py-12 ${bgColor}`}>
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            Our Stores Locations
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {stores.map((store, index) => (
+              <div key={store._id} className="w-full">
+                <section className="relative pb-8">
+                  {/* Map Section */}
+                  <div className="w-full h-[400px]">
+                    {store.coordinates ? (
+                      <iframe
+                        src={`${store.coordinates}${
+                          selectedMode === "dark"
+                            ? "&style=feature:all|element:geometry|color:0x212121"
+                            : ""
+                        }`}
+                        width="100%"
+                        height="100%"
+                        frameBorder="0"
+                        style={{ border: 0 }}
+                        allowFullScreen
+                        aria-hidden="false"
+                        tabIndex="0"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                        No map available
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Store Details Section - Card Layout */}
+                  <div
+                    className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${
+                      selectedMode === "dark"
+                        ? "bg-black text-white"
+                        : "bg-white text-black"
+                    }`}
+                    style={{
+                      boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.1)",
+                      borderRadius: "10px 10px 0 0",
+                    }}
+                  >
+                    <div className="text-center">
+                      <h1 className="text-2xl sm:text-3xl font-semibold mb-2">
+                        {store.name}
+                      </h1>
+                      <p className="text-base sm:text-lg mb-4">
+                        {store.address}
+                      </p>
+                      <p className="text-base sm:text-lg mb-6">{store.phone}</p>
+
+                      <button
+                        onClick={() => router.push(`/locations/${store._id}`)}
+                        className={`px-6 py-3 ${
+                          selectedMode === "dark"
+                            ? "bg-white text-black hover:bg-gray-200"
+                            : "bg-black text-white hover:bg-gray-800"
+                        } font-semibold text-lg transition-all duration-300`}
+                      >
+                        Book Appointment
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
+                
+               
               </div>
-            )}
+            ))}
+            
           </div>
-
-          {/* Store Details Section - Card Layout */}
-          <div
-            className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${selectedMode === "dark" ? "bg-black text-white" : "bg-white text-black"}`}
-            style={{
-              boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.1)",
-              borderRadius: "10px 10px 0 0",
-            }}
-          >
-            <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl font-semibold mb-2">{store.name}</h1>
-              <p className="text-base sm:text-lg mb-4">{store.address}</p>
-              <p className="text-base sm:text-lg mb-6">{store.phone}</p>
-
-              <button
-                onClick={() => router.push(`/locations/${store._id}`)}
-                className={`px-6 py-3 ${selectedMode === "dark" ? "bg-white text-black hover:bg-gray-200" : "bg-black text-white hover:bg-gray-800"} font-semibold text-lg transition-all duration-300`}
-              >
-                Book Appointment
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Banner Section */}
-        {index === stores.length - 1 && (
+          {/* Banner Section */}
+                
           <BannerSection
-            title="Limited Time Offer!"
-            description="Get 20% off on all tanning products when you book a session today."
-            image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-          />
-        )}
-      </div>
-    ))}
-  </div>
-</section>
-
-
-        
+                    title="Limited Time Offer!"
+                    description="Get 20% off on all tanning products when you book a session today."
+                    image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+                  />
+        </section>
 
         {/* Products Section */}
         <section className={`py-12 ${bgColor}`}>
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Tanning Products</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            Our Tanning Products
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredProducts.map((product) => (
               <div
@@ -242,11 +264,21 @@ export default function LocationsPage() {
 
                   {/* Product Details */}
                   <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                    <p className={`text-sm mb-3 ${selectedMode === "dark" ? "text-gray-400" : "text-gray-600"} group-hover:text-gray-800 transition-all duration-300`}>
+                    <h3 className="text-lg font-semibold mb-2">
+                      {product.name}
+                    </h3>
+                    <p
+                      className={`text-sm mb-3 ${
+                        selectedMode === "dark"
+                          ? "text-gray-400"
+                          : "text-gray-600"
+                      } group-hover:text-gray-800 transition-all duration-300`}
+                    >
                       {product.description.substring(0, 100)}...
                     </p>
-                    <p className="text-xl font-bold mb-3">£{product.price.toFixed(2)}</p>
+                    <p className="text-xl font-bold mb-3">
+                      £{product.price.toFixed(2)}
+                    </p>
 
                     {/* Add to Cart Button */}
                     <button
@@ -258,10 +290,16 @@ export default function LocationsPage() {
                       className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
                         loadingItemId === product._id
                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                          : `${selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"} hover:bg-gray-800 hover:text-white`
+                          : `${
+                              selectedMode === "dark"
+                                ? "bg-white text-black"
+                                : "bg-black text-white"
+                            } hover:bg-gray-800 hover:text-white`
                       }`}
                     >
-                      {loadingItemId === product._id ? "Adding..." : "Add to Cart"}
+                      {loadingItemId === product._id
+                        ? "Adding..."
+                        : "Add to Cart"}
                     </button>
                   </div>
                 </Link>
@@ -272,7 +310,9 @@ export default function LocationsPage() {
 
         {/* Packages Section */}
         <section className={`py-12 ${bgColor}`}>
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Premium Packages</h2>
+          <h2 className="text-3xl font-bold mb-6 text-center">
+            Our Premium Packages
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPackages.map((pkg) => (
               <div
@@ -299,11 +339,21 @@ export default function LocationsPage() {
                   {/* Package Details */}
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mb-2">{pkg.name}</h3>
-                    <p className={`text-sm mb-3 ${selectedMode === "dark" ? "text-gray-400" : "text-gray-600"} group-hover:text-gray-800 transition-all duration-300`}>
+                    <p
+                      className={`text-sm mb-3 ${
+                        selectedMode === "dark"
+                          ? "text-gray-400"
+                          : "text-gray-600"
+                      } group-hover:text-gray-800 transition-all duration-300`}
+                    >
                       {pkg.description.substring(0, 100)}...
                     </p>
-                    <p className="text-lg font-semibold mb-2">{pkg.minutes} minutes</p>
-                    <p className="text-xl font-bold mb-3">£{pkg.price.toFixed(2)}</p>
+                    <p className="text-lg font-semibold mb-2">
+                      {pkg.minutes} minutes
+                    </p>
+                    <p className="text-xl font-bold mb-3">
+                      £{pkg.price.toFixed(2)}
+                    </p>
 
                     {/* Add to Cart Button */}
                     <button
@@ -315,7 +365,11 @@ export default function LocationsPage() {
                       className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
                         loadingItemId === pkg._id
                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                          : `${selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"} hover:bg-gray-800 hover:text-white`
+                          : `${
+                              selectedMode === "dark"
+                                ? "bg-white text-black"
+                                : "bg-black text-white"
+                            } hover:bg-gray-800 hover:text-white`
                       }`}
                     >
                       {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
@@ -330,10 +384,6 @@ export default function LocationsPage() {
     </main>
   );
 }
-
-
-
-
 
 // "use client";
 
@@ -390,7 +440,7 @@ export default function LocationsPage() {
 //   if (loading) {
 //     return <div className="text-center py-20">Loading...</div>;
 //   }
-  
+
 //   const addToCart = async (itemId) => {
 //     if (!session) {
 //       router.push("/login");

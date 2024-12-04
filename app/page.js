@@ -243,13 +243,15 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 
       {/* Locations Section */}
       {stores.map((store, index) => (
-  <div key={store._id} className="w-full">
+  <div key={store._id} className="w-full mb-8">
     <section className="relative pb-8">
-      {/* Map Section */}
-      <div className="w-full h-[400px]">
+      {/* Map Section - Increase map size and add shadow */}
+      <div className="w-full h-[500px] rounded-lg shadow-lg overflow-hidden">
         {store.coordinates ? (
           <iframe
-            src={`${store.coordinates}${selectedMode === "dark" ? "&style=feature:all|element:geometry|color:0x212121" : ""}`}
+            src={`${store.coordinates}${selectedMode === "dark" 
+              ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off" 
+              : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"}`}
             width="100%"
             height="100%"
             frameBorder="0"
@@ -267,22 +269,28 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 
       {/* Store Details Section - Card Layout */}
       <div
-        className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${
-          selectedMode === "dark" ? "bg-black text-white" : "bg-white text-black"
-        }`}
+        className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white" : "bg-gradient-to-b from-white to-gray-200 text-black"}`}
         style={{
-          boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.1)",
-          borderRadius: "10px 10px 0 0",
+          boxShadow: "0px -2px 20px rgba(0, 0, 0, 0.1)", // Soft shadow for the card
+          borderRadius: "20px 20px 0 0", // More rounded corners
         }}
       >
-        <div className="text-center">
-          <h1 className="text-2xl sm:text-3xl font-semibold mb-2">{store.name}</h1>
-          <p className="text-base sm:text-lg mb-4">{store.address}</p>
-          <p className="text-base sm:text-lg mb-6">{store.phone}</p>
+        <div className="text-center space-y-4">
+          {/* Store Name (larger, bold) */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
 
+          {/* Store Address and Phone (smaller, softer colors) */}
+          <p className="text-sm sm:text-base text-gray-700">{store.address}</p>
+          <p className="text-sm sm:text-base text-gray-700">{store.phone}</p>
+
+          {/* Button with hover and border animation */}
           <button
             onClick={() => router.push(`/locations/${store._id}`)}
-            className={`px-6 py-3 ${selectedMode === "dark" ? "bg-white text-black hover:bg-gray-200" : "bg-black text-white hover:bg-gray-800"} font-semibold text-lg transition-all duration-300`}
+            className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${selectedMode === "dark" ? "bg-transparent border-white text-white hover:bg-white hover:text-black" : "bg-transparent border-black text-black hover:bg-black hover:text-white"}`}
+            style={{
+              padding: "12px 24px",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
+            }}
           >
             Book Appointment
           </button>
@@ -290,7 +298,7 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
       </div>
     </section>
 
-    {/* Banner Section */}
+    {/* Banner Section - Only on the last store */}
     {index === stores.length - 1 && (
       <BannerSection
         title="Limited Time Offer!"
@@ -300,6 +308,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
     )}
   </div>
 ))}
+
+
+
 
 
     </main>

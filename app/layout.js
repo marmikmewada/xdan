@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { SessionProvider } from "next-auth/react";
 import Nav from "./components/Nav";
+import Footer from "./components/Footer";
 import {auth } from "@/auth"
 
 const geistSans = localFont({
@@ -31,7 +32,7 @@ export default async function RootLayout({ children }) {
         <SessionProvider>
           <Nav server_session_data={session}></Nav>
         {children}
-
+          <Footer/>
         </SessionProvider>
        
       </body>
