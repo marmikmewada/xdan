@@ -11,7 +11,7 @@ export default function ProductPage() {
   const { data: session } = useSession();
   const router = useRouter();
   const { cartCount, setCartCount } = useStore();
-  const { selectedMode } = useStore(); // default mode is 'light'
+  const { selectedMode } = useStore();
 
   const [product, setProduct] = useState(null);
   const [relatedPackages, setRelatedPackages] = useState([]);
@@ -49,7 +49,6 @@ export default function ProductPage() {
 
     fetchData();
 
-    // Scroll to top when component mounts
     window.scrollTo(0, 0);
   }, [id]);
 
@@ -85,6 +84,10 @@ export default function ProductPage() {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 
+  const bgColor = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
+  const textColor = selectedMode === "dark" ? "text-white" : "text-black";
+  const cardBg = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
+
   const BannerSection = ({ title, description, image }) => (
     <section className="relative h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
       <div
@@ -111,9 +114,9 @@ export default function ProductPage() {
   );
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className={`min-h-screen ${bgColor} ${textColor}`}>
       <main>
-        <section className="bg-black">
+        <section className={bgColor}>
           <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               {/* Product Images Gallery */}
@@ -129,7 +132,7 @@ export default function ProductPage() {
                       className="transition-transform transform hover:scale-105"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full bg-gray-800 text-gray-500">
+                    <div className={`flex items-center justify-center h-full ${selectedMode === "dark" ? "bg-gray-800" : "bg-gray-200"} text-gray-500`}>
                       No image available
                     </div>
                   )}
@@ -157,16 +160,19 @@ export default function ProductPage() {
 
               {/* Product Details */}
               <div className="flex flex-col justify-start">
-                <h1 className="text-3xl font-extrabold text-white sm:text-4xl animate__animated animate__fadeIn">{product.name}</h1>
-                <p className="mt-4 text-xl text-gray-400 animate__animated animate__fadeIn animate__delay-1s">{product.description}</p>
-                <p className="mt-6 text-3xl font-bold text-white">£{product.price.toFixed(2)}</p>
+                <h1 className={`text-3xl font-extrabold ${textColor} sm:text-4xl animate__animated animate__fadeIn`}>{product.name}</h1>
+                <p className={`mt-4 text-xl ${selectedMode === "dark" ? "text-gray-400" : "text-gray-600"} animate__animated animate__fadeIn animate__delay-1s`}>{product.description}</p>
+                <p className={`mt-6 text-3xl font-bold ${textColor}`}>£{product.price.toFixed(2)}</p>
                 <button
                   onClick={() => addToCart(product._id)}
                   disabled={loadingItemId === product._id}
-                  className={`mt-8 w-full py-3 px-8 font-semibold text-center transition-all duration-300 ${loadingItemId === product._id
-                    ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                    : "bg-white text-black hover:bg-gray-300 transform hover:scale-105"
-                    }`}
+                  className={`mt-8 w-full py-3 px-8 font-semibold text-center transition-all duration-300 ${
+                    loadingItemId === product._id
+                      ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                      : selectedMode === "dark"
+                      ? "bg-white text-black hover:bg-gray-300"
+                      : "bg-black text-white hover:bg-gray-800"
+                  } transform hover:scale-105`}
                 >
                   {loadingItemId === product._id ? "Adding..." : "Add to Cart"}
                 </button>
@@ -176,140 +182,138 @@ export default function ProductPage() {
         </section>
 
         {/* Related Packages Section */}
-<section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-  <h2 className="text-2xl font-extrabold text-white mb-6 animate__animated animate__fadeIn">Related Packages</h2>
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-    {relatedPackages.slice(0, 3).map((pkg) => (
-      <div
-        key={pkg._id}
-        className={`relative overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${
-          selectedMode === "dark"
-            ? "bg-gradient-to-b from-gray-800 to-black"
-            : "bg-gradient-to-b from-white to-gray-200"
-        }`}
-      >
-        <Link href={`/packages/${pkg._id}`} className="absolute inset-0 z-10">
-          <span className="sr-only">View details for {pkg.name}</span>
-        </Link>
-        <div className="relative">
-          <div className="relative w-full h-48">
-            {pkg.imageUrl && pkg.imageUrl[0] ? (
-              <Image
-                src={pkg.imageUrl[0]}
-                alt={pkg.name}
-                layout="fill"
-                objectFit="cover"
-                className="transition-transform transform hover:scale-105"
-              />
-            ) : (
-              <div className="flex items-center justify-center h-full bg-gray-800 text-gray-500">
-                No image
+        <section className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <h2 className={`text-2xl font-extrabold ${textColor} mb-6 animate__animated animate__fadeIn`}>Related Packages</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {relatedPackages.slice(0, 3).map((pkg) => (
+              <div
+                key={pkg._id}
+                className={`relative overflow-hidden shadow-lg transition-all duration-300 hover:shadow-2xl ${cardBg}`}
+              >
+                <Link href={`/packages/${pkg._id}`} className="absolute inset-0 z-10">
+                  <span className="sr-only">View details for {pkg.name}</span>
+                </Link>
+                <div className="relative">
+                  <div className="relative w-full h-48">
+                    {pkg.imageUrl && pkg.imageUrl[0] ? (
+                      <Image
+                        src={pkg.imageUrl[0]}
+                        alt={pkg.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform transform hover:scale-105"
+                      />
+                    ) : (
+                      <div className={`flex items-center justify-center h-full ${selectedMode === "dark" ? "bg-gray-800" : "bg-gray-200"} text-gray-500`}>
+                        No image
+                      </div>
+                    )}
+                  </div>
+                  <div className="p-6">
+                    <h3 className={`text-xl font-semibold mb-2 ${textColor}`}>{pkg.name}</h3>
+                    <p className={`${selectedMode === "dark" ? "text-gray-400" : "text-gray-600"} mb-4 h-16 overflow-hidden`}>{pkg.description}</p>
+                    <p className={`text-lg font-semibold mb-2 ${textColor}`}>{pkg.minutes} minutes</p>
+                    <p className={`text-2xl font-bold mb-4 ${textColor}`}>£{pkg.price}</p>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        addToCart(pkg._id);
+                      }}
+                      disabled={loadingItemId === pkg._id}
+                      className={`relative z-20 mt-4 w-full py-2 px-4 font-semibold text-center transition-all duration-300 ${
+                        loadingItemId === pkg._id
+                          ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                          : selectedMode === "dark"
+                          ? "bg-white text-black hover:bg-gray-300"
+                          : "bg-black text-white hover:bg-gray-800"
+                      } transform hover:scale-105`}
+                    >
+                      {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
+                    </button>
+                  </div>
+                </div>
               </div>
-            )}
+            ))}
           </div>
-          <div className="p-6">
-            <h3 className="text-xl font-semibold mb-2 text-white">{pkg.name}</h3>
-            <p className="text-gray-400 mb-4 h-16 overflow-hidden">{pkg.description}</p>
-            <p className="text-lg font-semibold mb-2 text-white">{pkg.minutes} minutes</p>
-            <p className="text-2xl font-bold mb-4 text-white">£{pkg.price}</p>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                addToCart(pkg._id);
-              }}
-              disabled={loadingItemId === pkg._id}
-              className={`relative z-20 mt-4 w-full py-2 px-4 font-semibold text-center transition-all duration-300 ${
-                loadingItemId === pkg._id
-                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
-                  : "bg-white text-black hover:bg-gray-300 transform hover:scale-105"
-              }`}
-            >
-              {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
-            </button>
-          </div>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
-
+        </section>
 
         {/* Stores Section */}
-        {/* Locations Section */}
-      {stores.map((store, index) => (
-  <div key={store._id} className="w-full mb-8">
-    <section className="relative pb-8">
-      {/* Map Section - Increase map size and add shadow */}
-      <div className="w-full h-[500px] rounded-lg shadow-lg overflow-hidden">
-        {store.coordinates ? (
-          <iframe
-            src={`${store.coordinates}${selectedMode === "dark" 
-              ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off" 
-              : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"}`}
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            style={{ border: 0 }}
-            allowFullScreen
-            aria-hidden="false"
-            tabIndex="0"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-            No map available
+        {stores.map((store, index) => (
+          <div key={store._id} className="w-full mb-8">
+            <section className="relative pb-8">
+              {/* Map Section */}
+              <div className="w-full h-[500px] shadow-lg overflow-hidden">
+                {store.coordinates ? (
+                  <iframe
+                    src={`${store.coordinates}${selectedMode === "dark" 
+                      ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off" 
+                      : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"}`}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    aria-hidden="false"
+                    tabIndex="0"
+                  />
+                ) : (
+                  <div className={`flex items-center justify-center h-full ${selectedMode === "dark" ? "bg-gray-800" : "bg-gray-200"} text-gray-500`}>
+                    No map available
+                  </div>
+                )}
+              </div>
+
+              {/* Store Details Section */}
+              <div
+                className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${
+                  selectedMode === "dark" 
+                    ? "bg-gradient-to-b from-gray-900 to-black text-white" 
+                    : "bg-gradient-to-b from-white to-gray-100 text-black"
+                }`}
+                style={{
+                  boxShadow: "0px -2px 20px rgba(0, 0, 0, 0.1)",
+                  borderRadius: "20px 20px 0 0",
+                }}
+              >
+                <div className="text-center space-y-4">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
+                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>{store.address}</p>
+                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>{store.phone}</p>
+                  <button
+                    onClick={() => router.push(`/locations/${store._id}`)}
+                    className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${
+                      selectedMode === "dark"
+                        ? "bg-transparent border-white text-white hover:bg-white hover:text-black"
+                        : "bg-transparent border-black text-black hover:bg-black hover:text-white"
+                    }`}
+                    style={{
+                      padding: "12px 24px",
+                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
+                    }}
+                  >
+                    Book Appointment
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            {/* Banner Section - Only on the last store */}
+            {index === stores.length - 1 && (
+              <BannerSection
+                title="Limited Time Offer!"
+                description="Get 20% off on all tanning products when you book a session today."
+                image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+              />
+            )}
           </div>
-        )}
-      </div>
-
-      {/* Store Details Section - Card Layout */}
-      <div
-        className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white" : "bg-gradient-to-b from-white to-gray-200 text-black"}`}
-        style={{
-          boxShadow: "0px -2px 20px rgba(0, 0, 0, 0.1)", // Soft shadow for the card
-          borderRadius: "20px 20px 0 0", // More rounded corners
-        }}
-      >
-        <div className="text-center space-y-4">
-          {/* Store Name (larger, bold) */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
-
-          {/* Store Address and Phone (smaller, softer colors) */}
-          <p className="text-sm sm:text-base text-gray-700">{store.address}</p>
-          <p className="text-sm sm:text-base text-gray-700">{store.phone}</p>
-
-          {/* Button with hover and border animation */}
-          <button
-            onClick={() => router.push(`/locations/${store._id}`)}
-            className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${selectedMode === "dark" ? "bg-transparent border-white text-white hover:bg-white hover:text-black" : "bg-transparent border-black text-black hover:bg-black hover:text-white"}`}
-            style={{
-              padding: "12px 24px",
-              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
-            }}
-          >
-            Book Appointment
-          </button>
-        </div>
-      </div>
-    </section>
-
-    {/* Banner Section - Only on the last store */}
-    {index === stores.length - 1 && (
-      <BannerSection
-        title="Limited Time Offer!"
-        description="Get 20% off on all tanning products when you book a session today."
-        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-      />
-    )}
-  </div>
-))}
-
-
-
+        ))}
       </main>
     </div>
   );
 }
+
+
 
 
 

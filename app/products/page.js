@@ -84,11 +84,11 @@ export default function ProductsPage() {
     return <div className="text-center py-20">Loading...</div>;
   }
 
-  const bgColor = selectedMode === "dark" ? "bg-black" : "bg-white";
+  const bgColor = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-  const cardBg = selectedMode === "dark" ? "bg-black" : "bg-white";
-  const gradientClass = selectedMode === "dark" ? "from-gray-800 to-black" : "from-white to-gray-200";
-  
+  const cardBg = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
+  const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
+
   const BannerSection = ({ title, description, image }) => (
     <section className="relative h-screen overflow-hidden">
       <div
@@ -137,9 +137,9 @@ export default function ProductsPage() {
             placeholder="Search products..."
             className={`w-full p-2 border ${
               selectedMode === "dark"
-                ? "border-gray-700 bg-gray-800"
+                ? "border-gray-700 bg-gradient-to-b from-gray-800 to-black"
                 : "border-gray-300 bg-white"
-            } rounded-md`}
+            }`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -162,7 +162,7 @@ export default function ProductsPage() {
                         alt={product.name}
                         layout="fill"
                         objectFit="cover"
-                        className="transition-all duration-300 group-hover:scale-110"
+                        className="transition-all duration-300 group-hover:scale-105"
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
@@ -194,8 +194,8 @@ export default function ProductsPage() {
                         loadingItemId === product._id
                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                           : `${
-                              selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"
-                            } hover:bg-gray-800 hover:text-white`
+                              selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white hover:from-gray-700 hover:to-gray-900" : "bg-black text-white hover:bg-gray-800"
+                            }`
                       }`}
                     >
                       {loadingItemId === product._id ? "Adding..." : "Add to Cart"}
@@ -224,7 +224,7 @@ export default function ProductsPage() {
                         alt={pkg.name}
                         layout="fill"
                         objectFit="cover"
-                        className="transition-all duration-300 group-hover:scale-110"
+                        className="transition-all duration-300 group-hover:scale-105"
                       />
                     ) : (
                       <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
@@ -253,8 +253,8 @@ export default function ProductsPage() {
                         loadingItemId === pkg._id
                           ? "bg-gray-300 text-gray-600 cursor-not-allowed"
                           : `${
-                              selectedMode === "dark" ? "bg-white text-black" : "bg-black text-white"
-                            } hover:bg-gray-800 hover:text-white`
+                              selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white hover:from-gray-700 hover:to-gray-900" : "bg-black text-white hover:bg-gray-800"
+                            }`
                       }`}
                     >
                       {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
@@ -271,7 +271,7 @@ export default function ProductsPage() {
         <div key={store._id} className="w-full">
           <section className="relative pb-16 sm:pb-24">
             {/* Map Section */}
-            <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] rounded-lg shadow-2xl overflow-hidden">
+            <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] shadow-2xl overflow-hidden">
               {store.coordinates ? (
                 <iframe
                   src={`${store.coordinates}${
@@ -298,12 +298,11 @@ export default function ProductsPage() {
             <div
               className={`absolute bottom-0 left-0 right-0 p-8 sm:p-10 flex flex-col items-center justify-center ${
                 selectedMode === "dark"
-                  ? "bg-gradient-to-b from-gray-800 to-black text-white"
-                  : "bg-gradient-to-b from-white to-gray-200 text-black"
+                  ? "bg-gradient-to-b from-gray-900 to-black text-white"
+                  : "bg-gradient-to-b from-white to-gray-100 text-black"
               }`}
               style={{
                 boxShadow: "0px -4px 30px rgba(0, 0, 0, 0.1)",
-                borderRadius: "30px 30px 0 0",
               }}
             >
               <div className="text-center space-y-4 sm:space-y-5">
@@ -328,12 +327,11 @@ export default function ProductsPage() {
                   onClick={() => router.push(`/locations/${store._id}`)}
                   className={`px-8 py-3 font-medium text-base sm:text-lg transition-all duration-300 ${
                     selectedMode === "dark"
-                      ? "bg-gradient-to-b from-black to-gray-900 text-white border-2 border-white hover:bg-gray-100 hover:text-gray-300"
+                      ? "bg-gradient-to-b from-gray-800 to-black text-white border-2 border-white hover:bg-gray-700"
                       : "bg-transparent text-black border-2 border-black hover:bg-black hover:text-white"
                   }`}
                   style={{
                     boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "0",
                   }}
                 >
                   Book Appointment
@@ -343,7 +341,7 @@ export default function ProductsPage() {
           </section>
         </div>
       ))}
-<BannerSection
+      <BannerSection
         title="Limited Time Offer!"
         description="Get 20% off on all tanning products when you book a session today."
         image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
@@ -351,6 +349,8 @@ export default function ProductsPage() {
     </main>
   );
 }
+
+
 
 
 
