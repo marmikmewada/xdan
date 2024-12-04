@@ -236,19 +236,18 @@ export default function ProductPage() {
               </div>
             ))}
           </div>
-        </section>
-
-        {/* Stores Section */}
-        {stores.map((store, index) => (
+          {stores.map((store, index) => (
           <div key={store._id} className="w-full mb-8">
             <section className="relative pb-8">
               {/* Map Section */}
-              <div className="w-full h-[500px] shadow-lg overflow-hidden">
+              <div className="w-full h-[500px] rounded-lg shadow-lg overflow-hidden">
                 {store.coordinates ? (
                   <iframe
-                    src={`${store.coordinates}${selectedMode === "dark" 
-                      ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off" 
-                      : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"}`}
+                    src={`${store.coordinates}${
+                      selectedMode === "dark"
+                        ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off"
+                        : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"
+                    }`}
                     width="100%"
                     height="100%"
                     frameBorder="0"
@@ -258,7 +257,7 @@ export default function ProductPage() {
                     tabIndex="0"
                   />
                 ) : (
-                  <div className={`flex items-center justify-center h-full ${selectedMode === "dark" ? "bg-gray-800" : "bg-gray-200"} text-gray-500`}>
+                  <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
                     No map available
                   </div>
                 )}
@@ -267,8 +266,8 @@ export default function ProductPage() {
               {/* Store Details Section */}
               <div
                 className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${
-                  selectedMode === "dark" 
-                    ? "bg-gradient-to-b from-gray-900 to-black text-white" 
+                  selectedMode === "dark"
+                    ? "bg-gradient-to-b from-gray-900 to-black text-white"
                     : "bg-gradient-to-b from-white to-gray-100 text-black"
                 }`}
                 style={{
@@ -278,8 +277,12 @@ export default function ProductPage() {
               >
                 <div className="text-center space-y-4">
                   <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
-                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>{store.address}</p>
-                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>{store.phone}</p>
+                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                    {store.address}
+                  </p>
+                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                    {store.phone}
+                  </p>
                   <button
                     onClick={() => router.push(`/locations/${store._id}`)}
                     className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${
@@ -298,16 +301,20 @@ export default function ProductPage() {
               </div>
             </section>
 
-            {/* Banner Section - Only on the last store */}
+            {/* Banner */}
             {index === stores.length - 1 && (
               <BannerSection
                 title="Limited Time Offer!"
-                description="Get 20% off on all tanning products when you book a session today."
+                description="Get 20% off on all tanning packages when you book a session today."
                 image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
               />
             )}
           </div>
         ))}
+        </section>
+
+        {/* Stores Section */}
+        
       </main>
     </div>
   );
