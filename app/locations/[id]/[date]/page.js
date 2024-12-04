@@ -1,17 +1,19 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useStore from "@/app/store/useStore"; // Assuming you have this Zustand store set up
+import { useSession } from "next-auth/react";
 
 export default function EditLocationPage() {
+    const { data: session } = useSession(); 
     const router = useRouter();
     const { id, date } = useParams();
     const [availableSlots, setAvailableSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [notification, setNotification] = useState(null); // For showing error/success messages
     const { selectedMode } = useStore();
 
     useEffect(() => {
@@ -53,7 +55,11 @@ export default function EditLocationPage() {
         e.preventDefault();
 
         if (!selectedSlot) {
-            alert('Please select a slot before submitting.');
+            setNotification({ type: 'error', message: 'Please select a slot before submitting.' });
+            return;
+        }
+        if (!session) {
+            router.push("/login");
             return;
         }
 
@@ -69,29 +75,37 @@ export default function EditLocationPage() {
                     ],
                 }),
             });
+            console.log("response",response);
 
             if (!response.ok) {
-                throw new Error('Failed to book the slot');
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Failed to book the slot');
             }
 
+            setNotification({ type: 'success', message: 'Slot booked successfully!' });
             router.push(`/locations/${id}`);
         } catch (err) {
-            setError(err.message);
+            setNotification({ type: 'error', message: err.message });
         } finally {
             setIsLoading(false);
         }
     };
 
+    useEffect(() => {
+        if (notification) {
+            const timer = setTimeout(() => {
+                setNotification(null); // Hide notification after 3 seconds
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [notification]);
+
     if (isLoading) {
         return <div className="flex justify-center items-center h-screen text-lg">Loading...</div>;
     }
 
-    if (error) {
-        return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
-    }
-
     const bgGradient = selectedMode === 'dark' 
-        ? 'bg-gradient-to-r from-gray-800 to-black' 
+        ? 'bg-gradient-to-b from-black to-gray-900' 
         : 'bg-gradient-to-r from-white to-gray-200';
     const textColor = selectedMode === 'dark' ? 'text-white' : 'text-black';
     const buttonBg = selectedMode === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -102,9 +116,20 @@ export default function EditLocationPage() {
         <div className={`min-h-screen ${bgGradient} ${textColor} transition-colors duration-300`}>
             <div className="container mx-auto px-4 py-8">
                 <h1 className="text-2xl md:text-3xl font-bold mb-6">Select a Slot for {date}</h1>
+
+                {notification && (
+                    <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow-lg ${
+                        notification.type === 'success' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-gradient-to-b from-black to-gray-900'
+                    }`}>
+                        {notification.message}
+                    </div>
+                )}
+
                 <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
                     <div className="mb-4">
-                        <h2 className="text-lg md:text-xl font-semibold mb-4">Available Slots</h2>
+                        <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Available Slots</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {availableSlots.length === 0 ? (
                                 <p>No available slots for this date.</p>
@@ -141,7 +166,6 @@ export default function EditLocationPage() {
         </div>
     );
 }
-
 
 
 

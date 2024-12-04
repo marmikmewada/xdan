@@ -35,7 +35,7 @@ export const dbmodels = (mongoose) => {
       email: { type: String, required: true, unique: true },
       password: { type: String, required: true },
       phone: { type: String, required: true },
-      twofa: { type: Boolean, default: true },
+      twofa: { type: Boolean, default: false },
       address: { type: String },
       selectedMode: { type: String },
       newsletter: { type: Boolean, default: false },

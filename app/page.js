@@ -33,11 +33,11 @@ export default function Page() {
     const fetchData = async () => {
       try {
         const [storeData, productData, packageData, categoryData] =
-          await Promise.all([ 
-            fetch(`/api/store`).then((res) => res.json()), 
-            fetch(`/api/product`).then((res) => res.json()), 
-            fetch(`/api/package`).then((res) => res.json()), 
-            fetch(`/api/category`).then((res) => res.json()), 
+          await Promise.all([
+            fetch(`/api/store`).then((res) => res.json()),
+            fetch(`/api/product`).then((res) => res.json()),
+            fetch(`/api/package`).then((res) => res.json()),
+            fetch(`/api/category`).then((res) => res.json()),
           ]);
 
         console.log("productData", productData?.data);
@@ -94,16 +94,16 @@ export default function Page() {
     }
   };
 
-  const bgColor = selectedMode === "dark" 
-  ? "bg-gradient-to-b from-black to-gray-900" // Dark gradient
-  : "bg-gradient-to-b from-white to-gray-100"; // Light gradient
+  const bgColor =
+    selectedMode === "dark"
+      ? "bg-gradient-to-b from-black to-gray-900"
+      : "bg-gradient-to-b from-white to-gray-100";
 
-const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-const buttonBgColor = selectedMode === "dark" ? "bg-white" : "bg-black";
-const buttonTextColor = selectedMode === "dark" ? "text-black" : "text-white";
-const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hover:bg-gray-800";
-
-
+  const textColor = selectedMode === "dark" ? "text-white" : "text-black";
+  const buttonBgColor = selectedMode === "dark" ? "bg-gradient-to-b from-black to-gray-900" : "bg-black";
+  const buttonTextColor = selectedMode === "dark" ? "text-white" : "text-white";
+  const buttonHoverBgColor =
+    selectedMode === "dark" ? "hover:bg-gray-200" : "hover:bg-gray-800";
 
   const HeroSection = ({ title, description, image, buttons }) => (
     <section className="relative h-screen overflow-hidden">
@@ -117,20 +117,24 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
       >
         <div className="absolute inset-0 bg-black bg-opacity-60" />
       </div>
-      <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center">
+      <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
         <div className="max-w-2xl">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4 text-white leading-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 text-white leading-tight tracking-tight">
             {title}
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-8">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-200 mb-10 leading-relaxed">
             {description}
           </p>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-6">
             {buttons.map((button, index) => (
               <button
                 key={index}
                 onClick={button.onClick}
-                className={`px-6 py-3 ${button.primary ? `${buttonBgColor} ${buttonTextColor}` : 'bg-transparent border border-white text-white hover:bg-white hover:text-black'} font-semibold text-lg sm:text-xl transition-all duration-300 ${buttonHoverBgColor}`}
+                className={`px-8 py-4 ${
+                  button.primary
+                    ? `${buttonBgColor} ${buttonTextColor}`
+                    : "bg-transparent border-2 border-white text-white hover:bg-white hover:text-black"
+                } font-semibold text-base sm:text-lg transition-all duration-300 ${buttonHoverBgColor} rounded-none shadow-md`}
               >
                 {button.text}
               </button>
@@ -153,12 +157,12 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
       >
         <div className="absolute inset-0 bg-black bg-opacity-60" />
       </div>
-      <div className="relative h-full max-w-7xl mx-auto px-4 flex items-center justify-center text-center">
+      <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center text-center">
         <div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-white leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-white leading-tight tracking-tight">
             {title}
           </h2>
-          <p className="text-xl sm:text-2xl md:text-3xl text-gray-200">
+          <p className="text-xl sm:text-2xl md:text-3xl text-gray-200 leading-relaxed max-w-3xl mx-auto">
             {description}
           </p>
         </div>
@@ -174,156 +178,109 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
         description="Experience the best tanning services in the UK with our state-of-the-art facilities"
         image={heroImages[currentImageIndex]}
         buttons={[
-          { text: "Book Your Session", onClick: () => router.push("/locations"), primary: true },
-          { text: "View Services", onClick: () => router.push("/services"), primary: false },
+          {
+            text: "Book Your Session",
+            onClick: () => router.push("/locations"),
+            primary: true,
+          },
+          {
+            text: "View Products",
+            onClick: () => router.push("/services"),
+            primary: false,
+          },
         ]}
       />
 
-      {/* Products Section */}
-      {products.map((product, index) => (
-        <div key={product._id}>
-          <HeroSection
-            title={product.name}
-            description={product.description + ' ' + product.description}
-            image={product.imageUrl && product.imageUrl.length > 0 ? product.imageUrl[0] : heroImages[0]}
-            buttons={[
-              { 
-                text: loadingItemId === product._id ? "Adding..." : "Add to Cart", 
-                onClick: (e) => { e.preventDefault(); addToCart(product._id); },
-                primary: true,
-                className: "cart-button"
-              },
-              { 
-                text: `£${product.price.toFixed(2)}`, 
-                onClick: (e) => { e.preventDefault(); addToCart(product._id); },
-                primary: false 
-              },
-            ]}
-            images={product.imageUrl}
-          />
-          {index === products.length - 1 && (
-            <BannerSection
-              title="Limited Time Offer!"
-              description="Get 20% off on all tanning products when you book a session today."
-              image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-            />
-          )}
-        </div>
-      ))}
-
-      {/* Packages Section */}
-      {packages.map((pkg, index) => (
-        <div key={pkg._id}>
-          <HeroSection
-            title={pkg.name}
-            description={`${pkg.minutes} minutes`}
-            image={pkg.imageUrl && pkg.imageUrl[0] ? pkg.imageUrl[0] : heroImages[1]}
-            buttons={[
-              { 
-                text: loadingItemId === pkg._id ? "Adding..." : "Add to Cart", 
-                onClick: (e) => { e.preventDefault(); addToCart(pkg._id); },
-                primary: true
-              },
-              { 
-                text: `£${pkg.price.toFixed(2)}`, 
-                onClick: (e) => { e.preventDefault(); addToCart(pkg._id); },
-                primary: false 
-              },
-            ]}
-          />
-          {index === packages.length - 1 && (
-            <BannerSection
-              title="Limited Time Offer!"
-              description="Get 20% off on all tanning products when you book a session today."
-              image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-            />
-          )}
-        </div>
-      ))}
-
       {/* Locations Section */}
       {stores.map((store, index) => (
-  <div key={store._id} className="w-full mb-8">
-    <section className="relative pb-8">
-      {/* Map Section - Increase map size and add shadow */}
-      <div className="w-full h-[500px] rounded-lg shadow-lg overflow-hidden">
-        {store.coordinates ? (
-          <iframe
-            src={`${store.coordinates}${selectedMode === "dark" 
-              ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off" 
-              : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"}`}
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            style={{ border: 0 }}
-            allowFullScreen
-            aria-hidden="false"
-            tabIndex="0"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-            No map available
-          </div>
-        )}
-      </div>
+        <div key={store._id} className="w-full">
+          <section className="relative pb-16 sm:pb-24">
+            {/* Map Section */}
+            <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] rounded-lg shadow-2xl overflow-hidden">
+              {store.coordinates ? (
+                <iframe
+                  src={`${store.coordinates}${
+                    selectedMode === "dark"
+                      ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off"
+                      : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"
+                  }`}
+                  width="100%"
+                  height="100%"
+                  frameBorder="0"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  aria-hidden="false"
+                  tabIndex="0"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                  No map available
+                </div>
+              )}
+            </div>
 
-      {/* Store Details Section - Card Layout */}
-      <div
-        className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white" : "bg-gradient-to-b from-white to-gray-200 text-black"}`}
-        style={{
-          boxShadow: "0px -2px 20px rgba(0, 0, 0, 0.1)", // Soft shadow for the card
-          borderRadius: "20px 20px 0 0", // More rounded corners
-        }}
-      >
-        <div className="text-center space-y-4">
-          {/* Store Name (larger, bold) */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
-
-          {/* Store Address and Phone (smaller, softer colors) */}
-          <p className="text-sm sm:text-base text-gray-700">{store.address}</p>
-          <p className="text-sm sm:text-base text-gray-700">{store.phone}</p>
-
-          {/* Button with hover and border animation */}
-          <button
-            onClick={() => router.push(`/locations/${store._id}`)}
-            className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${selectedMode === "dark" ? "bg-transparent border-white text-white hover:bg-white hover:text-black" : "bg-transparent border-black text-black hover:bg-black hover:text-white"}`}
-            style={{
-              padding: "12px 24px",
-              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
-            }}
-          >
-            Book Appointment
-          </button>
+            {/* Store Details Section */}
+            <div
+              className={`absolute bottom-0 left-0 right-0 p-8 sm:p-10 flex flex-col items-center justify-center ${
+                selectedMode === "dark"
+                  ? "bg-gradient-to-b from-gray-800 to-black text-white"
+                  : "bg-gradient-to-b from-white to-gray-200 text-black"
+              }`}
+              style={{
+                boxShadow: "0px -4px 30px rgba(0, 0, 0, 0.1)",
+                borderRadius: "30px 30px 0 0",
+              }}
+            >
+              <div className="text-center space-y-4 sm:space-y-5">
+                <h1 className="text-2xl sm:text-3xl font-semibold">
+                  {store.name}
+                </h1>
+                <p
+                  className={`text-sm sm:text-base ${
+                    selectedMode === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  {store.address}
+                </p>
+                <p
+                  className={`text-sm sm:text-base ${
+                    selectedMode === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
+                  {store.phone}
+                </p>
+                <button
+                  onClick={() => router.push(`/locations/${store._id}`)}
+                  className={`px-8 py-3 font-medium text-base sm:text-lg transition-all duration-300 ${
+                    selectedMode === "dark"
+                      ? "bg-gradient-to-b from-black to-gray-900 text-white border-2 border-white hover:bg-gray-100 hover:text-gray-300"
+                      : "bg-transparent text-black border-2 border-black hover:bg-black hover:text-white"
+                  }`}
+                  style={{
+                    boxShadow: "0px 4px 15px rgba(0, 0, 0, 0.1)",
+                    borderRadius: "0",
+                  }}
+                >
+                  Book Appointment
+                </button>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
-    </section>
+      ))}
 
-    {/* Banner Section - Only on the last store */}
-    {index === stores.length - 1 && (
       <BannerSection
         title="Limited Time Offer!"
         description="Get 20% off on all tanning products when you book a session today."
-        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+        image={
+          selectedMode === "dark"
+            ? `https://ik.imagekit.io/2o9y0v10p/dan-studio/banners/Heading-black-white.png?updatedAt=1733332141665`
+            : "https://ik.imagekit.io/2o9y0v10p/dan-studio/banners/Heading-colored.jpg?updatedAt=1733332160124"
+        }
       />
-    )}
-  </div>
-))}
-
-
-
-
-
     </main>
   );
 }
-
-
-
-
-
-
-
-
 
 
 
@@ -363,11 +320,11 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //     const fetchData = async () => {
 //       try {
 //         const [storeData, productData, packageData, categoryData] =
-//           await Promise.all([ 
-//             fetch(`${baseUrl}/api/store`).then((res) => res.json()), 
-//             fetch(`${baseUrl}/api/product`).then((res) => res.json()), 
-//             fetch(`${baseUrl}/api/package`).then((res) => res.json()), 
-//             fetch(`${baseUrl}/api/category`).then((res) => res.json()), 
+//           await Promise.all([
+//             fetch(`${baseUrl}/api/store`).then((res) => res.json()),
+//             fetch(`${baseUrl}/api/product`).then((res) => res.json()),
+//             fetch(`${baseUrl}/api/package`).then((res) => res.json()),
+//             fetch(`${baseUrl}/api/category`).then((res) => res.json()),
 //           ]);
 
 //         setStores(storeData?.data || []);
@@ -550,10 +507,6 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //   `}</style>
 // </section>
 
-
-
-
-
 //       {/* Products Section */}
 //       <section className={`py-0 ${bgColor}`}>
 //   <div className="relative w-full h-screen overflow-hidden">
@@ -615,9 +568,6 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //   </div>
 // </section>
 
-
-
-
 // <section className="py-12 text-center">
 //   {/* Banner Text */}
 //   <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
@@ -627,9 +577,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //   <div className="mt-8">
 //     {selectedMode === "dark" ? (
 //       <div className="w-full h-auto relative">
-//         <Image 
-//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
-//           alt="Limited Time Offer - Dark Mode" 
+//         <Image
+//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg"
+//           alt="Limited Time Offer - Dark Mode"
 //           layout="responsive"
 //           width={640}
 //           height={286}
@@ -637,9 +587,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //       </div>
 //     ) : (
 //       <div className="w-full h-auto relative">
-//         <Image 
-//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
-//           alt="Limited Time Offer - Light Mode" 
+//         <Image
+//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg"
+//           alt="Limited Time Offer - Light Mode"
 //           layout="responsive"
 //           width={640}
 //           height={286}
@@ -648,9 +598,6 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //     )}
 //   </div>
 // </section>
-
-
-
 
 // {/* Packages Section */}
 // <section className={`py-12 ${bgColor}`}>
@@ -723,9 +670,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //   <div className="mt-8">
 //     {selectedMode === "dark" ? (
 //       <div className="w-full h-auto relative">
-//         <Image 
-//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
-//           alt="Limited Time Offer - Dark Mode" 
+//         <Image
+//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg"
+//           alt="Limited Time Offer - Dark Mode"
 //           layout="responsive"
 //           width={640}
 //           height={286}
@@ -733,9 +680,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //       </div>
 //     ) : (
 //       <div className="w-full h-auto relative">
-//         <Image 
-//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
-//           alt="Limited Time Offer - Light Mode" 
+//         <Image
+//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg"
+//           alt="Limited Time Offer - Light Mode"
 //           layout="responsive"
 //           width={640}
 //           height={286}
@@ -744,7 +691,6 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //     )}
 //   </div>
 // </section>
-
 
 // <section className={`py-12 ${bgColor}`}>
 //   <div className="max-w-7xl mx-auto px-4">
@@ -816,8 +762,6 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //   </div>
 // </section>
 
-
-
 // <section className="py-12 text-center">
 //   {/* Banner Text */}
 //   <h3 className="text-2xl font-semibold">Limited Time Offer!</h3>
@@ -827,9 +771,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //   <div className="mt-8">
 //     {selectedMode === "dark" ? (
 //       <div className="w-full h-auto relative">
-//         <Image 
-//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg" 
-//           alt="Limited Time Offer - Dark Mode" 
+//         <Image
+//           src="https://www.sunspawellness.com/images/posts/kbl-p9s-hybrid-1.jpg"
+//           alt="Limited Time Offer - Dark Mode"
 //           layout="responsive"
 //           width={640}
 //           height={286}
@@ -837,9 +781,9 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //       </div>
 //     ) : (
 //       <div className="w-full h-auto relative">
-//         <Image 
-//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg" 
-//           alt="Limited Time Offer - Light Mode" 
+//         <Image
+//           src="https://static.wixstatic.com/media/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg/v1/fill/w_640,h_286,fp_0.95_0.44,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2b14c_92160940e2d9435ea71e29271334893a~mv2.jpg"
+//           alt="Limited Time Offer - Light Mode"
 //           layout="responsive"
 //           width={640}
 //           height={286}
@@ -848,7 +792,6 @@ const buttonHoverBgColor = selectedMode === "dark" ? "hover:bg-gray-200" : "hove
 //     )}
 //   </div>
 // </section>
-
 
 //     </main>
 //   );

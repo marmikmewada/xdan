@@ -1,27 +1,31 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
-import { useSession } from "next-auth/react"; // Assuming you're using next-auth for session management
+import { useSession } from "next-auth/react";
 
 const ProfilePage = () => {
   const { data: session, status } = useSession();
   const [userData, setUserData] = useState(null);
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log("userData",userData)
+  const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+
+  console.log("userData", userData);
+
   // Fetch user details and orders data
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!session) return; // Skip if not logged in
+      if (!session) return;
 
       setLoading(true);
 
       try {
         const response = await fetch("/api/get-user-profile");
         const data = await response.json();
-console.log("data of user profile",data)
+        console.log("data of user profile", data);
         if (data.success) {
           setUserData(data.userDetails);
-          setOrders(data.orders); // Set orders data
+          setOrders(data.orders);
+          setIs2FAEnabled(data.userDetails?.twofa || false);
         } else {
           console.log("Failed to fetch user data:", data.message);
         }
@@ -34,6 +38,27 @@ console.log("data of user profile",data)
 
     fetchUserData();
   }, [session]);
+
+  const toggle2FA = async () => {
+    try {
+      const response = await fetch("/api/toggle-twofa", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ enable: !is2FAEnabled }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        setIs2FAEnabled(!is2FAEnabled);
+      } else {
+        console.log("Failed to update 2FA status:", data.message);
+      }
+    } catch (error) {
+      console.log("Error updating 2FA status:", error);
+    }
+  };
 
   if (status === "loading" || loading) {
     return <div>Loading...</div>;
@@ -57,6 +82,21 @@ console.log("data of user profile",data)
             <p><strong>Phone:</strong> {userData.phone}</p>
             <p><strong>Date of Birth:</strong> {new Date(userData.dob).toLocaleDateString()}</p>
             <p><strong>Address:</strong> {userData.address || "Not provided"}</p>
+            <div className="flex items-center mt-4">
+              <label className="mr-4"><strong>Two-Factor Authentication:</strong></label>
+              <div
+                className={`w-12 h-6 flex items-center rounded-full p-1 cursor-pointer ${
+                  is2FAEnabled ? "bg-green-500" : "bg-gray-400"
+                }`}
+                onClick={toggle2FA}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    is2FAEnabled ? "translate-x-6" : "translate-x-0"
+                  }`}
+                ></div>
+              </div>
+            </div>
           </div>
         </div>
       )}

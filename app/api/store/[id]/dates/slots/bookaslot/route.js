@@ -65,6 +65,27 @@ export async function POST(req, { params }) {
       );
     }
 
+    const existingBooking = await bookingTable.findOne({
+      userRef: userDetails._id,
+      storeRef: id,
+      date,
+    }).exec();
+
+    if (existingBooking) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "You already have a booking for this store on the selected date.",
+        },
+        { status: 400 }
+      );
+    }
+
+    
+
+
+
+
     // Check for unavailable slots on the requested date
     const unavailableSlots = await unavailableSlotTable.findOne({ storeRef: id, date }).exec();
 
