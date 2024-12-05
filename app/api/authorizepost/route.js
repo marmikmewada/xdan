@@ -58,7 +58,8 @@ export async function POST(req) {
         id: user._id.toString(),
         name: user.name,
         email: user.email,
-        role: user.role, // You can add other fields like `twofa` here if needed
+        role: user.role,
+        twofa: user.twofa // You can add other fields like `twofa` here if needed
       },
     };
 

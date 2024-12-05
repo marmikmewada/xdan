@@ -54,7 +54,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
           // Ensure the API returned valid user data
           if (data.success && data.data) {
-            const { id, name, email, role, store } = data.data;
+            const { id, name, email, role, store,twofa } = data.data;
 
             // If the user has store information (e.g., staff), you might want to include it in the session
             return {
@@ -62,7 +62,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               name,
               email,
               role,
-              store_id: store ? store : null, // Safely access store info if available
+              store_id: store ? store : null,
+              twofa // Safely access store info if available
             };
           }
 
@@ -110,11 +111,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // Ensure the API returned valid user data
         if (userData.success && userData.data) {
           console.log("userData.data",userData.data)
-          const { name, lastName, email, role, _id} = userData.data;
+          const { name, lastName, email, role, _id, twofa} = userData.data;
           token.id = _id; // Use user.id since we set it in the authorize function
           token.email = email;
           token.name = name;
           token.role = role;
+          token.twofa = twofa;
           
         }
       }
@@ -135,6 +137,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.store_id=token.store;
       }
       session.token = token;
+      session.user.twofa = token.twofa;
       return session;
     },
   },
