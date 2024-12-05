@@ -100,6 +100,7 @@ export async function GET(req, res) {
     const details = await stripe.checkout.sessions.list();
     console.log("details:>", details.data);
     const { metadata, payment_status } = details?.data[0] || {};
+    console.log("payment_status",payment_status)
     const { orderId } = metadata || {};
 
     const orderDetails = await orderTable.findById(orderId);
@@ -129,7 +130,15 @@ export async function GET(req, res) {
         }
       );
     }
-
+    await orderTable.updateOne(
+      { _id: orderId },
+      {
+        $set: {
+          paymentStatus: payment_status === "paid" ? "completed" : "failed",
+        },
+      }
+    );
+    if(orderDetails.packageRef.length>0){
     // Sum up the minutes from the ordered packages, considering duplicates
     const packages = await packageTable.find({
       _id: { $in: orderDetails.packageRef },
@@ -202,16 +211,10 @@ export async function GET(req, res) {
         },
       }
     );
+  }
 
     // Now update the order's payment status after updating the user's minutes
-    await orderTable.updateOne(
-      { _id: orderId },
-      {
-        $set: {
-          paymentStatus: payment_status === "paid" ? "completed" : "failed",
-        },
-      }
-    );
+    
 
     return NextResponse.json(
       {

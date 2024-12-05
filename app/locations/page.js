@@ -92,9 +92,9 @@ export default function LocationsPage() {
     return <div className="text-center py-20">Loading...</div>;
   }
 
-  const bgColor = selectedMode === "dark" ? "bg-black" : "bg-white";
+  const bgColor = selectedMode === "dark" ? "bg-gradient-to-r from-gray-800 to-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-  const cardBg = selectedMode === "dark" ? "bg-black" : "bg-white";
+  const cardBg = selectedMode === "dark" ? "bg-gradient-to-r from-gray-800 to-black" : "bg-white";
   
   const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
 
@@ -141,7 +141,7 @@ export default function LocationsPage() {
         <div className="mb-6">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search stores..."
             className={`w-full p-2 border ${
               selectedMode === "dark"
                 ? "border-gray-700 bg-gradient-to-b from-gray-800 to-black"
@@ -199,7 +199,9 @@ export default function LocationsPage() {
           {/* Button with hover and border animation */}
           <button
             onClick={() => router.push(`/locations/${store._id}`)}
-            className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${selectedMode === "dark" ? "bg-transparent border-white text-white hover:bg-white hover:text-black" : "bg-transparent border-black text-black hover:bg-black hover:text-white"}`}
+            className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${selectedMode === "dark"
+              ? "bg-gradient-to-r from-gray-800 to-black border-white text-white hover:bg-white hover:text-gray-400"
+              : "bg-transparent border-black text-black hover:bg-black hover:text-white"}`}
             style={{
               padding: "12px 24px",
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",

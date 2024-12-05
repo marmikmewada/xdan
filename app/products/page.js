@@ -86,7 +86,7 @@ export default function ProductsPage() {
 
   const bgColor = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-  const cardBg = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
+  const cardBg = selectedMode === "dark" ? "bg-gradient-to-r from-gray-800 to-black" : "bg-white";
   const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
 
   const BannerSection = ({ title, description, image }) => (
@@ -317,7 +317,7 @@ export default function ProductsPage() {
                     onClick={() => router.push(`/locations/${store._id}`)}
                     className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${
                       selectedMode === "dark"
-                        ? "bg-transparent border-white text-white hover:bg-white hover:text-black"
+                        ? "bg-gradient-to-r from-gray-800 to-black border-white text-white hover:bg-white hover:text-gray-400"
                         : "bg-transparent border-black text-black hover:bg-black hover:text-white"
                     }`}
                     style={{

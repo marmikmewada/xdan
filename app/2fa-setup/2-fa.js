@@ -6,9 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import useStore from "@/app/store/useStore"; // Assuming you have a store for the selectedMode
+import {  useSearchParams } from "next/navigation";
 
-export default function TwoFAStep({ server_session_data }) {
-  const { data: session, update } = useSession(); // Get the session
+export default function TwoFAStep() {
+  const searchParams=useSearchParams()
+  // const { data: session, update } = useSession(); // Get the session
+  const email=searchParams.get("email")
+  const password=searchParams.get("password")
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [loading, setLoading] = useState(true);
@@ -18,15 +22,9 @@ export default function TwoFAStep({ server_session_data }) {
   const { selectedMode } = useStore();
 
   useEffect(() => {
-    if (server_session_data) {
-      update(server_session_data);
-    }
-  }, [server_session_data]);
-
-  useEffect(() => {
     async function fetchQRCode() {
       try {
-        const res = await fetch("/api/auth/generate-totp", {
+        const res = await fetch(`/api/auth/generate-totp?email=${email}`, {
           method: "GET",
           credentials: "include",
         });
@@ -58,14 +56,14 @@ export default function TwoFAStep({ server_session_data }) {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ otp: otpCode }), // Send only the OTP
+      body: JSON.stringify({ otp: otpCode,email,password }), // Send only the OTP
     });
 
     const data = await response.json();
 
     if (data.success) {
-      console.log("session by kira", session);
       router.push("/"); // Redirect on success
+      router.refresh()
     } else {
       alert(data.message || "An unknown error occurred.");
     }
@@ -141,7 +139,6 @@ export default function TwoFAStep({ server_session_data }) {
 
 
 
-
 // "use client";
 
 // import { useState, useEffect } from "react";
@@ -149,6 +146,7 @@ export default function TwoFAStep({ server_session_data }) {
 // import Image from "next/image";
 // import Link from "next/link";
 // import { useSession } from "next-auth/react";
+// import useStore from "@/app/store/useStore"; // Assuming you have a store for the selectedMode
 
 // export default function TwoFAStep({ server_session_data }) {
 //   const { data: session, update } = useSession(); // Get the session
@@ -157,10 +155,8 @@ export default function TwoFAStep({ server_session_data }) {
 //   const [loading, setLoading] = useState(true);
 //   const router = useRouter();
 
-//   // Log the session for debugging
-//   useEffect(() => {
-//     console.log("Session:", session);
-//   }, [session]);
+//   // Getting the selected mode from the store
+//   const { selectedMode } = useStore();
 
 //   useEffect(() => {
 //     if (server_session_data) {
@@ -198,7 +194,6 @@ export default function TwoFAStep({ server_session_data }) {
 //       return;
 //     }
 
-//     // Send only the OTP to the verify-totp API
 //     const response = await fetch("/api/auth/verify-totp", {
 //       method: "POST",
 //       headers: {
@@ -217,10 +212,16 @@ export default function TwoFAStep({ server_session_data }) {
 //     }
 //   };
 
+//   // Define gradient classes based on selectedMode
+//   const gradientClass = selectedMode === 'dark' ? 'bg-gradient-to-r from-gray-800 to-black' : 'bg-gradient-to-r from-white to-gray-200';
+//   const textColor = selectedMode === 'dark' ? 'text-white' : 'text-black';
+//   const inputBg = selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800';
+//   const buttonBg = selectedMode === 'dark' ? 'bg-gray-600 hover:bg-gray-700' : 'bg-black hover:bg-gray-300';
+
 //   return (
-//     <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-6">
-//       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
-//         <h2 className="text-2xl font-semibold text-center text-gray-800 mb-6">2FA Setup</h2>
+//     <div className={`min-h-screen flex items-center justify-center py-12 px-6 ${gradientClass}`}>
+//       <div className={`max-w-md w-full p-8 rounded-xl shadow-lg transition-all duration-300 ease-in-out ${selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+//         <h2 className="text-3xl font-semibold text-center mb-6 tracking-tight">2FA Setup</h2>
 
 //         {/* Loading or QR Code */}
 //         <div className="flex justify-center mb-6">
@@ -241,16 +242,14 @@ export default function TwoFAStep({ server_session_data }) {
 
 //         {/* OTP Input */}
 //         <div className="mb-6">
-//           <label htmlFor="otp" className="block text-sm font-medium text-gray-700 mb-2">
-//             Enter the OTP from your app
-//           </label>
+//           <label htmlFor="otp" className={`block text-sm font-medium ${textColor} mb-2`}>Enter the OTP from your app</label>
 //           <input
 //             type="text"
 //             id="otp"
 //             name="otp"
 //             value={otpCode}
 //             onChange={(e) => setOtpCode(e.target.value)}
-//             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//             className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputBg} border-gray-300`}
 //             placeholder="Enter OTP"
 //             maxLength={6}
 //           />
@@ -260,7 +259,7 @@ export default function TwoFAStep({ server_session_data }) {
 //         <div className="mt-6">
 //           <button
 //             onClick={handleSubmit}
-//             className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//             className={`w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 ${buttonBg}`}
 //           >
 //             Verify OTP
 //           </button>
@@ -270,7 +269,7 @@ export default function TwoFAStep({ server_session_data }) {
 //         <div className="mt-4 text-center">
 //           <Link
 //             href="#"
-//             className="text-sm text-blue-500 hover:text-blue-700 font-semibold"
+//             className={`text-sm text-blue-500 hover:text-blue-700 font-semibold ${textColor}`}
 //             onClick={() => alert("Resend OTP functionality not implemented")}
 //           >
 //             Resend OTP
@@ -280,3 +279,4 @@ export default function TwoFAStep({ server_session_data }) {
 //     </div>
 //   );
 // }
+

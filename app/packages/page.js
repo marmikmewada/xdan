@@ -316,7 +316,7 @@ export default function PackagesPage() {
                     onClick={() => router.push(`/locations/${store._id}`)}
                     className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${
                       selectedMode === "dark"
-                        ? "bg-transparent border-white text-white hover:bg-white hover:text-black"
+                        ? "bg-gradient-to-r from-gray-800 to-black border-white text-white hover:bg-white hover:text-gray-400"
                         : "bg-transparent border-black text-black hover:bg-black hover:text-white"
                     }`}
                     style={{

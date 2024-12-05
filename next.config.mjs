@@ -11,6 +11,12 @@ const nextConfig = {
                 hostname: "source.unsplash.com",
                 port: "",
             },
+            
+            {
+                protocol: "https",
+                hostname: "images.unsplash.com",
+                port: "",
+            },
             {
                 protocol: "https",
                 hostname: "www.sunspawellness.com",

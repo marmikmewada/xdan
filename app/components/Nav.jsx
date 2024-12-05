@@ -121,7 +121,7 @@ export default function Nav({ server_session_data }) {
 
   const isLoginPage = pathname === "/login";
 
-  const navLinkClass = `text-lg font-semibold transition-colors duration-300 ease-in-out transform ${
+  const navLinkClass = `text-sm font-semibold transition-colors duration-300 ease-in-out transform ${
     selectedMode === "dark"
       ? "text-white hover:text-gray-300 hover:underline"
       : "text-black hover:text-gray-700 hover:underline"
@@ -156,20 +156,24 @@ export default function Nav({ server_session_data }) {
             <Link href="/" className={navLinkClass}>
               Home
             </Link>
+            <Link href="/about" className={navLinkClass}>
+              About Us
+            </Link>
             <Link href="/products" className={navLinkClass}>
-              Products
+              Shop Lotions
             </Link>
             <Link href="/packages" className={navLinkClass}>
-              Packages
+              Shop Packages
+            </Link>
+            <Link href="/reviews" className={navLinkClass}>
+              Courses
             </Link>
             <Link href="/locations" className={navLinkClass}>
               Locations
             </Link>
-            <Link href="/about" className={navLinkClass}>
-              About
-            </Link>
+            
             <Link href="/reviews" className={navLinkClass}>
-              Customer Reviews
+              Sun Beds
             </Link>
 
             {session && (
@@ -227,7 +231,7 @@ export default function Nav({ server_session_data }) {
           </div>
 
           {/* Mobile Menu */}
-          <div className="flex items-center sm:hidden">
+          <div className="flex items-center md:hidden">
             <button
               onClick={toggleMode}
               className={`p-2 rounded-full focus:outline-none transition-colors duration-300 ease-in-out mr-2 ${
@@ -247,7 +251,7 @@ export default function Nav({ server_session_data }) {
               href="/cart"
               className="relative text-gray-800 dark:text-white"
             >
-              <FaShoppingCart className="w-6 h-6 text-gray-800 dark:text-white" />
+              <FaShoppingCart className="w-6 h-6" color={selectedMode === "dark"?"white":"#32325d"} />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">
                   {cartCount}
@@ -261,7 +265,7 @@ export default function Nav({ server_session_data }) {
                 selectedMode === "dark"
                   ? "text-white hover:bg-gray-800"
                   : "text-black hover:bg-gray-200"
-              } focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white`}
+              } focus:outline-none  focus:ring-inset focus:ring-white`}
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
@@ -293,18 +297,32 @@ export default function Nav({ server_session_data }) {
         Home
       </Link>
       <Link
+        href="/about"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        About Us
+      </Link>
+      <Link
         href="/products"
         onClick={closeMenu}
         className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
       >
-        Products
+        Shop Lotions
       </Link>
       <Link
         href="/packages"
         onClick={closeMenu}
         className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
       >
-        Packages
+        Shop Packages
+      </Link>
+      <Link
+        href="/reviews"
+        onClick={closeMenu}
+        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
+      >
+        Courses
       </Link>
       <Link
         href="/locations"
@@ -313,20 +331,15 @@ export default function Nav({ server_session_data }) {
       >
         Locations
       </Link>
-      <Link
-        href="/about"
-        onClick={closeMenu}
-        className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
-      >
-        About
-      </Link>
+      
       <Link
         href="/reviews"
         onClick={closeMenu}
         className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
       >
-        Customer Reviews
+        Sun Beds
       </Link>
+
 
       {session && session.user.role === "staff" && (
         <Link
@@ -352,7 +365,7 @@ export default function Nav({ server_session_data }) {
           onClick={closeMenu}
           className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
         >
-          Login
+          Login/Register
         </Link>
       )}
       {session &&

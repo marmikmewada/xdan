@@ -9,7 +9,6 @@ const ProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
 
-  console.log("userData", userData);
 
   // Fetch user details and orders data
   useEffect(() => {
@@ -106,8 +105,8 @@ const ProfilePage = () => {
       <div className="bg-white p-6 rounded-lg shadow-md">
         {orders.length > 0 ? (
           <ul>
-            {orders.map((order) => (
-              <li key={order._id} className="border-b py-4">
+            {orders.map((order,index) => (
+              <li key={index} className="border-b py-4">
                 <h3 className="text-lg font-medium">Order ID: {order._id}</h3>
                 <p><strong>Status:</strong> {order.statusForUser}</p>
                 <p><strong>Total Amount:</strong> £{order.totalAmount}</p>
@@ -119,8 +118,8 @@ const ProfilePage = () => {
                   <div>
                     <h4 className="font-semibold mt-2">Products:</h4>
                     <ul>
-                      {order.productRef.map((product) => (
-                        <li key={product._id}>
+                      {order.productRef.map((product,index) => (
+                        <li key={index}>
                           {product.name} - £{product.price}
                         </li>
                       ))}
@@ -132,8 +131,8 @@ const ProfilePage = () => {
                   <div>
                     <h4 className="font-semibold mt-2">Packages:</h4>
                     <ul>
-                      {order.packageRef.map((pkg) => (
-                        <li key={pkg._id}>
+                      {order.packageRef.map((pkg,index) => (
+                        <li key={index}>
                           {pkg.name} - £{pkg.price}
                         </li>
                       ))}

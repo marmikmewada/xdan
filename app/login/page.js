@@ -32,8 +32,8 @@ export default function Login() {
         setError(data.message || "Login failed. Please check your credentials.");
       } else {
         // Check if 2FA is enabled
-        if (data.data.twofa) {
-          router.push('/2fa-setup'); // Redirect to 2FA setup if enabled
+        if(data?.is_twofa_redirect){
+          router.push(`/2fa-setup?email=${username}&password=${password}`)
         } else {
           router.push('/'); // Redirect to homepage if 2FA is not enabled
           router.refresh()

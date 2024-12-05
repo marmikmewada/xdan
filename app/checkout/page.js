@@ -37,6 +37,7 @@ const CheckoutPage = () => {
           setCart(result.data.items || []);
           setTotalAmount(result.data.cartTotal || 0);
         } else {
+          navigate.push("/")
           console.log(result.message || "Failed to fetch cart.");
         }
       } catch (error) {

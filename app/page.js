@@ -13,11 +13,20 @@ export default function Page() {
   const [cartCount, setCartCount] = useState(0);
   const { selectedMode } = useStore();
 
-  const heroImages = [
+  const lightModeHeroImages = [
     "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1607008829749-c0f284074b61?auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80",
     "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&q=80",
+  ];
+
+  const darkModeHeroImages = [
+    "https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?auto=format&fit=crop&q=80",
+    "https://images.unsplash.com/photo-1520006403909-838d6b92c22e?auto=format&fit=crop&q=80",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -54,7 +63,7 @@ export default function Page() {
     fetchData();
 
     const intervalId = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+      setCurrentImageIndex((prev) => (prev + 1) % 5);
     }, 5000);
 
     return () => clearInterval(intervalId);
@@ -170,13 +179,58 @@ export default function Page() {
     </section>
   );
 
+  const InfoSection = ({ title, description, image, reverse = false }) => (
+    <section className={`py-16 ${bgColor}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className={`flex flex-col ${reverse ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8`}>
+          <div className="md:w-1/2">
+            <Image
+              src={image}
+              alt={title}
+              width={600}
+              height={400}
+              className=" shadow-lg"
+            />
+          </div>
+          <div className="md:w-1/2">
+            <h2 className={`text-3xl font-bold mb-4 ${textColor}`}>{title}</h2>
+            <p className={`${textColor} text-lg`}>{description}</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+
+  const EquipmentSection = ({ title, items }) => (
+    <section className={`py-16 ${bgColor}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 className={`text-3xl font-bold mb-8 text-center ${textColor}`}>{title}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {items.map((item, index) => (
+            <div key={index} className={`p-6 shadow-lg ${selectedMode === 'dark' ? 'bg-gradient-to-b from-black to-gray-900' : 'bg-white'}`}>
+              <Image
+                src={item.image}
+                alt={item.name}
+                width={300}
+                height={200}
+                className=" mb-4"
+              />
+              <h3 className={`text-xl font-semibold mb-2 ${textColor}`}>{item.name}</h3>
+              <p className={`${textColor}`}>{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
       {/* Hero Section */}
       <HeroSection
         title="Glow Up at Bronze & Beauty"
         description="Experience the best tanning services in the UK with our state-of-the-art facilities"
-        image={heroImages[currentImageIndex]}
+        image={selectedMode === "dark" ? darkModeHeroImages[currentImageIndex] : lightModeHeroImages[currentImageIndex]}
         buttons={[
           {
             text: "Book Your Session",
@@ -190,6 +244,49 @@ export default function Page() {
           },
         ]}
       />
+
+      {/* About Bronze & Beauty Section */}
+      
+        {/* About Bronze & Beauty Section */}
+<InfoSection
+  title="About Bronze & Beauty"
+  description="Bronze & Beauty is the UK's premier tanning salon, offering a luxurious and safe tanning experience. Our state-of-the-art facilities and expert staff ensure you achieve the perfect glow every time. With multiple locations across the country, we're committed to helping you look and feel your best."
+  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}  // Conditional image path
+  className={`p-8 rounded-lg shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+/>
+
+{/* UV Equipment Section */}
+<EquipmentSection
+  title="Our UV Equipment"
+  items={[
+    {
+      name: "High-Pressure Tanning Bed",
+      description: "Experience fast, deep tanning with our high-pressure beds, perfect for those seeking quick results.",
+      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
+      // Apply gradient background to individual card as well
+    },
+    {
+      name: "Low-Pressure Tanning Bed",
+      description: "Ideal for building a base tan or maintaining your glow, our low-pressure beds offer a gentle tanning experience.",
+      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
+    },
+    {
+      name: "Stand-Up Tanning Booth",
+      description: "For those who prefer not to lie down, our stand-up booths provide a quick and effective tanning session.",
+      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
+    }
+  ]}
+  className={`p-8 rounded-lg shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+/>
+
+{/* Sun Beds Section */}
+<InfoSection
+  title="Our Sun Beds"
+  description="At Bronze & Beauty, we offer a variety of sun beds to suit your tanning needs. From gentle low-pressure beds for beginners to high-intensity beds for experienced tanners, we have the perfect option for everyone. Our beds are regularly maintained and sanitized to ensure your safety and comfort."
+  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}  // Conditional image path
+  reverse={true}
+  className={`p-8 rounded-lg shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+/>
 
       {/* Locations Section */}
       {stores.map((store, index) => (
@@ -210,7 +307,7 @@ export default function Page() {
                   style={{ border: 0 }}
                   allowFullScreen
                   aria-hidden="false"
-                  tabIndex="0"
+                  tabIndex={0}
                 />
               ) : (
                 <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
@@ -281,6 +378,7 @@ export default function Page() {
     </main>
   );
 }
+
 
 
 

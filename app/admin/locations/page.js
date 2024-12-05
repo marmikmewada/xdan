@@ -83,7 +83,9 @@ export default function LocationsPage() {
                                         </Link>
                                     </p>
                                 )}
-                                <div className="flex justify-end mt-4">
+                            </div>
+                        </Link>
+                        <div className="flex justify-end mt-4 p-4">
                                     {/* <Link
                                         href={`/admin/locations/${location?._id}/edit`}
                                         className="text-blue-500 hover:text-blue-700 mr-2"
@@ -91,7 +93,8 @@ export default function LocationsPage() {
                                         <Edit size={20} />
                                     </Link> */}
                                     <button
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation()
                                             setLocationToDelete(location)
                                             setDeleteModalOpen(true)
                                         }}
@@ -100,8 +103,6 @@ export default function LocationsPage() {
                                         <Trash2 size={20} />
                                     </button>
                                 </div>
-                            </div>
-                        </Link>
                     </div>
                 ))}
             </div>
