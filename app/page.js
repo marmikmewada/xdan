@@ -207,7 +207,7 @@ export default function Page() {
         <h2 className={`text-3xl font-bold mb-8 text-center ${textColor}`}>{title}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {items.map((item, index) => (
-            <div key={index} className={`p-6 shadow-lg ${selectedMode === 'dark' ? 'bg-gradient-to-b from-black to-gray-900' : 'bg-white'} rounded-lg`}>
+            <div key={index} className={`p-6 shadow-lg ${selectedMode === 'dark' ? 'bg-gradient-to-b from-black to-gray-900' : 'bg-white'}`}>
               {/* Image */}
               <div className="relative w-full h-48 mb-4">
                 <Image
@@ -215,7 +215,6 @@ export default function Page() {
                   alt={item.name}
                   layout="fill" // This helps maintain responsive image sizing
                   objectFit="cover" // Ensures the image covers the container without stretching
-                  className="rounded-t-lg"
                 />
               </div>
   
@@ -260,7 +259,7 @@ export default function Page() {
   title="About Bronze & Beauty"
   description="Bronze & Beauty is the UK's premier tanning salon, offering a luxurious and safe tanning experience. Our state-of-the-art facilities and expert staff ensure you achieve the perfect glow every time. With multiple locations across the country, we're committed to helping you look and feel your best."
   image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}  // Conditional image path
-  className={`p-8 rounded-lg shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+  className={`p-8  shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
 />
 
 {/* UV Equipment Section */}
@@ -284,7 +283,7 @@ export default function Page() {
       image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
     }
   ]}
-  className={`p-8 rounded-lg shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+  className={`p-8  shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
 />
 
 {/* Sun Beds Section */}
@@ -293,7 +292,7 @@ export default function Page() {
   description="At Bronze & Beauty, we offer a variety of sun beds to suit your tanning needs. From gentle low-pressure beds for beginners to high-intensity beds for experienced tanners, we have the perfect option for everyone. Our beds are regularly maintained and sanitized to ensure your safety and comfort."
   image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}  // Conditional image path
   reverse={true}
-  className={`p-8 rounded-lg shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+  className={`p-8  shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
 />
 
       {/* Locations Section */}
@@ -301,7 +300,7 @@ export default function Page() {
         <div key={store._id} className="w-full">
           <section className="relative pb-16 sm:pb-24">
             {/* Map Section */}
-            <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] rounded-lg shadow-2xl overflow-hidden">
+            <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] shadow-2xl overflow-hidden">
               {store.coordinates ? (
                 <iframe
                   src={`${store.coordinates}${
