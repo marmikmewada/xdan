@@ -29,7 +29,7 @@ export default function PrivacyPolicyPage() {
           </p>
           <p>
             The policy sets out the different areas where user privacy
-            is concerned and outlines the obligations & requirements of
+            is concerned and outlines the obligations &amp; requirements of
             the users, the company, website, and website owners.
             Furthermore, the way this website processes, stores, and
             protects user data and information will also be detailed
@@ -50,9 +50,9 @@ export default function PrivacyPolicyPage() {
             cookies on their computer/device.
           </p>
           <p>
-            Cookies are small files saved to the user's computer's hard
+            Cookies are small files saved to the user&apos;s computer&apos;s hard
             drive that track, save, and store information about the
-            user's interactions and usage of the website. This allows
+            user&apos;s interactions and usage of the website. This allows
             the website, through its server, to provide the users with a
             tailored experience within this website.
           </p>
@@ -101,7 +101,7 @@ export default function PrivacyPolicyPage() {
         <div>
           <p className="mb-4">
             Bronze & Beauty Studio is fully committed to your privacy,
-            which is why we make sure you're always in control of what
+            which is why we make sure you&apos;re always in control of what
             we do with your personal information.
           </p>
           <p className="mb-4">
