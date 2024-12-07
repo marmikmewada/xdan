@@ -99,6 +99,7 @@ export const dbmodels = (mongoose) => {
     couponCode: { type: String, required: true, unique: true },
     percentage: { type: Number, required: true },
     maxUsage: { type: Number, required: true },
+    usage: { type: Number, required: false,default:0 },
     expiry: { type: Date, required: true },
   });
 

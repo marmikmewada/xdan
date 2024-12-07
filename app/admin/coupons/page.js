@@ -92,6 +92,7 @@ export default function CouponListPage() {
                             <th className="border border-gray-300 px-4 py-2 text-sm sm:text-base">Coupon Code</th>
                             <th className="border border-gray-300 px-4 py-2 text-sm sm:text-base">Discount (%)</th>
                             <th className="border border-gray-300 px-4 py-2 text-sm sm:text-base">Max Usage</th>
+                            <th className="border border-gray-300 px-4 py-2 text-sm sm:text-base">Usage</th>
                             <th className="border border-gray-300 px-4 py-2 text-sm sm:text-base">Expiry</th>
                             <th className="border border-gray-300 px-4 py-2 text-sm sm:text-base">Actions</th>
                         </tr>
@@ -102,6 +103,7 @@ export default function CouponListPage() {
                                 <td className="border border-gray-300 px-4 py-2 text-sm sm:text-base">{coupon.couponCode}</td>
                                 <td className="border border-gray-300 px-4 py-2 text-sm sm:text-base">{coupon.percentage}%</td>
                                 <td className="border border-gray-300 px-4 py-2 text-sm sm:text-base">{coupon.maxUsage}</td>
+                                <td className="border border-gray-300 px-4 py-2 text-sm sm:text-base">{coupon.usage}</td>
                                 <td className="border border-gray-300 px-4 py-2 text-sm sm:text-base">
                                     {new Date(coupon.expiry).toLocaleDateString()}
                                 </td>

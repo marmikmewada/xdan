@@ -19,6 +19,10 @@ const CheckoutPage = () => {
   const [postcode, setPostcode] = useState('');
   const [phone, setPhone] = useState('');
   const [deliveryCharges, setDeliveryCharges] = useState(0);
+  const [couponCode, setCouponCode] = useState('');
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [notification, setNotification] = useState(null); // For showing error/success messages
+  console.log("notification",notification)
 
   useEffect(() => {
     const fetchCart = async () => {
@@ -59,6 +63,7 @@ const CheckoutPage = () => {
         deliveryAddress: formatDeliveryAddress(),
         cartItems: cart,
         totalAmount: totalAmount + deliveryCharges,
+        couponCode,
       };
 
       const response = await fetch('/api/checkout', {
@@ -76,7 +81,7 @@ const CheckoutPage = () => {
         // window.location.href = responseData.order.stripeUrl;
       } else {
         console.log(responseData.message);
-        alert("Payment failed. Please try again.");
+        // alert("Payment failed. Please try again.");
       }
     } catch (error) {
       console.error("Error during Stripe payment:", error);
@@ -96,6 +101,7 @@ const CheckoutPage = () => {
         deliveryAddress: formatDeliveryAddress(),
         cartItems: cart,
         totalAmount: totalAmount + deliveryCharges,
+        couponCode,
       };
 
       const response = await fetch('/api/checkout', {
@@ -109,7 +115,8 @@ const CheckoutPage = () => {
       const responseData = await response.json();
 
       if (responseData.success) {
-        alert("Order placed successfully. Please pick up your items.");
+        await fetch("/api/emptycart",{ method: 'DELETE'})
+        // alert("Order placed successfully. Please pick up your items.");
         navigate.push("/order-confirmation");
       } else {
         alert(responseData.message);
@@ -152,6 +159,15 @@ const CheckoutPage = () => {
     return `${streetAddress}, ${city}, ${postcode}, Phone: ${phone}`;
   };
 
+  useEffect(() => {
+    if (notification) {
+        const timer = setTimeout(() => {
+            setNotification(null); // Hide notification after 3 seconds
+        }, 3000);
+        return () => clearTimeout(timer);
+    }
+}, [notification]);
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -160,11 +176,59 @@ const CheckoutPage = () => {
     );
   }
 
+  const verifyCoupon = async () => {
+    try {
+      const response = await fetch("/api/verify-coupon", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ couponCode }),
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        const discountPercentage = data.discountPercentage;
+
+      // Update the coupon discount state
+      
+      // Calculate the discount amount
+      const discountAmount = (totalAmount * discountPercentage) / 100;
+      setCouponDiscount(discountAmount);
+      console.log("discountAmount",discountAmount)
+
+      // Update the total amount after applying the discount
+      const updatedTotalAmount = totalAmount - discountAmount;
+      console.log("updatedTotalAmount",updatedTotalAmount)
+      // setTotalAmount(updatedTotalAmount);
+      } else {
+        setNotification({ type: 'error', message: data.message});
+        setCouponDiscount(0);
+        console.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error verifying coupon:", error);
+    }
+  };
+
+  
+  
+
+  const final_amount=deliveryCharges&&couponDiscount?totalAmount+deliveryCharges-couponDiscount:deliveryCharges?totalAmount+deliveryCharges:couponDiscount?totalAmount-couponDiscount:0
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <div className="bg-white shadow-md rounded-lg p-6">
         <h3 className="text-2xl font-semibold mb-4">Order Summary</h3>
 
+        {notification && (
+                    <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow-lg ${
+                        notification.type === 'success' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-gradient-to-b from-black to-gray-900 text-white'
+                    }`}>
+                        {notification.message}
+                    </div>
+                )}
         {/* Cart Items Display */}
         <div className="mb-6">
           <h4 className="text-xl font-semibold mb-3">Cart Items</h4>
@@ -193,7 +257,30 @@ const CheckoutPage = () => {
           {deliveryCharges > 0 && (
             <p><strong>Delivery Charges: </strong>£{deliveryCharges}</p>
           )}
-          <p><strong>Final Total: </strong>£{totalAmount + deliveryCharges}</p>
+          {couponDiscount > 0 && (
+            <p><strong>Coupon Discount: </strong>£{couponDiscount}</p>
+          )}
+          {final_amount > 0&&
+          <p><strong>Final Total: </strong>£{final_amount} </p>
+          }
+          {/* <p><strong>Final Total: </strong>£{deliveryCharges?deliveryCharges+totalAmount :totalAmount-couponDiscount}</p> */}
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700">Coupon Code</label>
+          <input
+            type="text"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+            placeholder="Enter coupon code (optional)"
+            className="w-full mt-2 border border-gray-300 rounded-lg px-4 py-2"
+          />
+           <button
+              onClick={verifyCoupon}
+              className="py-2 px-6 bg-gray-500 text-white rounded-lg font-semibold hover:bg-gray-600"
+            >
+              Apply
+            </button>
         </div>
 
         {/* Payment Method Selection */}

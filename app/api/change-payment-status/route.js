@@ -95,7 +95,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET, {
 export async function GET(req, res) {
   try {
     await connectToDatabase(mongoose);
-    const { orderTable, packageTable, userTable } = dbmodels(mongoose);
+    const { orderTable, packageTable, userTable,discountCouponTable } = dbmodels(mongoose);
 
     const details = await stripe.checkout.sessions.list();
     console.log("details:>", details.data);
@@ -138,6 +138,14 @@ export async function GET(req, res) {
         },
       }
     );
+    if(orderDetails?.usedCouponCode){
+    await userTable.findByIdAndUpdate(userDetails._id, {
+      $push: { couponUsage: orderDetails?.usedCouponCode },
+    });
+    await discountCouponTable.findByIdAndUpdate(validCoupon._id, {
+      $inc: { usage: 1 },
+    });
+  }
     if(orderDetails.packageRef.length>0){
     // Sum up the minutes from the ordered packages, considering duplicates
     const packages = await packageTable.find({

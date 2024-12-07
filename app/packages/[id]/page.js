@@ -28,7 +28,7 @@ export default function PackagePage() {
       try {
         const [packageRes, productsRes, storesRes] = await Promise.all([
           fetch(`/api/package/${id}`),
-          fetch('/api/product'),
+          fetch('/api/package'),
           fetch('/api/store')
         ]);
 
@@ -192,7 +192,7 @@ export default function PackagePage() {
         {/* Related Products Section */}
         <section className={`py-12 ${bgColor} ${gradientClass}`}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className={`text-3xl font-bold mb-6 text-center ${textColor}`}>Related Products</h2>
+            <h2 className={`text-3xl font-bold mb-6 text-center ${textColor}`}>Related Packages</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {relatedProducts.slice(0, 3).map((product) => (
                 <div
@@ -225,6 +225,7 @@ export default function PackagePage() {
                       >
                         {product.description.substring(0, 100)}...
                       </p>
+                      <p className="text-lg font-semibold mb-2">{product.minutes} minutes</p>
                       <p className="text-xl font-bold mb-3">£{product.price.toFixed(2)}</p>
 
                       <button

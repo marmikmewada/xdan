@@ -255,12 +255,13 @@ export default function Page() {
       {/* About Bronze & Beauty Section */}
       
         {/* About Bronze & Beauty Section */}
-<InfoSection
+        <InfoSection
   title="About Bronze & Beauty"
-  description="Bronze & Beauty is the UK's premier tanning salon, offering a luxurious and safe tanning experience. Our state-of-the-art facilities and expert staff ensure you achieve the perfect glow every time. With multiple locations across the country, we're committed to helping you look and feel your best."
-  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}  // Conditional image path
-  className={`p-8  shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+  description="Bronze & Beauty Studio is a professional tanning shop located in the heart of Hednesford High Street, Staffordshire. Our goal is to help customers achieve a healthy, responsible tan in our immaculate and friendly shop. Bronze & Beauty Studio promotes responsible tanning and are proud members of The Sunbed Association, our staff are trained to provide educated recommendations for the best tanning results. Our sun beds are maintained to the highest standards, checked and sanitised after every use. Each tanning room comes with a fresh towel, goggles for UV protection on the eyes, body wipes, and head bands. We pride ourselves on customer satisfaction and customer service."
+  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'} 
+  className={`p-8 shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} 
 />
+
 
 {/* UV Equipment Section */}
 <EquipmentSection
@@ -269,31 +270,31 @@ export default function Page() {
     {
       name: "High-Pressure Tanning Bed",
       description: "Experience fast, deep tanning with our high-pressure beds, perfect for those seeking quick results.",
-      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
-      // Apply gradient background to individual card as well
+      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'
     },
     {
       name: "Low-Pressure Tanning Bed",
       description: "Ideal for building a base tan or maintaining your glow, our low-pressure beds offer a gentle tanning experience.",
-      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
+      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'
     },
     {
       name: "Stand-Up Tanning Booth",
       description: "For those who prefer not to lie down, our stand-up booths provide a quick and effective tanning session.",
-      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'  // Conditional image path
+      image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'
     }
   ]}
-  className={`p-8  shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+  className={`p-8 shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} 
 />
 
-{/* Sun Beds Section */}
+
 <InfoSection
   title="Our Sun Beds"
   description="At Bronze & Beauty, we offer a variety of sun beds to suit your tanning needs. From gentle low-pressure beds for beginners to high-intensity beds for experienced tanners, we have the perfect option for everyone. Our beds are regularly maintained and sanitized to ensure your safety and comfort."
-  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}  // Conditional image path
+  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'} 
   reverse={true}
-  className={`p-8  shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} // Apply gradient background to card
+  className={`p-8 shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} 
 />
+
 
       {/* Locations Section */}
       {stores.map((store, index) => (

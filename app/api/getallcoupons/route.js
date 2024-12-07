@@ -12,7 +12,7 @@ export async function GET(req) {
     const { discountCouponTable } = dbmodels(mongoose);
 
     // Step 2: Fetch all coupons
-    const coupons = await discountCouponTable.find().select('couponCode percentage maxUsage expiry');  // Select relevant fields
+    const coupons = await discountCouponTable.find().select('couponCode percentage maxUsage expiry usage');  // Select relevant fields
     console.log(coupons);
     
     // Step 3: Check if there are any coupons
