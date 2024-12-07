@@ -54,7 +54,7 @@ export default function CartPage() {
       if (!result.success) {
         console.log(result.message || 'Failed to increase quantity.');
       } else {
-        // fetchCart(); // Refresh cart
+        fetchCart(); // Refresh cart
         router.refresh();
       }
     } catch (error) {
@@ -74,7 +74,7 @@ export default function CartPage() {
       if (!result.success) {
         console.log(result.message || 'Failed to decrease quantity.');
       } else {
-        // fetchCart(); // Refresh cart
+        fetchCart(); // Refresh cart
         router.refresh()
       }
     } catch (error) {
@@ -94,7 +94,7 @@ export default function CartPage() {
       if (!result.success) {
         console.log(result.message || 'Failed to remove item.');
       } else {
-        // fetchCart(); // Refresh cart
+        fetchCart(); // Refresh cart
         router.refresh()
       }
     } catch (error) {
@@ -113,7 +113,7 @@ export default function CartPage() {
       if (!result.success) {
         console.log(result.message || 'Failed to empty cart.');
       } else {
-        // fetchCart(); // Refresh cart
+        fetchCart(); // Refresh cart
         router.refresh()
       }
     } catch (error) {

@@ -40,18 +40,20 @@ export default function Footer() {
     <footer className={`py-16 ${gradientClass} ${textColor}`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
-          {/* The Tanning Shop */}
+          {/* Company Information */}
           <div>
-            <h2 className="text-2xl font-semibold mb-4">The Tanning Shop</h2>
+            <h2 className="text-2xl font-semibold mb-4">Company Information</h2>
             <ul className="space-y-3 text-sm">
               <li>
-                Bronze and Beautify Studio is a registered business in the UK.
+                Bronze & Beauty Studio Hednesford Limited. Company Registration Number: 16059465
               </li>
-              <li>Company number 05891329, VAT number 287155376</li>
               <li>
-                Registered address: Unit J6, Morton Park, Darlington DL1 4PG
+                Registered Address: 39 Market Street, Hednesford, Cannock, Staffordshire WS12 1AY
               </li>
-              <li>customerservices@tfgg.co.uk</li>
+              <li>
+                <FaEnvelope className={`inline-block mr-2 ${textColor}`} />
+                <span>Hednesford@bronzebeautystudio.co.uk</span>
+              </li>
             </ul>
           </div>
 
@@ -60,7 +62,7 @@ export default function Footer() {
             <h2 className="text-2xl font-semibold mb-4">Help & Info</h2>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="#" className="hover:underline">
+                <Link href="/contact" className="hover:underline">
                   Contact Us
                 </Link>
               </li>
@@ -72,6 +74,16 @@ export default function Footer() {
               <li>
                 <Link href="#" className="hover:underline">
                   Our Stores
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy-policy" className="hover:underline">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms-and-conditions" className="hover:underline">
+                  Terms &amp; Conditions
                 </Link>
               </li>
             </ul>
@@ -175,21 +187,8 @@ export default function Footer() {
         {/* Bottom Section */}
         <div className="mt-12 text-center border-t border-gray-700 pt-6">
           <div className="text-sm">
-            &copy; {new Date().getFullYear()} Bronze and Beautify Studio. All rights
-            reserved. <br />
-            <div className="flex justify-center gap-4 mt-4">
-              <Link href="/privacy-policy" className="text-blue-500 hover:underline">
-                Privacy Policy
-              </Link>
-              <span>|</span>
-              <Link href="/terms-and-conditions" className="text-blue-500 hover:underline">
-                Terms &amp; Conditions
-              </Link>
-              <span>|</span>
-              <Link href="/faq" className="text-blue-500 hover:underline">
-                FAQ
-              </Link>
-            </div>
+            &copy; {new Date().getFullYear()} Bronze & Beauty Studio Hednesford Limited. All rights
+            reserved.
           </div>
         </div>
       </div>
@@ -201,19 +200,22 @@ export default function Footer() {
 
 
 
-// "use client";
+
+
+
+
+// 'use client';
 
 // import {
 //   FaFacebook,
 //   FaInstagram,
-//   FaTwitter,
-//   FaYoutube,
+//   FaTiktok,
 //   FaEnvelope,
 //   FaPhoneAlt,
-//   FaTiktok,
 // } from "react-icons/fa";
 // import { useState } from "react";
 // import useStore from "@/app/store/useStore";
+// import Link from 'next/link';
 
 // export default function Footer() {
 //   const [email, setEmail] = useState("");
@@ -249,8 +251,7 @@ export default function Footer() {
 //             <h2 className="text-2xl font-semibold mb-4">The Tanning Shop</h2>
 //             <ul className="space-y-3 text-sm">
 //               <li>
-//                 The Feel Good Group Ltd T/A The Tanning Shop is registered in the
-//                 UK
+//                 Bronze and Beautify Studio is a registered business in the UK.
 //               </li>
 //               <li>Company number 05891329, VAT number 287155376</li>
 //               <li>
@@ -265,27 +266,20 @@ export default function Footer() {
 //             <h2 className="text-2xl font-semibold mb-4">Help & Info</h2>
 //             <ul className="space-y-3 text-sm">
 //               <li>
-//                 <a href="#" className="hover:underline">
+//                 <Link href="#" className="hover:underline">
 //                   Contact Us
-//                 </a>
+//                 </Link>
 //               </li>
 //               <li>
-//                 <a href="#" className="hover:underline">
+//                 <Link href="/faq" className="hover:underline">
 //                   FAQs
-//                 </a>
+//                 </Link>
 //               </li>
 //               <li>
-//                 <a href="#" className="hover:underline">
-//                   Responsible Tanning
-//                 </a>
-//               </li>
-//               <li>
-//                 <a href="#" className="hover:underline">
+//                 <Link href="#" className="hover:underline">
 //                   Our Stores
-//                 </a>
+//                 </Link>
 //               </li>
-              
-              
 //             </ul>
 //           </div>
 
@@ -294,22 +288,20 @@ export default function Footer() {
 //             <h2 className="text-2xl font-semibold mb-4">Products</h2>
 //             <ul className="space-y-3 text-sm">
 //               <li>
-//                 <a href="#" className="hover:underline">
+//                 <Link href="#" className="hover:underline">
 //                   Minutes & Packages
-//                 </a>
+//                 </Link>
 //               </li>
 //               <li>
-//                 <a href="#" className="hover:underline">
+//                 <Link href="#" className="hover:underline">
 //                   UV Tanning Beds
-//                 </a>
+//                 </Link>
 //               </li>
-              
 //               <li>
-//                 <a href="#" className="hover:underline">
+//                 <Link href="#" className="hover:underline">
 //                   Lotions
-//                 </a>
+//                 </Link>
 //               </li>
-              
 //             </ul>
 //           </div>
 
@@ -326,12 +318,12 @@ export default function Footer() {
 //                 <span>contact@mytanningsalon.com</span>
 //               </li>
 //               <li>
-//                 <a
+//                 <Link
 //                   href="https://www.google.com/maps"
 //                   className={`hover:underline ${textColor}`}
 //                 >
 //                   View on Map
-//                 </a>
+//                 </Link>
 //               </li>
 //             </ul>
 
@@ -388,19 +380,28 @@ export default function Footer() {
 
 //         {/* Bottom Section */}
 //         <div className="mt-12 text-center border-t border-gray-700 pt-6">
-//           <p className="text-sm">
-//             &copy; {new Date().getFullYear()} Bronze and beauty Tanning saloon. All rights
-//             reserved.
-//           </p>
+//           <div className="text-sm">
+//             &copy; {new Date().getFullYear()} Bronze and Beautify Studio. All rights
+//             reserved. <br />
+//             <div className="flex justify-center gap-4 mt-4">
+//               <Link href="/privacy-policy" className="text-blue-500 hover:underline">
+//                 Privacy Policy
+//               </Link>
+//               <span>|</span>
+//               <Link href="/terms-and-conditions" className="text-blue-500 hover:underline">
+//                 Terms &amp; Conditions
+//               </Link>
+//               <span>|</span>
+//               <Link href="/faq" className="text-blue-500 hover:underline">
+//                 FAQ
+//               </Link>
+//             </div>
+//           </div>
 //         </div>
 //       </div>
 //     </footer>
 //   );
 // }
-
-
-
-
 
 
 
