@@ -8,7 +8,8 @@ import { NextResponse } from "next/server";
 import moment from "moment";
 
 export async function POST(req, { params }) {
-  const { id } = params; // Get the store ID from the URL params
+  const { id,bedid } = params; // Get the store ID from the URL params
+  console.log("bedid",bedid)
 
   try {
     const { date, timeSlots } = await req.json(); // Removed packageRef from the request body
@@ -68,6 +69,7 @@ export async function POST(req, { params }) {
     const existingBooking = await bookingTable.findOne({
       userRef: userDetails._id,
       storeRef: id,
+      bedRef:bedid,
       date,
     }).exec();
 
@@ -81,13 +83,9 @@ export async function POST(req, { params }) {
       );
     }
 
-    
-
-
-
 
     // Check for unavailable slots on the requested date
-    const unavailableSlots = await unavailableSlotTable.findOne({ storeRef: id, date }).exec();
+      const unavailableSlots = await unavailableSlotTable.findOne({ storeRef: id,bedRef:bedid, date }).exec();
 
     if (unavailableSlots) {
       // Loop through the requested timeSlots and check if any of them are unavailable
@@ -119,6 +117,7 @@ export async function POST(req, { params }) {
     // Mark the slots as unavailable for this store and date
     await unavailableSlotTable.create({
       storeRef: id,
+      bedRef:bedid,
       date,
       slots: timeSlots,
     });
@@ -127,7 +126,8 @@ export async function POST(req, { params }) {
     const booking = await bookingTable.create({
       userRef: userDetails._id,
       storeRef: id,
-      date,
+      date,      
+      bedRef:bedid,
       timeSlots,
     });
 

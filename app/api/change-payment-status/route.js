@@ -94,6 +94,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET, {
 
 export async function GET(req, res) {
   try {
+    const session = await auth();
+    const userId = session?.user?.id;
     await connectToDatabase(mongoose);
     const { orderTable, packageTable, userTable,discountCouponTable } = dbmodels(mongoose);
 
@@ -139,9 +141,12 @@ export async function GET(req, res) {
       }
     );
     if(orderDetails?.usedCouponCode){
-    await userTable.findByIdAndUpdate(userDetails._id, {
+    await userTable.findByIdAndUpdate(userId, {
       $push: { couponUsage: orderDetails?.usedCouponCode },
     });
+    console.log("orderDetails?.usedCouponCode",orderDetails?.usedCouponCode)
+    const validCoupon = await discountCouponTable.findById(orderDetails?.usedCouponCode ).exec();
+    console.log("validCoupon",validCoupon)
     await discountCouponTable.findByIdAndUpdate(validCoupon._id, {
       $inc: { usage: 1 },
     });
@@ -187,8 +192,7 @@ export async function GET(req, res) {
     }
 
     // Get the user ID from session (assuming `auth` returns the session with user ID)
-    const session = await auth();
-    const userId = session?.user?.id;
+    
 
     // Fetch the user's current minutes, ensure it's a valid number (if missing, default to 0)
     const user = await userTable.findById(userId);

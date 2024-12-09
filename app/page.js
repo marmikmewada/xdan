@@ -229,7 +229,15 @@ export default function Page() {
       </div>
     </section>
   );
-  
+  const gradientClass = selectedMode === "dark"
+    ? "bg-gradient-to-r from-gray-800 to-black"
+    : "bg-gradient-to-r from-white to-gray-200";
+  const inputBg = selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
+  const buttonBg = selectedMode === "dark"
+    ? "bg-gray-600 hover:bg-gray-700"
+    : "bg-gray-200 hover:bg-gray-300";
+  const iconColor = selectedMode === "dark" ? "text-white" : "text-gray-800";
+  const hoverIconColor = selectedMode === "dark" ? "hover:text-blue-400" : "hover:text-blue-500";
 
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
@@ -297,10 +305,9 @@ export default function Page() {
 
 
       {/* Locations Section */}
-      {stores.map((store, index) => (
+      {/* {stores.map((store, index) => (
         <div key={store._id} className="w-full">
           <section className="relative pb-16 sm:pb-24">
-            {/* Map Section */}
             <div className="w-full h-[60vh] sm:h-[70vh] md:h-[80vh] shadow-2xl overflow-hidden">
               {store.coordinates ? (
                 <iframe
@@ -324,7 +331,6 @@ export default function Page() {
               )}
             </div>
 
-            {/* Store Details Section */}
             <div
               className={`absolute bottom-0 left-0 right-0 p-8 sm:p-10 flex flex-col items-center justify-center ${
                 selectedMode === "dark"
@@ -372,7 +378,44 @@ export default function Page() {
             </div>
           </section>
         </div>
-      ))}
+      ))} */}
+      {stores.map((store) => (
+            <div key={store._id} className="mb-8">
+              <div className="relative h-[400px] w-full overflow-hidden shadow-lg">
+                {store.coordinates ? (
+                  <iframe
+                    src={`${store.coordinates}${
+                      selectedMode === "dark"
+                        ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off"
+                        : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"
+                    }`}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    aria-hidden="false"
+                    tabIndex="0"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                    No map available
+                  </div>
+                )}
+              </div>
+              <div className={`${gradientClass} p-6 mt-4`}>
+                <h3 className="text-2xl font-bold mb-2">{store.name}</h3>
+                <p className={`mb-2 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>{store.address}</p>
+                <p className={`mb-4 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>{store.phone}</p>
+                <button
+                  onClick={() => router.push(`/locations/${store._id}`)}
+                  className={`${buttonBg} px-6 py-2 font-semibold transition-colors duration-300`}
+                >
+                  Book Appointment
+                </button>
+              </div>
+            </div>
+          ))}
 
       <BannerSection
         title="Limited Time Offer!"

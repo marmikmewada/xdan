@@ -73,14 +73,14 @@ export default function LocationsPage() {
                                 <p className="text-gray-900 font-bold">Phone: {location?.phone}</p>
                                 {location?.coordinates && (
                                     <p className="text-blue-500 mt-2">
-                                        <Link
-                                            href={location.coordinates}
+                                        <button
+                                            onClick={()=>router.push(location?.coordinates)}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                             className="underline"
                                         >
                                             View on Map
-                                        </Link>
+                                        </button>
                                     </p>
                                 )}
                             </div>

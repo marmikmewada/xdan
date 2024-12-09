@@ -167,6 +167,7 @@ export const dbmodels = (mongoose) => {
   const bookingSchema = new mongoose.Schema({
     userRef: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     storeRef: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
+    bedRef: { type: mongoose.Schema.Types.ObjectId, ref: "Bed" },
     date: { type: Date, required: true },
     timeSlots: [
       {
@@ -180,6 +181,7 @@ export const dbmodels = (mongoose) => {
   // Unavailable Slots Model
   const unavailableSlotSchema = new mongoose.Schema({
     storeRef: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
+    bedRef: {type: mongoose.Schema.Types.ObjectId, ref: "Bed" },
     date: { type: Date, required: true },
     slots: [
       {
@@ -196,6 +198,15 @@ export const dbmodels = (mongoose) => {
     dates: { type: [Date], required: true }, // Array of dates (multiple unavailable days)
     reason: { type: String },
   });
+
+  const bedSchema = new mongoose.Schema({
+    storeRef: [{ type: mongoose.Schema.Types.ObjectId, ref: "Store" }], // Reference to the store
+    bedName: { type: String, required: true },
+    imageUrl: [{ type: String }], // Name of the bed, e.g. "Bed 1"
+   // Type of bed, e.g. "Sunbed", "Massage Bed"
+  });
+
+  
 
   // const { userTable, productTable } = dbmodels(mongoose);  ************
   // Add other schemas like packageSchema, orderSchema, etc. here...
@@ -228,6 +239,7 @@ export const dbmodels = (mongoose) => {
       mongoose.model("UnavailableDay", unavailableDaySchema),
       bannerTable:
       mongoose.models?.Banner || mongoose.model("Banner", bannerSchema),  // New model for banners
+      bedTable: mongoose.models?.Bed || mongoose.model("Bed", bedSchema),
     // Add other models here like:
     // packageTable, discountCouponTable, orderTable, etc.
   };

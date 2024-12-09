@@ -7,9 +7,10 @@ import { connectToDatabase,
 import moment from 'moment-timezone';
 
 export async function GET(req, { params }) {
-  const { id } = params; // Get the store id from the URL
+  const { id,bedid } = params; // Get the store id from the URL
   const { searchParams } = new URL(req.url);
   const date = searchParams.get('date'); // Get the selected date from the query params
+  console.log("bedid",bedid)
 
   if (!date) {
     return new Response(
@@ -44,6 +45,7 @@ export async function GET(req, { params }) {
     // Query to get unavailable slots for the specific store on the selected date
     const unavailableSlots = await unavailableSlotTable.find({
       storeRef: id,
+      bedRef:bedid,
       date: selectedDate.toDate(), // Match the exact date
     }).exec();
 
@@ -61,6 +63,7 @@ export async function GET(req, { params }) {
     // Query to get bookings for the store on the selected date
     const bookings = await bookingTable.find({
       storeRef: id,
+      bedRef:bedid,
       date: { $gte: selectedDate.toDate(), $lt: endOfDay.toDate() },
     }).populate('userRef', 'name'); // Populate user name from the User model
 

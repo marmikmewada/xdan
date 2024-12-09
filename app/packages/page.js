@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import useStore from "@/app/store/useStore";
+import { Search, ShoppingCart } from 'lucide-react';
+import { motion } from "framer-motion";
 
 export default function PackagesPage() {
   const { data: session } = useSession();
@@ -90,7 +92,7 @@ export default function PackagesPage() {
   const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
 
   const BannerSection = ({ title, description, image }) => (
-    <section className="relative h-screen overflow-hidden">
+    <section className="relative h-[50vh] overflow-hidden">
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{
@@ -114,6 +116,14 @@ export default function PackagesPage() {
     </section>
   );
 
+  const inputBg = selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
+  const buttonBg = selectedMode === "dark"
+    ? "bg-gray-600 hover:bg-gray-700"
+    : "bg-gray-200 hover:bg-gray-300";
+  const iconColor = selectedMode === "dark" ? "text-white" : "text-gray-800";
+  const hoverIconColor = selectedMode === "dark" ? "hover:text-blue-400" : "hover:text-blue-500";
+
+
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
       <BannerSection
@@ -130,18 +140,15 @@ export default function PackagesPage() {
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Search Bar */}
-        <div className="mb-6">
+        <div className="mb-8 relative">
           <input
             type="text"
-            placeholder="Search packages..."
-            className={`w-full p-2 border ${
-              selectedMode === "dark"
-                ? "border-gray-700 bg-gradient-to-b from-gray-800 to-black"
-                : "border-gray-300 bg-white"
-            }`}
+            placeholder="Search products..."
+            className={`w-full p-3 pl-10 ${inputBg} border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
+          <Search className={`absolute left-3 top-3 ${iconColor}`} size={20} />
         </div>
 
         {/* Packages Section */}
@@ -149,57 +156,51 @@ export default function PackagesPage() {
           <h2 className="text-3xl font-bold mb-6 text-center">Our Premium Packages</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPackages.map((pkg) => (
-              <div
-                key={pkg._id}
-                className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
-              >
-                <Link href={`/packages/${pkg._id}`} className="block">
-                  <div className="relative h-48 w-full group-hover:opacity-75 transition-all duration-300">
-                    {pkg.imageUrl && pkg.imageUrl[0] ? (
-                      <Image
-                        src={pkg.imageUrl[0]}
-                        alt={pkg.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="transition-all duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                        No image
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{pkg.name}</h3>
-                    <p
-                      className={`text-sm mb-3 ${
-                        selectedMode === "dark" ? "text-gray-400" : "text-gray-600"
-                      } group-hover:text-gray-800 transition-all duration-300`}
-                    >
-                      {pkg.description.substring(0, 100)}...
-                    </p>
-                    <p className="text-lg font-semibold mb-2">{pkg.minutes} minutes</p>
-                    <p className="text-xl font-bold mb-3">£{pkg.price.toFixed(2)}</p>
+              <motion.div
+              key={pkg._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`${gradientClass} shadow-lg transition-all duration-300 hover:shadow-xl`}
+            >
+              <Link href={`/packages/${pkg._id}`} className="block">
+                <div className="relative h-64 w-full overflow-hidden">
+                  {pkg.imageUrl && pkg.imageUrl[0] ? (
+                    <Image
+                      src={pkg.imageUrl[0]}
+                      alt={pkg.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-300 transform hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                      No image
+                    </div>
+                  )}
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{pkg.name}</h3>
+                  <p className={`text-sm mb-2 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                    {pkg.description.substring(0, 100)}...
+                  </p>
+                  <p className="text-lg font-semibold mb-4">{pkg.minutes} minutes</p>
+                  <div className="flex justify-between items-center">
+                    <p className="text-2xl font-bold">£{pkg.price.toFixed(2)}</p>
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         addToCart(pkg._id);
                       }}
                       disabled={loadingItemId === pkg._id}
-                      className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
-                        loadingItemId === pkg._id
-                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                          : `${
-                              selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white" : "bg-black text-white"
-                            } hover:bg-gray-800 hover:text-white`
-                      }`}
+                      className={`${buttonBg} p-2 rounded-full transition-colors duration-300 ${hoverIconColor}`}
                     >
-                      {loadingItemId === pkg._id ? "Adding..." : "Add to Cart"}
+                      <ShoppingCart size={24} />
                     </button>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
+            </motion.div>
             ))}
           </div>
         </section>
@@ -265,11 +266,9 @@ export default function PackagesPage() {
         </section>
 
         {/* Locations Section */}
-        {stores.map((store, index) => (
-          <div key={store._id} className="w-full mb-8">
-            <section className="relative pb-8">
-              {/* Map Section */}
-              <div className="w-full h-[500px] rounded-lg shadow-lg overflow-hidden">
+        {stores.map((store) => (
+            <div key={store._id} className="mb-8">
+              <div className="relative h-[400px] w-full overflow-hidden shadow-lg">
                 {store.coordinates ? (
                   <iframe
                     src={`${store.coordinates}${
@@ -291,55 +290,19 @@ export default function PackagesPage() {
                   </div>
                 )}
               </div>
-
-              {/* Store Details Section */}
-              <div
-                className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${
-                  selectedMode === "dark"
-                    ? "bg-gradient-to-b from-gray-900 to-black text-white"
-                    : "bg-gradient-to-b from-white to-gray-100 text-black"
-                }`}
-                style={{
-                  boxShadow: "0px -2px 20px rgba(0, 0, 0, 0.1)",
-                  borderRadius: "20px 20px 0 0",
-                }}
-              >
-                <div className="text-center space-y-4">
-                  <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
-                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                    {store.address}
-                  </p>
-                  <p className={`text-sm sm:text-base ${selectedMode === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                    {store.phone}
-                  </p>
-                  <button
-                    onClick={() => router.push(`/locations/${store._id}`)}
-                    className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${
-                      selectedMode === "dark"
-                        ? "bg-gradient-to-r from-gray-800 to-black border-white text-white hover:bg-white hover:text-gray-400"
-                        : "bg-transparent border-black text-black hover:bg-black hover:text-white"
-                    }`}
-                    style={{
-                      padding: "12px 24px",
-                      boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
-                    }}
-                  >
-                    Book Appointment
-                  </button>
-                </div>
+              <div className={`${gradientClass} p-6 mt-4`}>
+                <h3 className="text-2xl font-bold mb-2">{store.name}</h3>
+                <p className={`mb-2 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>{store.address}</p>
+                <p className={`mb-4 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>{store.phone}</p>
+                <button
+                  onClick={() => router.push(`/locations/${store._id}`)}
+                  className={`${buttonBg} px-6 py-2 font-semibold transition-colors duration-300`}
+                >
+                  Book Appointment
+                </button>
               </div>
-            </section>
-
-            {/* Banner */}
-            {index === stores.length - 1 && (
-              <BannerSection
-                title="Limited Time Offer!"
-                description="Get 20% off on all tanning packages when you book a session today."
-                image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-              />
-            )}
-          </div>
-        ))}
+            </div>
+          ))}
       </div>
     </main>
   );

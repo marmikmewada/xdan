@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 export default function EditLocationPage() {
     const { data: session } = useSession(); 
     const router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
     const { id, date } = useParams();
     const [availableSlots, setAvailableSlots] = useState([]);
     const [selectedSlot, setSelectedSlot] = useState(null);
@@ -20,15 +21,16 @@ export default function EditLocationPage() {
         const fetchSlots = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`/api/store/${id}/dates/slots?date=${date}`);
+                const response = await fetch(`/api/bed`);
+                // fetch(`/api/store/${id}/dates/slots?date=${date}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch available slots');
                 }
                 const data = await response.json();
                 console.log("slot data", data);
     
-                if (Array.isArray(data.slots)) {
-                    setAvailableSlots(data.slots);
+                if (data) {
+                    setAvailableSlots(data.data);
                 } else {
                     setAvailableSlots([]);
                 }
@@ -111,7 +113,11 @@ export default function EditLocationPage() {
     const buttonBg = selectedMode === 'dark' ? 'bg-gray-800' : 'bg-white';
     const buttonText = selectedMode === 'dark' ? 'text-white' : 'text-gray-800';
     const buttonHover = selectedMode === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-100';
-
+    const handleBedClick = (bedId) => {
+        const url = `${baseUrl}/locations/${id}/${date}/${bedId}`;
+        router.push(url);
+      };
+    
     return (
         <div className={`min-h-screen ${bgGradient} ${textColor} transition-colors duration-300`}>
             <div className="container mx-auto px-4 py-8">
@@ -129,7 +135,24 @@ export default function EditLocationPage() {
 
                 <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
                     <div className="mb-4">
-                        <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Available Slots</h2>
+                    <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Available Beds</h2>
+                    {availableSlots.length === 0 ? (
+          <p>No beds available.</p>
+        ) : (
+            availableSlots.map((bed) => (
+            <button
+              key={bed._id}
+              type="button"
+              className="p-4 text-xs md:text-sm border rounded-lg bg-white hover:bg-gray-100 transition-colors duration-300"
+              onClick={() => handleBedClick(bed._id)}
+            >
+              <h3 className="font-semibold text-gray-900">{bed.bedName}</h3>
+              {/* <div className="mt-2 text-xs text-gray-600">
+                Stores: {bed.storeRef.map((store) => store.name).join(", ")}
+              </div> */}
+            </button>
+          )))}
+                        {/* <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Available Slots</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             {availableSlots.length === 0 ? (
                                 <p>No available slots for this date.</p>
@@ -149,7 +172,7 @@ export default function EditLocationPage() {
                                     </button>
                                 ))
                             )}
-                        </div>
+                        </div> */}
                     </div>
 
                     {/* Fixed Book Slot Button */}
