@@ -10,7 +10,7 @@ export async function POST(req, { params }) {
   const { id } = params; // Get the store ID from the URL params
 
   try {
-    const { date, slots, reason } = await req.json();
+    const { date, slots, reason,bedId } = await req.json();
 
     // Validate required fields
     if (!date || !slots || !Array.isArray(slots) || slots.length === 0) {
@@ -97,6 +97,7 @@ export async function POST(req, { params }) {
       // If no existing record for the specific date, create a new one
       unavailableSlot = await unavailableSlotTable.create({
         storeRef: id,
+        bedRef:bedId,
         date,
         slots,
         reason,

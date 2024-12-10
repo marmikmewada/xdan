@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import useStore from "@/app/store/useStore";
+import { Search, ShoppingCart } from 'lucide-react';
 
 export default function LocationsPage() {
   const { data: session } = useSession();
@@ -95,11 +96,15 @@ export default function LocationsPage() {
   const bgColor = selectedMode === "dark" ? "bg-gradient-to-r from-gray-800 to-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
   const cardBg = selectedMode === "dark" ? "bg-gradient-to-r from-gray-800 to-black" : "bg-white";
-  
+  const inputBg = selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
+  const iconColor = selectedMode === "dark" ? "text-white" : "text-gray-800";
+  const buttonBg = selectedMode === "dark"
+    ? "bg-gray-600 hover:bg-gray-700"
+    : "bg-gray-200 hover:bg-gray-300";
   const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
 
   const BannerSection = ({ title, description, image }) => (
-    <section className="relative h-screen overflow-hidden">
+    <section className="relative h-[50vh] overflow-hidden">
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{
@@ -138,91 +143,60 @@ export default function LocationsPage() {
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Search Bar */}
-        <div className="mb-6">
+        {/* <div className="mb-8 relative">
           <input
             type="text"
-            placeholder="Search stores..."
-            className={`w-full p-2 border ${
-              selectedMode === "dark"
-                ? "border-gray-700 bg-gradient-to-b from-gray-800 to-black"
-                : "border-gray-300 bg-white"
-            }`}
+            placeholder="Search products..."
+            className={`w-full p-3 pl-10 ${inputBg} border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-        </div>
+          <Search className={`absolute left-3 top-3 ${iconColor}`} size={20} />
+        </div> */}
 
         {/* Locations Section */}
         {/* Stores Section */}
              {/* Locations Section */}
-      {stores.map((store, index) => (
-  <div key={store._id} className="w-full mb-8">
-    <section className="relative pb-8">
-      {/* Map Section - Increase map size and add shadow */}
-      <div className="w-full h-[500px] rounded-lg shadow-lg overflow-hidden">
-        {store.coordinates ? (
-          <iframe
-            src={`${store.coordinates}${selectedMode === "dark" 
-              ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off" 
-              : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"}`}
-            width="100%"
-            height="100%"
-            frameBorder="0"
-            style={{ border: 0 }}
-            allowFullScreen
-            aria-hidden="false"
-            tabIndex="0"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-            No map available
-          </div>
-        )}
-      </div>
-
-      {/* Store Details Section - Card Layout */}
-      <div
-        className={`absolute bottom-0 left-0 right-0 p-6 flex flex-col items-center justify-center ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white" : "bg-gradient-to-b from-white to-gray-200 text-black"}`}
-        style={{
-          boxShadow: "0px -2px 20px rgba(0, 0, 0, 0.1)", // Soft shadow for the card
-          borderRadius: "20px 20px 0 0", // More rounded corners
-        }}
-      >
-        <div className="text-center space-y-4">
-          {/* Store Name (larger, bold) */}
-          <h1 className="text-2xl sm:text-3xl font-bold text-center">{store.name}</h1>
-
-          {/* Store Address and Phone (smaller, softer colors) */}
-          <p className="text-sm sm:text-base text-gray-700">{store.address}</p>
-          <p className="text-sm sm:text-base text-gray-700">{store.phone}</p>
-
-          {/* Button with hover and border animation */}
-          <button
-            onClick={() => router.push(`/locations/${store._id}`)}
-            className={`px-6 py-3 border-2 font-semibold text-lg transition-all duration-300 ${selectedMode === "dark"
-              ? "bg-gradient-to-r from-gray-800 to-black border-white text-white hover:bg-white hover:text-gray-400"
-              : "bg-transparent border-black text-black hover:bg-black hover:text-white"}`}
-            style={{
-              padding: "12px 24px",
-              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.15)",
-            }}
-          >
-            Book Appointment
-          </button>
-        </div>
-      </div>
-    </section>
-
-    {/* Banner Section - Only on the last store */}
-    {index === stores.length - 1 && (
-      <BannerSection
-        title="Limited Time Offer!"
-        description="Get 20% off on all tanning products when you book a session today."
-        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-      />
-    )}
-  </div>
-))}
+             <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-6">Our Locations</h2>
+          {stores.map((store) => (
+            <div key={store._id} className="mb-8">
+              <div className="relative h-[400px] w-full overflow-hidden shadow-lg">
+                {store.coordinates ? (
+                  <iframe
+                    src={`${store.coordinates}${
+                      selectedMode === "dark"
+                        ? "&style=feature:all|element:geometry|color:0x212121|element:labels.icon|visibility:off|feature:poi|visibility:off"
+                        : "&style=feature:all|element:geometry|color:0xeeeeee|element:labels.icon|visibility:on|feature:poi|visibility:on"
+                    }`}
+                    width="100%"
+                    height="100%"
+                    frameBorder="0"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    aria-hidden="false"
+                    tabIndex="0"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                    No map available
+                  </div>
+                )}
+              </div>
+              <div className={`${gradientClass} p-6 mt-4`}>
+                <h3 className="text-2xl font-bold mb-2">{store.name}</h3>
+                <p className={`mb-2 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>{store.address}</p>
+                <p className={`mb-4 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>{store.phone}</p>
+                <button
+                  onClick={() => router.push(`/locations/${store._id}`)}
+                  className={`${buttonBg} px-6 py-2 font-semibold transition-colors duration-300`}
+                >
+                  Book Appointment
+                </button>
+              </div>
+            </div>
+          ))}
+        </section>
 
         {/* Products Section */}
         <section className={`py-12 ${bgColor} ${gradientClass}`}>
@@ -321,6 +295,7 @@ export default function LocationsPage() {
                     >
                       {pkg.description.substring(0, 100)}...
                     </p>
+                    <p className="text-lg font-semibold mb-2">{pkg.minutes} minutes</p>
                     <p className="text-xl font-bold mb-3">£{pkg.price.toFixed(2)}</p>
                     <button
                       onClick={(e) => {

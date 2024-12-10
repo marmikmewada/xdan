@@ -65,14 +65,16 @@ export default function EditLocationPage() {
 
         setIsLoading(true);
         try {
-            const response = await fetch(`/api/store/${id}/dates/${bedId}/slots/bookaslot`, {
+            const response = await fetch(`/api/store/${id}/markunslots`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     date,
-                    timeSlots: [
+                    bedId,
+                    slots: [
                         { startTime: selectedSlot.startTime, endTime: selectedSlot.endTime }
                     ],
+                    reason:"Unavailable for maintenance"
                 }),
             });
             console.log("response", response);
@@ -85,8 +87,8 @@ export default function EditLocationPage() {
             console.log("data",data)
             const {_id:booking_id}=data||{}
 
-            setNotification({ type: 'success', message: 'Slot booked successfully!' });
-            router.push(`/booking-successful/${id}`);
+            setNotification({ type: 'success', message: 'Marked as un available!' });
+            router.push(`/admin/locations`);
         } catch (err) {
             setNotification({ type: 'error', message: err.message });
         } finally {
@@ -148,7 +150,7 @@ export default function EditLocationPage() {
                                         disabled={slot.status !== 'available'}
                                     >
                                         {slot.startTime} - {slot.endTime}
-                                        {slot.status !== 'available'  && <div className="text-sm opacity-70">unavailable</div>}
+                                        {slot.status === 'booked' && <div className="text-sm opacity-70">unavailable</div>}
                                     </button>
                                 ))
                             )}
@@ -162,7 +164,7 @@ export default function EditLocationPage() {
                             className={`w-full ${buttonBg} ${buttonText} ${buttonHover} font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300`}
                             disabled={isLoading || !selectedSlot}
                         >
-                            {isLoading ? 'Booking...' : 'Book a slot'}
+                            {isLoading ? 'Marking...' : 'Mark as unavailable'}
                         </button>
                     </div>
                 </form>

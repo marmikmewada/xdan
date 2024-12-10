@@ -77,9 +77,9 @@ export default function BedList() {
               <tr key={bed._id}>
                 <td className="border px-4 py-2">{bed.bedName}</td>
                 <td className="border px-4 py-2">
-                  {storeRef?.length>0?storeRef.map((store)=>{
+                  {storeRef?.length>0?storeRef.map((store,index)=>{
                     return(
-                    <span key={store.id}>{store?.name}</span>
+                    <span key={index}>{store?.name}</span>
                     )
                   }):
                    "No Store Assigned"}

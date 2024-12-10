@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 const ProfilePage = () => {
   const { data: session, status } = useSession();
@@ -70,7 +71,7 @@ const ProfilePage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-semibold mb-6">User Profile</h1>
-
+      <Link href="/order-history"> Order history </Link>
       {userData && (
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
           <h2 className="text-xl font-semibold mb-4">Profile Details</h2>
@@ -100,7 +101,7 @@ const ProfilePage = () => {
         </div>
       )}
 
-      <h2 className="text-xl font-semibold mb-4">Order History</h2>
+      {/* <h2 className="text-xl font-semibold mb-4">Order History</h2>
 
       <div className="bg-white p-6 rounded-lg shadow-md">
         {orders.length > 0 ? (
@@ -145,7 +146,7 @@ const ProfilePage = () => {
         ) : (
           <p>No orders found.</p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };

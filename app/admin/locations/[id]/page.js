@@ -192,7 +192,7 @@ export default function ViewStorePage() {
               className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
               disabled={selectedDates.length === 0}
             >
-              Open Slots
+              Open beds
             </button>
           </div>
         </div>

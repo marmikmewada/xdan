@@ -21,7 +21,7 @@ export default function EditLocationPage() {
         const fetchSlots = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`/api/bed`);
+                const response = await fetch(`/api/getbeds?store=${id}`);
                 // fetch(`/api/store/${id}/dates/slots?date=${date}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch available slots');

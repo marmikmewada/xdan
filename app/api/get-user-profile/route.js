@@ -29,7 +29,7 @@ export async function GET(req) {
     const orders = await orderTable.find({ userRef: session.user.id })
       .populate('productRef') // Populate product details
       .populate('packageRef') // Populate package details
-      .sort({ created: 1 })
+      .sort({ createdAt: -1 })
       .populate('usedCouponCode') // Populate coupon details
       .exec();
 
