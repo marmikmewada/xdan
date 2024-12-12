@@ -87,7 +87,7 @@ export default function EditLocationPage() {
             console.log("data",data)
             const {_id:booking_id}=data||{}
 
-            setNotification({ type: 'success', message: 'Marked as un available!' });
+            setNotification({ type: 'success', message: 'Marked as unavailable!' });
             router.push(`/admin/locations`);
         } catch (err) {
             setNotification({ type: 'error', message: err.message });

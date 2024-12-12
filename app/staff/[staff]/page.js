@@ -31,7 +31,7 @@ export default async function StaffDashboard({ params }) {
             </Link>
 
             {/* User Box */}
-            <Link href={`/user/${staff}`} className="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+            <Link href={`/admin/minus-minutes`} className="bg-white overflow-hidden shadow-lg rounded-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
               <div className="p-6">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
@@ -41,8 +41,8 @@ export default async function StaffDashboard({ params }) {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <h2 className="text-lg font-semibold text-gray-900">User</h2>
-                    <p className="mt-1 text-sm text-gray-500">Manage user package</p>
+                    <h2 className="text-lg font-semibold text-gray-900">Cut minutes</h2>
+                    <p className="mt-1 text-sm text-gray-500">Manage Minutes</p>
                   </div>
                 </div>
               </div>

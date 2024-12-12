@@ -67,6 +67,8 @@ export default function AdminDashboard() {
     { title: 'Assign Category', url: '/admin/assigncategory', icon: <AssignCategoryIcon /> },
     { title: 'All Users', url: '/admin/getallusers', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
     { title: 'Minus minutes', url: '/admin/minus-minutes', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
+    { title: 'Beds', url: '/admin/beds', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
+    { title: 'Orders', url: '/admin/orders', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
   ];
 
   return (

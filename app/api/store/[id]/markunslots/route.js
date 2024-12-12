@@ -74,16 +74,16 @@ export async function POST(req, { params }) {
     }
 
     // Check if the store exists
-    const storeExists = await unavailableSlotTable.findOne({ storeRef: id }).exec();
-    if (!storeExists) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Store not found",
-        },
-        { status: 404 }
-      );
-    }
+    // const storeExists = await unavailableSlotTable.findOne({ storeRef: id }).exec();
+    // if (!storeExists) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Store not found",
+    //     },
+    //     { status: 404 }
+    //   );
+    // }
 
     // Create or update the unavailable slots for the store
     let unavailableSlot = await unavailableSlotTable.findOne({ storeRef: id, date }).exec();
