@@ -4,8 +4,14 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Edit, Trash2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 
 export default function LocationsPage() {
+    const {data:session}=useSession()
+  const {user}=session||{}
+  const {role}=user||{}
+  console.log("role",role)
+  
     const router = useRouter()
     const [locations, setLocations] = useState([])
     const [isLoading, setIsLoading] = useState(true)
@@ -14,6 +20,10 @@ export default function LocationsPage() {
     const [locationToDelete, setLocationToDelete] = useState(null)
 
     useEffect(() => {
+        
+         if(role!=="admin"){
+            router.back()
+         }
         const fetchLocations = async () => {
             try {
                 const response = await fetch('/api/store')
@@ -57,6 +67,9 @@ export default function LocationsPage() {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            <br />
+            <br />
+            <br />
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Locations</h1>
                 <Link href="/admin/locations/create" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

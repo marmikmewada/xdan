@@ -50,6 +50,9 @@ export default function BedList() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
+      <br />
+      <br />
+      <br />
       <div className="max-w-4xl mx-auto bg-white p-6 shadow-lg rounded-md">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">List of Beds</h1>

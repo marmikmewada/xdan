@@ -117,7 +117,7 @@ export const dbmodels = (mongoose) => {
       givenByStaff:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
       statusForUser: { 
         type: String, 
-        enum: ['failed','placed', 'ready-for-pickup', 'collected'],  // Possible status values
+        enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
       },
       detailsFromStripe: { type: Object }, // Store Stripe details if payment was through Stripe
       paymentMethod: { 
@@ -206,6 +206,27 @@ export const dbmodels = (mongoose) => {
    // Type of bed, e.g. "Sunbed", "Massage Bed"
   });
 
+
+  const ordersTransectionSchema=new mongoose.Schema({
+    doneBy:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    previousOrderStatus:{ 
+      type: String, 
+      enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
+    },
+    updatedOrderStatus:{ 
+      type: String, 
+      enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
+    },
+    orderRef:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    previousPaymentStatus:{ 
+      type: String, 
+      enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
+    },
+    updatedPaymentStatus:{ 
+      type: String, 
+      enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
+    }
+  },{ timestamps: true })
   
 
   // const { userTable, productTable } = dbmodels(mongoose);  ************
@@ -240,6 +261,7 @@ export const dbmodels = (mongoose) => {
       bannerTable:
       mongoose.models?.Banner || mongoose.model("Banner", bannerSchema),  // New model for banners
       bedTable: mongoose.models?.Bed || mongoose.model("Bed", bedSchema),
+      ordersTransectionTable: mongoose.models?.OrderTransections || mongoose.model("OrderTransections", ordersTransectionSchema),
     // Add other models here like:
     // packageTable, discountCouponTable, orderTable, etc.
   };

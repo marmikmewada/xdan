@@ -4,13 +4,18 @@ import React, { useState, useEffect, useMemo } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 export default function ViewStorePage() {
   const { id } = useParams()
   const router = useRouter()
+  const {data:session}=useSession()
+  const {user}=session||{}
+  const {role}=user||{}
+  console.log("role",role)
   const [store, setStore] = useState(null)
   const [isUpdate,setIsUpdate]=useState(1)
-  const [availableDates, setAvailableDates] = useState([]) 
+  const [availableDates, setAvailableDates] = useState([])
   const [unavailableDates, setUnavailableDates] = useState([]) 
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -140,12 +145,16 @@ export default function ViewStorePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      
+      {role==="admin"&&
       <div className="mb-6">
         <Link href="/admin/locations" className="text-blue-500 hover:text-blue-700">
           &larr; Back to Stores
         </Link>
-      </div>
+      </div>}
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
+      <br />
+     
         <div className="p-8">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">{store?.name}</h1>
           <div className="mb-4">

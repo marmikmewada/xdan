@@ -58,6 +58,9 @@ export default function PackagesPage() {
 
     return (
         <div className="container mx-auto px-4 py-8">
+            <br />
+            <br />
+            <br />
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold">Packages</h1>
                 <Link href="/admin/packages/create" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

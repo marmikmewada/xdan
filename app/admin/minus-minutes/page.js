@@ -56,6 +56,9 @@ export default function UserDetailsTable() {
 
   return (
     <div className="p-4">
+      <br />
+      <br />
+      <br />
       <h1 className="text-2xl font-semibold mb-4">User Details</h1>
 
       {/* Search Bar */}

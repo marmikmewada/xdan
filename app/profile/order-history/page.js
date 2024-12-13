@@ -57,6 +57,7 @@ function OrderHistory() {
     <div className={`min-h-screen ${bgColor} ${textColor} px-4 py-8 md:px-8`}>
       <br />
       <br />
+      <br />
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold">Order History</h2>

@@ -78,6 +78,8 @@ export default function ProductsPage() {
 
     return (
         <div className={`min-h-screen ${bgColor} ${textColor} px-4 py-8 md:px-8`}>
+            <br />
+            <br />
             <div className="max-w-6xl mx-auto">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold">Products</h1>
