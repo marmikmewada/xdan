@@ -58,6 +58,8 @@ export default function Nav({ server_session_data }) {
 
       try {
         const response = await fetch("/api/getcart");
+        // const mode = await fetch("/api/getmode");
+
         const data = await response.json();
 
         if (data.success) {
@@ -66,6 +68,7 @@ export default function Nav({ server_session_data }) {
             0
           );
           setCartCount(totalQuantity);
+          // setSelectedMode(mode);
         } else {
           console.log("Failed to fetch cart:", data.message || "Unknown error");
         }

@@ -36,7 +36,7 @@ export default function Login() {
           router.push(`/2fa-setup?email=${username}&password=${password}`)
         } else {
           router.push('/'); // Redirect to homepage if 2FA is not enabled
-          router.refresh()
+          router.refresh();
         }
       }
     } catch (err) {

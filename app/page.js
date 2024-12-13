@@ -12,6 +12,7 @@ export default function Page() {
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [cartCount, setCartCount] = useState(0);
   const { selectedMode } = useStore();
+  const {setSelectedMode} =useStore();
 
   const lightModeHeroImages = [
     "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80",
@@ -37,6 +38,36 @@ export default function Page() {
   const [loadingItemId, setLoadingItemId] = useState(null);
 
   const categoriesRef = useRef(null);
+
+  useEffect(() => {
+    const fetchMode = async () => {
+      try {
+        const response = await fetch("/api/getmode");
+        const data = await response.json();
+
+        if (data.success && data.data?.selectedMode) {
+          setSelectedMode(data.data.selectedMode);
+        } else {
+          console.error(
+            "Failed to fetch mode:",
+            data.message || "Unknown error"
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching mode:", error.message);
+      }
+    };
+
+    fetchMode();
+  }, [setSelectedMode]);
+
+  useEffect(() => {
+    if (selectedMode === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [selectedMode]);
 
   useEffect(() => {
     const fetchData = async () => {
