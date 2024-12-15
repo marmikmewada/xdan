@@ -12,15 +12,15 @@ export async function GET(req,{params}) {
         // Find the booking by its ID and populate references
         const booking = await bookingTable
           .findById(id)
-          .populate("userRef", "name email") // Populate user details (name and email)
-          .populate("storeRef", "name address") // Populate store details (name and address)
-          .populate("bedRef", "bedName") // Populate bed details (bed name)
-          .populate("packageRef", "packageName price"); // Populate package details
+          .populate("userRef") // Populate user details (name and email)
+          .populate("storeRef") // Populate store details (name and address)
+          .populate("bedRef") // Populate bed details (bed name)
+          .populate("packageRef"); // Populate package details
     
       return NextResponse.json(
         {
           success: true,
-          message: beds.length ? "Beds fetched successfully" : "No beds found",
+          message: "booking fetched successfully" ,
           data: booking,
         },
         { status: 200 }

@@ -71,7 +71,10 @@ const ProfilePage = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-semibold mb-6">User Profile</h1>
+      <div className="grid gap-2">
       <Link href="/profile/order-history"> Order history </Link>
+      <Link href="/profile/my-bookings"> Booking history </Link>
+      </div>
       {userData && (
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">
           <h2 className="text-xl font-semibold mb-4">Profile Details</h2>

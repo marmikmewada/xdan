@@ -37,7 +37,7 @@ export async function GET(req) {
           .sort({ createdAt: -1 })
           .exec();
       } else if (session.user.role === 'staff') {
-        orders = await orderTable.find({ ...query, orderType: "pickup" })
+        orders = await orderTable.find({ ...query})
           .populate('productRef')
           .populate('packageRef')
           .populate('usedCouponCode')

@@ -86,7 +86,7 @@ export default function EditLocationPage() {
             const {_id:booking_id}=data||{}
 
             setNotification({ type: 'success', message: 'Slot booked successfully!' });
-            router.push(`/booking-successful/${id}`);
+            router.push(`/booking-successful/${booking_id}`);
         } catch (err) {
             setNotification({ type: 'error', message: err.message });
         } finally {

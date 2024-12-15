@@ -62,6 +62,7 @@ export default function AdminDashboard() {
     { title: 'Locations', url: '/admin/locations', icon: <LocationIcon /> },
     { title: 'Orders', url: '/admin/orders', icon: <OrderIcon /> },
     // { title: 'Categories', url: '/admin/categories', icon: <CategoryIcon /> },
+    { title: 'All Bookings', url: '/admin/all-bookings', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
     { title: 'Coupons', url: '/admin/coupons', icon: <CouponIcon /> },
     { title: 'Assign Staff', url: '/admin/assignstaff', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 12h-2v1a3 3 0 01-6 0v-1H5m14-5H5m14 0h-2m-2 0h-6a2 2 0 00-2 2v12a2 2 0 002 2h6a2 2 0 002-2V9a2 2 0 00-2-2z" /></DashboardIcon> },
     // { title: 'Assign Category', url: '/admin/assigncategory', icon: <AssignCategoryIcon /> },
@@ -69,7 +70,7 @@ export default function AdminDashboard() {
     { title: 'Minus minutes', url: '/admin/minus-minutes', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
     { title: 'Beds', url: '/admin/beds', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
     { title: 'orders Transections', url: '/admin/orders-transection', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
-    
+    { title: 'Minutes Transections', url: '/admin/minutes-transaction', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
   ];
 
   return (

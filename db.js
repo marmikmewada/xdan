@@ -217,7 +217,7 @@ export const dbmodels = (mongoose) => {
       type: String, 
       enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
     },
-    orderRef:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    orderRef:{ type: mongoose.Schema.Types.ObjectId, ref: "Order" },
     previousPaymentStatus:{ 
       type: String, 
       enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
@@ -226,6 +226,17 @@ export const dbmodels = (mongoose) => {
       type: String, 
       enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
     }
+  },{ timestamps: true })
+
+  const minutesTransactionSchema=new mongoose.Schema({
+    doneBy:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    minutesOfUser:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
+    previousMinutes:{ 
+      type: Number,   // Possible status values
+    },
+    updatedMinutes:{ 
+      type: Number,   // Possible status values
+    },
   },{ timestamps: true })
   
 
@@ -262,6 +273,7 @@ export const dbmodels = (mongoose) => {
       mongoose.models?.Banner || mongoose.model("Banner", bannerSchema),  // New model for banners
       bedTable: mongoose.models?.Bed || mongoose.model("Bed", bedSchema),
       ordersTransectionTable: mongoose.models?.OrderTransections || mongoose.model("OrderTransections", ordersTransectionSchema),
+      minutesTransactionTable: mongoose.models?.MinutesTransaction || mongoose.model("MinutesTransaction", minutesTransactionSchema),
     // Add other models here like:
     // packageTable, discountCouponTable, orderTable, etc.
   };

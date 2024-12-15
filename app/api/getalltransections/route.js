@@ -28,13 +28,13 @@ export async function GET(req) {
   
       let ordersTransection;
   
-      if (session.user.role === 'admin') {
+      // if (session.user.role === 'admin') {
         ordersTransection = await ordersTransectionTable.find(query)
           .populate('doneBy')
           .populate('orderRef')
           .sort({ createdAt: -1 })
           .exec();
-      } 
+      // } 
   
       return NextResponse.json({
         success: true,
