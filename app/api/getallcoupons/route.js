@@ -27,6 +27,8 @@ export async function GET(req) {
       success: true,
       message: "Coupons retrieved successfully",
       data: coupons,  // Return the coupons' data
+    },{
+      headers: { 'Cache-Control': 'no-store' }
     });
 
   } catch (error) {
