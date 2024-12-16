@@ -6,6 +6,7 @@ import { connectToDatabase,
   dbmodels } from "@/db";
 
   // export const dynamic = 'force-static'
+  export const dynamic = 'force-dynamic';
 
 export async function GET(req) {
   try {
@@ -30,6 +31,7 @@ export async function GET(req) {
     },{
       headers: { 'Cache-Control': 'no-store' }
     });
+    
 
   } catch (error) {
     console.error("Error fetching coupons:", error);
