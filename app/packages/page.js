@@ -152,8 +152,8 @@ export default function PackagesPage() {
         </div>
 
         {/* Packages Section */}
-        <section className={`py-12 ${bgColor} ${gradientClass}`}>
-          <h2 className="text-3xl font-bold mb-6 text-center">Our Premium Packages</h2>
+        <section className={`py-12 ${bgColor}`}>
+          <h2 className="text-3xl font-bold mb-6 text-start">Our Premium Packages</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPackages.map((pkg) => (
               <motion.div
@@ -210,57 +210,50 @@ export default function PackagesPage() {
           <h2 className="text-3xl font-bold mb-6 text-center">Featured Products</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.slice(0, 3).map((product) => (
-              <div
-                key={product._id}
-                className={`${cardBg} shadow-md transition-all duration-300 hover:shadow-lg relative group`}
-              >
-                <Link href={`/products/${product._id}`} className="block">
-                  <div className="relative h-48 w-full group-hover:opacity-75 transition-all duration-300">
-                    {product.imageUrl && product.imageUrl[0] ? (
-                      <Image
-                        src={product.imageUrl[0]}
-                        alt={product.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="transition-all duration-300 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                        No image
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-4">
-                    <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                    <p
-                      className={`text-sm mb-3 ${
-                        selectedMode === "dark" ? "text-gray-400" : "text-gray-600"
-                      } group-hover:text-gray-800 transition-all duration-300`}
-                    >
-                      {product.description.substring(0, 100)}...
-                    </p>
-                    <p className="text-xl font-bold mb-3">£{product.price.toFixed(2)}</p>
-
+              <motion.div
+              key={product._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              className={`${gradientClass} shadow-lg transition-all duration-300 hover:shadow-xl`}
+            >
+              <Link href={`/products/${product._id}`} className="block">
+                <div className="relative h-64 w-full overflow-hidden">
+                  {product.imageUrl && product.imageUrl[0] ? (
+                    <Image
+                      src={product.imageUrl[0]}
+                      alt={product.name}
+                      layout="fill"
+                      objectFit="cover"
+                      className="transition-transform duration-300 transform hover:scale-105"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                      No image
+                    </div>
+                  )}
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                  <p className={`text-sm mb-4 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                    {product.description.substring(0, 100)}...
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <p className="text-2xl font-bold">£{product.price.toFixed(2)}</p>
                     <button
                       onClick={(e) => {
                         e.preventDefault();
                         addToCart(product._id);
                       }}
                       disabled={loadingItemId === product._id}
-                      className={`w-full py-2 px-4 text-sm font-semibold text-center transition-all duration-300 transform group-hover:scale-105 ${
-                        loadingItemId === product._id
-                          ? "bg-gray-300 text-gray-600 cursor-not-allowed"
-                          : `${
-                              selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black text-white" : "bg-black text-white"
-                            } hover:bg-gray-800 hover:text-white`
-                      }`}
+                      className={`${buttonBg} p-2 rounded-full transition-colors duration-300 ${hoverIconColor}`}
                     >
-                      {loadingItemId === product._id ? "Adding..." : "Add to Cart"}
+                      <ShoppingCart size={24} />
                     </button>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
+            </motion.div>
             ))}
           </div>
         </section>

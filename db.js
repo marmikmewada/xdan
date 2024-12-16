@@ -43,7 +43,22 @@ export const dbmodels = (mongoose) => {
         { type: mongoose.Schema.Types.ObjectId, ref: "DiscountCoupon" },
       ],
       role: { type: String, enum: ["admin", "user", "staff"], default: "user" },
-      minutes: {type: Number, default:0},
+      minutes: { type: Number, default: 0 },
+      skinType: { type: String, enum: ["Dark", "Medium", "Fare", "Sensitive"] },
+      gender: { type: String, enum: ["Male", "Female", "Prefer not to say"],required: true },
+      hereAbout: {
+        type: String,
+        enum: [
+          "Website",
+          "Flyer",
+          "TV Advert",
+          "Email",
+          "Seen Store",
+          "Social Media",
+          "Word of Mouth",
+          "Ad Banner",
+        ],
+      },
     },
     { timestamps: true }
   );
@@ -52,7 +67,7 @@ export const dbmodels = (mongoose) => {
       {
         name: { type: String, required: true },
         url: { type: String, required: true },
-      }
+      },
     ],
   });
 
@@ -99,7 +114,7 @@ export const dbmodels = (mongoose) => {
     couponCode: { type: String, required: true, unique: true },
     percentage: { type: Number, required: true },
     maxUsage: { type: Number, required: true },
-    usage: { type: Number, required: false,default:0 },
+    usage: { type: Number, required: false, default: 0 },
     expiry: { type: Date, required: true },
   });
 
@@ -112,33 +127,35 @@ export const dbmodels = (mongoose) => {
       totalAmount: { type: Number, required: true },
       orderType: {
         type: String,
-        enum: ['pickup', 'delivery']
+        enum: ["pickup", "delivery"],
       },
-      givenByStaff:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
-      statusForUser: { 
-        type: String, 
-        enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
+      givenByStaff: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      statusForUser: {
+        type: String,
+        enum: ["failed", "placed", "ready-for-pickup", "collected", "shipped"], // Possible status values
       },
       detailsFromStripe: { type: Object }, // Store Stripe details if payment was through Stripe
-      paymentMethod: { 
-        type: String, 
-        enum: ['stripe', 'pay-on-pickup'],  // Allowed values: 'stripe' or 'pay-on-pickup'
-        required: true
+      paymentMethod: {
+        type: String,
+        enum: ["stripe", "pay-on-pickup"], // Allowed values: 'stripe' or 'pay-on-pickup'
+        required: true,
       },
-      paymentStatus: { 
-        type: String, 
-        enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
-        default: 'pending'
+      paymentStatus: {
+        type: String,
+        enum: ["pending", "completed", "failed"], // Payment status (for Stripe, or if user has paid when picking up)
+        default: "pending",
       },
       deliveryAddress: {
         type: String, // True if delivery is selected
       },
-      usedCouponCode: {type: mongoose.Schema.Types.ObjectId, ref: "DiscountCoupon"},
-      couponDiscountAmount: {type: Number},
+      usedCouponCode: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "DiscountCoupon",
+      },
+      couponDiscountAmount: { type: Number },
     },
     { timestamps: true }
   );
-  
 
   // Newsletter Model
   const newsletterSchema = new mongoose.Schema({
@@ -181,7 +198,7 @@ export const dbmodels = (mongoose) => {
   // Unavailable Slots Model
   const unavailableSlotSchema = new mongoose.Schema({
     storeRef: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
-    bedRef: {type: mongoose.Schema.Types.ObjectId, ref: "Bed" },
+    bedRef: { type: mongoose.Schema.Types.ObjectId, ref: "Bed" },
     date: { type: Date, required: true },
     slots: [
       {
@@ -203,42 +220,46 @@ export const dbmodels = (mongoose) => {
     storeRef: [{ type: mongoose.Schema.Types.ObjectId, ref: "Store" }], // Reference to the store
     bedName: { type: String, required: true },
     imageUrl: [{ type: String }], // Name of the bed, e.g. "Bed 1"
-   // Type of bed, e.g. "Sunbed", "Massage Bed"
+    // Type of bed, e.g. "Sunbed", "Massage Bed"
   });
 
+  const ordersTransectionSchema = new mongoose.Schema(
+    {
+      doneBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      previousOrderStatus: {
+        type: String,
+        enum: ["failed", "placed", "ready-for-pickup", "collected", "shipped"], // Possible status values
+      },
+      updatedOrderStatus: {
+        type: String,
+        enum: ["failed", "placed", "ready-for-pickup", "collected", "shipped"], // Possible status values
+      },
+      orderRef: { type: mongoose.Schema.Types.ObjectId, ref: "Order" },
+      previousPaymentStatus: {
+        type: String,
+        enum: ["pending", "completed", "failed"], // Payment status (for Stripe, or if user has paid when picking up)
+      },
+      updatedPaymentStatus: {
+        type: String,
+        enum: ["pending", "completed", "failed"], // Payment status (for Stripe, or if user has paid when picking up)
+      },
+    },
+    { timestamps: true }
+  );
 
-  const ordersTransectionSchema=new mongoose.Schema({
-    doneBy:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    previousOrderStatus:{ 
-      type: String, 
-      enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
+  const minutesTransactionSchema = new mongoose.Schema(
+    {
+      doneBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      minutesOfUser: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      previousMinutes: {
+        type: Number, // Possible status values
+      },
+      updatedMinutes: {
+        type: Number, // Possible status values
+      },
     },
-    updatedOrderStatus:{ 
-      type: String, 
-      enum: ['failed','placed', 'ready-for-pickup', 'collected','shipped'],  // Possible status values
-    },
-    orderRef:{ type: mongoose.Schema.Types.ObjectId, ref: "Order" },
-    previousPaymentStatus:{ 
-      type: String, 
-      enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
-    },
-    updatedPaymentStatus:{ 
-      type: String, 
-      enum: ['pending', 'completed', 'failed'],  // Payment status (for Stripe, or if user has paid when picking up)
-    }
-  },{ timestamps: true })
-
-  const minutesTransactionSchema=new mongoose.Schema({
-    doneBy:{ type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    minutesOfUser:{type: mongoose.Schema.Types.ObjectId, ref: "User"},
-    previousMinutes:{ 
-      type: Number,   // Possible status values
-    },
-    updatedMinutes:{ 
-      type: Number,   // Possible status values
-    },
-  },{ timestamps: true })
-  
+    { timestamps: true }
+  );
 
   // const { userTable, productTable } = dbmodels(mongoose);  ************
   // Add other schemas like packageSchema, orderSchema, etc. here...
@@ -269,11 +290,15 @@ export const dbmodels = (mongoose) => {
     unavailableDayTable:
       mongoose.models?.UnavailableDay ||
       mongoose.model("UnavailableDay", unavailableDaySchema),
-      bannerTable:
-      mongoose.models?.Banner || mongoose.model("Banner", bannerSchema),  // New model for banners
-      bedTable: mongoose.models?.Bed || mongoose.model("Bed", bedSchema),
-      ordersTransectionTable: mongoose.models?.OrderTransections || mongoose.model("OrderTransections", ordersTransectionSchema),
-      minutesTransactionTable: mongoose.models?.MinutesTransaction || mongoose.model("MinutesTransaction", minutesTransactionSchema),
+    bannerTable:
+      mongoose.models?.Banner || mongoose.model("Banner", bannerSchema), // New model for banners
+    bedTable: mongoose.models?.Bed || mongoose.model("Bed", bedSchema),
+    ordersTransectionTable:
+      mongoose.models?.OrderTransections ||
+      mongoose.model("OrderTransections", ordersTransectionSchema),
+    minutesTransactionTable:
+      mongoose.models?.MinutesTransaction ||
+      mongoose.model("MinutesTransaction", minutesTransactionSchema),
     // Add other models here like:
     // packageTable, discountCouponTable, orderTable, etc.
   };

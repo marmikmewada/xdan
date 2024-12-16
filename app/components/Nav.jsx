@@ -198,7 +198,7 @@ export default function Nav({ server_session_data }) {
             )}
             {!session && !isLoginPage && (
               <Link href="/login" className={navLinkClass}>
-                Login
+                Login/Register
               </Link>
             )}
             {session &&
