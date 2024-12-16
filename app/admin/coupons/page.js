@@ -23,6 +23,7 @@ export default function CouponListPage() {
                 throw new Error('Failed to fetch coupons');
             }
             const data = await response.json();
+            console.log("data",data.data)
             setCoupons(data?.data || []);
         } catch (err) {
             console.log(err.message);
