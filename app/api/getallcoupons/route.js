@@ -5,6 +5,8 @@ import { connectToDatabase,
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
 
+  export const dynamic = 'force-static'
+
 export async function GET(req) {
   try {
     // Step 1: Connect to the database
