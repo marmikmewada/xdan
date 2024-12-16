@@ -5,7 +5,7 @@ import { connectToDatabase,
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
 
-  export const dynamic = 'force-static'
+  // export const dynamic = 'force-static'
 
 export async function GET(req) {
   try {
@@ -14,7 +14,7 @@ export async function GET(req) {
     const { discountCouponTable } = dbmodels(mongoose);
 
     // Step 2: Fetch all coupons
-    const coupons = await discountCouponTable.find().select('couponCode percentage maxUsage expiry usage');  // Select relevant fields
+    const coupons = await discountCouponTable.find();  // Select relevant fields
     // console.log(coupons);
     
     // Step 3: Check if there are any coupons
