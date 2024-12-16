@@ -172,7 +172,7 @@ export default function Nav({ server_session_data }) {
               Locations
             </Link>
             
-            <Link href="/reviews" className={navLinkClass}>
+            <Link href="/" className={navLinkClass}>
               Sun Beds
             </Link>
 
@@ -327,7 +327,7 @@ export default function Nav({ server_session_data }) {
       </Link>
       
       <Link
-        href="/reviews"
+        href="/"
         onClick={closeMenu}
         className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
       >
