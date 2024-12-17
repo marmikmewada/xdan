@@ -197,6 +197,8 @@ const CheckoutPage = () => {
 
   return (
     <div className={`min-h-screen p-6 ${bgColor} ${textColor}`}>
+      <br />
+      <br />
       <div className={`max-w-3xl mx-auto ${bgColor} shadow-lg rounded-lg p-6`}>
         <h3 className="text-3xl font-bold mb-6">Order Summary</h3>
 

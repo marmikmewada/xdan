@@ -74,6 +74,7 @@ const ProfilePage = () => {
       <div className="grid gap-2">
       <Link href="/profile/order-history"> Order history </Link>
       <Link href="/profile/my-bookings"> Booking history </Link>
+      <Link href="/profile/new-password"> New password  </Link>
       </div>
       {userData && (
         <div className="bg-white p-6 rounded-lg shadow-md mb-8">

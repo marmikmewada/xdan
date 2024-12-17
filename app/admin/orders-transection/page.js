@@ -67,10 +67,10 @@ const OrdersTransection = () => {
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-bold">₹{order.orderRef.totalAmount}</p>
+                      <p className="text-lg font-bold">£{order.orderRef.totalAmount}</p>
                       {order.couponDiscountAmount > 0 && (
                         <p className="text-sm text-green-500">
-                          Discount: ₹{order.couponDiscountAmount}
+                          Discount: £{order.couponDiscountAmount}
                         </p>
                       )}
                     </div>

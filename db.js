@@ -44,7 +44,7 @@ export const dbmodels = (mongoose) => {
       ],
       role: { type: String, enum: ["admin", "user", "staff"], default: "user" },
       minutes: { type: Number, default: 0 },
-      skinType: { type: String, enum: ["Dark", "Medium", "Fare", "Sensitive"] },
+      skinType: { type: String, enum: ["Dark", "Medium", "Fair", "Sensitive"] },
       gender: { type: String, enum: ["Male", "Female", "Prefer not to say"],required: true },
       hereAbout: {
         type: String,

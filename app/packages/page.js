@@ -86,17 +86,23 @@ export default function PackagesPage() {
     return <div className="text-center py-20">Loading...</div>;
   }
 
-  const bgColor = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
-  const cardBg = selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-white";
-  const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
+  const inputBg = selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
+  const buttonBg = selectedMode === "dark"
+    ? "bg-gray-600 hover:bg-gray-700"
+    : "bg-gray-200 hover:bg-gray-300";
+  const iconColor = selectedMode === "dark" ? "text-white" : "text-gray-800";
+  const hoverIconColor = selectedMode === "dark" ? "hover:text-blue-400" : "hover:text-blue-500";
+  const gradientClass = selectedMode === "dark"
+    ? "bg-gradient-to-r from-gray-800 to-black"
+    : "bg-gradient-to-r from-white to-gray-200";
 
-  const BannerSection = ({ title, description, image }) => (
+  const BannerSection = ({ title, description, image, darkModeImage }) => (
     <section className="relative h-[50vh] overflow-hidden">
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{
-          backgroundImage: `url(${image})`,
+          backgroundImage: `url(${selectedMode === "dark" ? darkModeImage : image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -116,34 +122,22 @@ export default function PackagesPage() {
     </section>
   );
 
-  const inputBg = selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
-  const buttonBg = selectedMode === "dark"
-    ? "bg-gray-600 hover:bg-gray-700"
-    : "bg-gray-200 hover:bg-gray-300";
-  const iconColor = selectedMode === "dark" ? "text-white" : "text-gray-800";
-  const hoverIconColor = selectedMode === "dark" ? "hover:text-blue-400" : "hover:text-blue-500";
-
-
   return (
-    <main className={`min-h-screen ${bgColor} ${textColor}`}>
+    <main className={`min-h-screen ${gradientClass} ${textColor}`}>
       <BannerSection
         title="Limited Time Offer!"
         description="Get 20% off on all tanning packages when you book a session today."
         image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+        darkModeImage="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80"
       />
 
-      <header className={`${bgColor} shadow`}>
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold">Our Packages</h1>
-        </div>
-      </header>
-
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        {/* Search Bar */}
+        <h1 className="text-4xl font-bold mb-8">Our Packages</h1>
+
         <div className="mb-8 relative">
           <input
             type="text"
-            placeholder="Search products..."
+            placeholder="Search packages..."
             className={`w-full p-3 pl-10 ${inputBg} border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500`}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -151,115 +145,114 @@ export default function PackagesPage() {
           <Search className={`absolute left-3 top-3 ${iconColor}`} size={20} />
         </div>
 
-        {/* Packages Section */}
-        <section className={`py-12 ${bgColor}`}>
-          <h2 className="text-3xl font-bold mb-6 text-start">Our Premium Packages</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-6">Premium Packages</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPackages.map((pkg) => (
               <motion.div
-              key={pkg._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`${gradientClass} shadow-lg transition-all duration-300 hover:shadow-xl`}
-            >
-              <Link href={`/packages/${pkg._id}`} className="block">
-                <div className="relative h-64 w-full overflow-hidden">
-                  {pkg.imageUrl && pkg.imageUrl[0] ? (
-                    <Image
-                      src={pkg.imageUrl[0]}
-                      alt={pkg.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-300 transform hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                      No image
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{pkg.name}</h3>
-                  <p className={`text-sm mb-2 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    {pkg.description.substring(0, 100)}...
-                  </p>
-                  <p className="text-lg font-semibold mb-4">{pkg.minutes} minutes</p>
-                  <div className="flex justify-between items-center">
-                    <p className="text-2xl font-bold">£{pkg.price.toFixed(2)}</p>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        addToCart(pkg._id);
-                      }}
-                      disabled={loadingItemId === pkg._id}
-                      className={`${buttonBg} p-2 rounded-full transition-colors duration-300 ${hoverIconColor}`}
-                    >
-                      <ShoppingCart size={24} />
-                    </button>
+                key={pkg._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`${gradientClass} shadow-lg transition-all duration-300 hover:shadow-xl`}
+              >
+                <Link href={`/packages/${pkg._id}`} className="block">
+                  <div className="relative h-64 w-full overflow-hidden">
+                    {pkg.imageUrl && pkg.imageUrl[0] ? (
+                      <Image
+                        src={pkg.imageUrl[0]}
+                        alt={pkg.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 transform hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                        No image
+                      </div>
+                    )}
                   </div>
-                </div>
-              </Link>
-            </motion.div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{pkg.name}</h3>
+                    <p className={`text-sm mb-2 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                      {pkg.description.substring(0, 100)}...
+                    </p>
+                    <p className="text-lg font-semibold mb-4">{pkg.minutes} minutes</p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-2xl font-bold">£{pkg.price.toFixed(2)}</p>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(pkg._id);
+                        }}
+                        disabled={loadingItemId === pkg._id}
+                        className={`${buttonBg} p-2 rounded-full transition-colors duration-300 ${hoverIconColor}`}
+                      >
+                        <ShoppingCart size={24} />
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
         </section>
 
-        {/* Featured Products Section */}
-        <section className={`py-12 ${bgColor} ${gradientClass}`}>
-          <h2 className="text-3xl font-bold mb-6 text-center">Featured Products</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-6">Featured Products</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {products.slice(0, 3).map((product) => (
               <motion.div
-              key={product._id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`${gradientClass} shadow-lg transition-all duration-300 hover:shadow-xl`}
-            >
-              <Link href={`/products/${product._id}`} className="block">
-                <div className="relative h-64 w-full overflow-hidden">
-                  {product.imageUrl && product.imageUrl[0] ? (
-                    <Image
-                      src={product.imageUrl[0]}
-                      alt={product.name}
-                      layout="fill"
-                      objectFit="cover"
-                      className="transition-transform duration-300 transform hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
-                      No image
-                    </div>
-                  )}
-                </div>
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
-                  <p className={`text-sm mb-4 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                    {product.description.substring(0, 100)}...
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <p className="text-2xl font-bold">£{product.price.toFixed(2)}</p>
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        addToCart(product._id);
-                      }}
-                      disabled={loadingItemId === product._id}
-                      className={`${buttonBg} p-2 rounded-full transition-colors duration-300 ${hoverIconColor}`}
-                    >
-                      <ShoppingCart size={24} />
-                    </button>
+                key={product._id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+                className={`${gradientClass} shadow-lg transition-all duration-300 hover:shadow-xl`}
+              >
+                <Link href={`/products/${product._id}`} className="block">
+                  <div className="relative h-64 w-full overflow-hidden">
+                    {product.imageUrl && product.imageUrl[0] ? (
+                      <Image
+                        src={product.imageUrl[0]}
+                        alt={product.name}
+                        layout="fill"
+                        objectFit="cover"
+                        className="transition-transform duration-300 transform hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex items-center justify-center h-full bg-gray-200 text-gray-500">
+                        No image
+                      </div>
+                    )}
                   </div>
-                </div>
-              </Link>
-            </motion.div>
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold mb-2">{product.name}</h3>
+                    <p className={`text-sm mb-4 ${selectedMode === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                      {product.description.substring(0, 100)}...
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <p className="text-2xl font-bold">£{product.price.toFixed(2)}</p>
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault();
+                          addToCart(product._id);
+                        }}
+                        disabled={loadingItemId === product._id}
+                        className={`${buttonBg} p-2 rounded-full transition-colors duration-300 ${hoverIconColor}`}
+                      >
+                        <ShoppingCart size={24} />
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              </motion.div>
             ))}
           </div>
         </section>
 
-        {/* Locations Section */}
-        {stores.map((store) => (
+        <section className="mb-16">
+          <h2 className="text-3xl font-bold mb-6">Our Locations</h2>
+          {stores.map((store) => (
             <div key={store._id} className="mb-8">
               <div className="relative h-[400px] w-full overflow-hidden shadow-lg">
                 {store.coordinates ? (
@@ -296,14 +289,11 @@ export default function PackagesPage() {
               </div>
             </div>
           ))}
+        </section>
       </div>
     </main>
   );
 }
-
-
-
-
 
 
 

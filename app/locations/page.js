@@ -105,12 +105,12 @@ export default function LocationsPage() {
   const gradientClass = selectedMode === "dark" ? "from-gray-900 to-black" : "from-white to-gray-200";
   const hoverIconColor = selectedMode === "dark" ? "hover:text-blue-400" : "hover:text-blue-500";
 
-  const BannerSection = ({ title, description, image }) => (
+  const BannerSection = ({ title, description, image, darkModeImage }) => (
     <section className="relative h-[50vh] overflow-hidden">
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{
-          backgroundImage: `url(${image})`,
+          backgroundImage: `url(${selectedMode === "dark" ? darkModeImage : image})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
@@ -136,12 +136,13 @@ export default function LocationsPage() {
         title="Limited Time Offer!"
         description="Get 20% off on all tanning products when you book a session today."
         image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
+        darkModeImage="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80"
       />
-      <header className={`${bgColor} shadow`}>
+      {/* <header className={`${bgColor} shadow`}>
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold text-center">Our Locations</h1>
         </div>
-      </header>
+      </header> */}
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Search Bar */}
@@ -311,3 +312,4 @@ export default function LocationsPage() {
     </main>
   );
 }
+
