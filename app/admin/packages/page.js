@@ -70,7 +70,7 @@ export default function PackagesPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {packages.map((pkg) => (
                     <div key={pkg?._id} className="bg-white rounded-lg shadow-md overflow-hidden">
-                        <Link href={`/admin/packages/${pkg?._id}`}>
+                        <div  onClick={()=>router.push(`/admin/packages/${pkg?._id}`)}>
                             <div className="h-48 w-full relative" >
                                 {pkg?.imageUrl && pkg?.imageUrl.length > 0 ? (
                                     <Image
@@ -99,7 +99,8 @@ export default function PackagesPage() {
                                         <Edit size={20} />
                                     </Link>
                                     <button
-                                        onClick={() => {
+                                        onClick={(e) => {
+                                            e.stopPropagation()
                                             setPackageToDelete(pkg)
                                             setDeleteModalOpen(true)
                                         }}
@@ -109,7 +110,7 @@ export default function PackagesPage() {
                                     </button>
                                 </div>
                             </div>
-                        </Link>
+                        </div>
                     </div>
                 ))}
             </div>

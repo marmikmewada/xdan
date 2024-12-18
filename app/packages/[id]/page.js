@@ -125,7 +125,7 @@ export default function PackagePage() {
       <main>
         <BannerSection
           title={packageData.name}
-          description="Experience the perfect glow with our premium tanning packages"
+          description="Unlock your inner glow with the best tanning packages in town!"
           image={packageData.imageUrl && packageData.imageUrl[0] ? packageData.imageUrl[0] : "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"}
         />
 

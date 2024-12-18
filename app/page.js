@@ -15,19 +15,19 @@ export default function Page() {
   const {setSelectedMode} =useStore();
 
   const lightModeHeroImages = [
-    "https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1607008829749-c0f284074b61?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1519415510236-718bdfcd89c8?auto=format&fit=crop&q=80",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491626_y.jpg?updatedAt=1734538542277",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491627_y.jpg?updatedAt=1734538539169",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491625_y.jpg?updatedAt=1734538539019",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985748882686067357_y.jpg?updatedAt=1734538719725",
+    "https://ik.imagekit.io/syziko5ml/banners/Light%20mode%204.png?updatedAt=1734538836033",
   ];
-
+  
   const darkModeHeroImages = [
-    "https://images.unsplash.com/photo-1519741347686-c1e0aadf4611?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?auto=format&fit=crop&q=80",
-    "https://images.unsplash.com/photo-1520006403909-838d6b92c22e?auto=format&fit=crop&q=80",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491619_y.jpg?updatedAt=1734538542263",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491624_y.jpg?updatedAt=1734538539164",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491623_y.jpg?updatedAt=1734538538872",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5985748882686067356_x.jpg?updatedAt=1734538719938",
+    "https://ik.imagekit.io/syziko5ml/banners/Dark%20mode%204.png?updatedAt=1734538835875",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -274,8 +274,8 @@ export default function Page() {
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
       {/* Hero Section */}
       <HeroSection
-        title="Glow Up at Bronze & Beauty"
-        description="Experience the best tanning services in the UK with our state-of-the-art facilities"
+        title="Come & Glow At Bronze & Beauty Studio"
+        description="Come And Experience The Best Tanning Studio In The Staffordshire Area, With State Of The Art Facilities & Exceptional Customer Service"
         image={selectedMode === "dark" ? darkModeHeroImages[currentImageIndex] : lightModeHeroImages[currentImageIndex]}
         buttons={[
           {
@@ -297,7 +297,7 @@ export default function Page() {
         <InfoSection
   title="About Bronze & Beauty"
   description="Bronze & Beauty Studio is a professional tanning shop located in the heart of Hednesford High Street, Staffordshire. Our goal is to help customers achieve a healthy, responsible tan in our immaculate and friendly shop. Bronze & Beauty Studio promotes responsible tanning and are proud members of The Sunbed Association, our staff are trained to provide educated recommendations for the best tanning results. Our sun beds are maintained to the highest standards, checked and sanitised after every use. Each tanning room comes with a fresh towel, goggles for UV protection on the eyes, body wipes, and head bands. We pride ourselves on customer satisfaction and customer service."
-  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'} 
+  image={selectedMode === 'dark' ? 'https://ik.imagekit.io/syziko5ml/banners/6.png?updatedAt=1734539275694' : 'https://ik.imagekit.io/syziko5ml/banners/5.png?updatedAt=1734539275697'} 
   className={`p-8 shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} 
 />
 
@@ -449,8 +449,8 @@ export default function Page() {
           ))}
 
       <BannerSection
-        title="Limited Time Offer!"
-        description="Get 20% off on all tanning products when you book a session today."
+        // title="Limited Time Offer!"
+        // description="Get 20% off on all tanning products when you book a session today."
         image={
           selectedMode === "dark"
             ? `https://ik.imagekit.io/2o9y0v10p/dan-studio/banners/Heading-black-white.png?updatedAt=1733332141665`

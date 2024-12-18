@@ -161,21 +161,21 @@ export default function Footer() {
         <div className="mt-8 text-center">
           <div className="flex justify-center space-x-6">
             <a
-              href="#"
+              href="https://www.facebook.com/profile.php?id=61567174911803"
               className={`${iconColor} ${hoverIconColor} text-2xl`}
               aria-label="Facebook"
             >
               <FaFacebook />
             </a>
             <a
-              href="#"
+              href="https://www.instagram.com/bronzebeautystudioltd"
               className={`${iconColor} ${hoverIconColor} text-2xl`}
               aria-label="Instagram"
             >
               <FaInstagram />
             </a>
             <a
-              href="#"
+              href="https://www.tiktok.com/@bronzebeautystudioltd (tik tok link)"
               className={`${iconColor} ${hoverIconColor} text-2xl`}
               aria-label="TikTok"
             >

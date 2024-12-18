@@ -113,7 +113,7 @@ export default function ProductPage() {
             {title}
           </h2>
           <p className="text-xl sm:text-2xl md:text-3xl text-gray-200 animate__animated animate__fadeIn animate__delay-1s">
-            {description}
+          Get the ultimate golden glow with our amazing accelerators & lotions
           </p>
         </div>
       </div>

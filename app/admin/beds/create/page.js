@@ -8,8 +8,8 @@ import { X } from "lucide-react";
 
 const imagekit = new ImageKit({
   publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
-  privateKey: "private_KqUF8hy7OdWsOVnfZt//RA1O9k0=",
-  urlEndpoint: "https://ik.imagekit.io/2o9y0v10p",
+  privateKey: process.env.NEXT_PUBLIC_IMAGEKIT_PRIVATE_KEY,
+  urlEndpoint: process.env.NEXT_PUBLIC_URL_ENDPOINT,
 });
 
 export default function CreateBed() {

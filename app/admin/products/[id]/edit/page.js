@@ -9,8 +9,8 @@ import ImageKit from "imagekit";
 
 const imagekit = new ImageKit({
     publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY, // Replace with your public API key
-    privateKey: "private_KqUF8hy7OdWsOVnfZt//RA1O9k0=", // Replace with your private API key
-    urlEndpoint: "https://ik.imagekit.io/2o9y0v10p", // Replace with your ImageKit URL endpoint
+    privateKey: process.env.NEXT_PUBLIC_IMAGEKIT_PRIVATE_KEY, // Replace with your private API key
+    urlEndpoint:process.env.NEXT_PUBLIC_URL_ENDPOINT, // Replace with your ImageKit URL endpoint
 });
 
 export default function EditProductPage() {

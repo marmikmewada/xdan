@@ -123,10 +123,10 @@ export default function ProductsPage() {
   return (
     <main className={`min-h-screen ${gradientClass} ${textColor}`}>
       <BannerSection
-        title="Limited Time Offer!"
-        description="Get 20% off on all tanning products when you book a session today."
-        image="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80"
-        darkModeImage="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80"
+        // title="Limited Time Offer!"
+        // description="Get 20% off on all tanning products when you book a session today."
+        image="https://ik.imagekit.io/syziko5ml/banners/photo_5987599773072474730_y.jpg?updatedAt=1734538929753"
+        darkModeImage="https://ik.imagekit.io/syziko5ml/banners/photo_5987599773072474749_y.jpg?updatedAt=1734538929646"
       />
 
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">

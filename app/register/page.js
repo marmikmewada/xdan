@@ -139,7 +139,7 @@ export default function Register() {
     "Word of Mouth",
     "Ad Banner",
   ];
-  const services = ["UV Tanning", "Spray Tanning", "Red Light Therapy", "Cryotherapy"];
+  const services = ["UV Tanning"];
 
   return (
     <div className={`min-h-screen flex items-center justify-center py-12 px-6 ${gradientClass}`}>

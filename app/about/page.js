@@ -45,7 +45,7 @@ export default function AboutPage() {
             <a href="mailto:admin@bronzebeautystudio.co.uk" className="text-blue-500 hover:underline">admin@bronzebeautystudio.co.uk</a>.
           </p>
           <img
-            src={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'}
+            src={selectedMode === 'dark' ? 'https://ik.imagekit.io/syziko5ml/banners/6.png?updatedAt=1734539275694' : 'https://ik.imagekit.io/syziko5ml/banners/5.png?updatedAt=1734539275697'}
             alt="Bronze & Beauty Studio"
             className="w-full h-64 md:h-80 object-cover rounded-lg"
           />
