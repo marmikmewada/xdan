@@ -18,16 +18,16 @@ export default function Page() {
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491626_y.jpg?updatedAt=1734538542277",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491627_y.jpg?updatedAt=1734538539169",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491625_y.jpg?updatedAt=1734538539019",
-    "https://ik.imagekit.io/syziko5ml/banners/photo_5985748882686067357_y.jpg?updatedAt=1734538719725",
-    "https://ik.imagekit.io/syziko5ml/banners/Light%20mode%204.png?updatedAt=1734538836033",
+    "https://ik.imagekit.io/syziko5ml/banners/1.png?updatedAt=1734543158921",
+    "https://ik.imagekit.io/syziko5ml/banners/3.png?updatedAt=1734543159050",
   ];
   
   const darkModeHeroImages = [
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491619_y.jpg?updatedAt=1734538542263",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491624_y.jpg?updatedAt=1734538539164",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491623_y.jpg?updatedAt=1734538538872",
-    "https://ik.imagekit.io/syziko5ml/banners/photo_5985748882686067356_x.jpg?updatedAt=1734538719938",
-    "https://ik.imagekit.io/syziko5ml/banners/Dark%20mode%204.png?updatedAt=1734538835875",
+    "https://ik.imagekit.io/syziko5ml/banners/2.png?updatedAt=1734543158646",
+    "https://ik.imagekit.io/syziko5ml/banners/4.png?updatedAt=1734543159046",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -329,7 +329,7 @@ export default function Page() {
 <InfoSection
   title="Our Sun Beds"
   description="At Bronze & Beauty, we offer a variety of sun beds to suit your tanning needs. From gentle low-pressure beds for beginners to high-intensity beds for experienced tanners, we have the perfect option for everyone. Our beds are regularly maintained and sanitized to ensure your safety and comfort."
-  image={selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'} 
+  image={selectedMode === 'dark' ? 'https://ik.imagekit.io/syziko5ml/banners/18.png?updatedAt=1734543345312' : 'https://ik.imagekit.io/syziko5ml/banners/17.png?updatedAt=1734543345580'} 
   reverse={true}
   className={`p-8 shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} 
 />
