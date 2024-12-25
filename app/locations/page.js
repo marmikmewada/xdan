@@ -133,8 +133,8 @@ export default function LocationsPage() {
   return (
     <main className={`min-h-screen ${bgColor} ${textColor}`}>
       <BannerSection
-        title="Limited Time Offer!"
-        description="Get 20% off on all tanning products when you book a session today."
+        // title="Limited Time Offer!"
+        // description="Get 20% off on all tanning products when you book a session today."
         image="https://ik.imagekit.io/syziko5ml/banners/b7cddd56-a0dd-48ea-accf-f522ca1b4716.png?updatedAt=1735130396598"
         darkModeImage="https://ik.imagekit.io/syziko5ml/banners/313655a7-619e-45cc-bbc1-1949177e0b0a.png?updatedAt=1735130396543"
       />

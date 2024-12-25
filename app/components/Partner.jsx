@@ -1,5 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react';
+import  useStore  from '@/app/store/useStore';
 
 const partners = [
   { name: 'Partner 1', lightModeImage: 'https://ik.imagekit.io/syziko5ml/banners/3%20(1).png?updatedAt=1735064048038', darkModeImage: 'https://ik.imagekit.io/syziko5ml/banners/4%20(1).png?updatedAt=1735064047380' },
@@ -16,9 +17,15 @@ const partners = [
   { name: 'Partner 12', lightModeImage: 'https://ik.imagekit.io/syziko5ml/banners/23.png?updatedAt=1735064036782', darkModeImage: 'https://ik.imagekit.io/syziko5ml/banners/24.png?updatedAt=1735064035781' },
 ];
 
-const PartnersCarousel = ({ selectedMode }) => {
+const PartnersCarousel = () => {
   const [currentPartners, setCurrentPartners] = useState([0, 1, 2]); // Indices of partners to show
   const [counter, setCounter] = useState(0);
+    const {selectedMode} = useStore();
+  const textColor = selectedMode === "dark" ? "text-white" : "text-black";
+  const bgColor =
+  selectedMode === "dark"
+    ? "bg-gradient-to-b from-black to-gray-900"
+    : "bg-gradient-to-b from-white to-gray-100";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,13 +45,17 @@ const PartnersCarousel = ({ selectedMode }) => {
   }, [counter]);
 
   return (
-    <div className="flex space-x-4">
+    <div className={`py-16 ${bgColor} max-w-7xl mx-auto px-4 sm:px-6 lg:px-8`}>
+         <h2 className={`text-3xl font-bold mb-4 ${textColor}`}>Our Partners</h2>
+         <div className="flex space-x-4">
+        
       {currentPartners.map((partnerIndex, i) => {
         const partner = partners[partnerIndex];
         const imageSrc = selectedMode === 'dark' ? partner.darkModeImage : partner.lightModeImage;
 
         return (
           <div key={i} className="w-1/3 p-2 transition-all duration-700 ease-in-out transform hover:scale-105">
+           
             <div className="relative">
               <img 
                 src={imageSrc} 
@@ -59,6 +70,9 @@ const PartnersCarousel = ({ selectedMode }) => {
         );
       })}
     </div>
+    </div>
+    
+   
   );
 };
 
