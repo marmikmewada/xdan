@@ -104,6 +104,8 @@ export default function CreateBed() {
 
   return (
     <main className="min-h-screen bg-gray-100 p-6">
+      <br />
+      <br />
       <div className="max-w-lg mx-auto bg-white p-6 shadow-lg rounded-md">
         <h1 className="text-2xl font-bold mb-4">Create New Bed</h1>
 

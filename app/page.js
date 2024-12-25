@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import useStore from "../app/store/useStore";
+import PartnersCarousel from "./components/Partner";
 
 export default function Page() {
   const router = useRouter();
@@ -18,16 +19,16 @@ export default function Page() {
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491626_y.jpg?updatedAt=1734538542277",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491627_y.jpg?updatedAt=1734538539169",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491625_y.jpg?updatedAt=1734538539019",
-    "https://ik.imagekit.io/syziko5ml/banners/1.png?updatedAt=1734543158921",
-    "https://ik.imagekit.io/syziko5ml/banners/3.png?updatedAt=1734543159050",
+    "https://ik.imagekit.io/syziko5ml/banners/944c4a7f-cc83-4687-a08e-b4374c585ea1.png?updatedAt=1735062490537",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5987599773072474968_y.jpg?updatedAt=1735062760554",
   ];
   
   const darkModeHeroImages = [
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491619_y.jpg?updatedAt=1734538542263",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491624_y.jpg?updatedAt=1734538539164",
     "https://ik.imagekit.io/syziko5ml/banners/photo_5985568644383491623_y.jpg?updatedAt=1734538538872",
-    "https://ik.imagekit.io/syziko5ml/banners/2.png?updatedAt=1734543158646",
-    "https://ik.imagekit.io/syziko5ml/banners/4.png?updatedAt=1734543159046",
+    "https://ik.imagekit.io/syziko5ml/banners/c30667ff-1e81-4bb8-ae6d-0847c77d0c0d.png?updatedAt=1735062490530",
+    "https://ik.imagekit.io/syziko5ml/banners/photo_5987599773072474969_y.jpg?updatedAt=1735062760643",
   ];
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -250,10 +251,10 @@ export default function Page() {
               </div>
   
               {/* Content */}
-              <div className="text-center">
+              {/* <div className="text-center">
                 <h3 className={`text-xl font-semibold mb-2 ${textColor}`}>{item.name}</h3>
                 <p className={`${textColor}`}>{item.description}</p>
-              </div>
+              </div> */}
             </div>
           ))}
         </div>
@@ -302,13 +303,14 @@ export default function Page() {
 />
 
 
+<PartnersCarousel/>
 {/* UV Equipment Section */}
-<EquipmentSection
-  title="Our UV Equipment"
+{/* <EquipmentSection
+  title="Our Partners"
   items={[
     {
-      name: "High-Pressure Tanning Bed",
-      description: "Experience fast, deep tanning with our high-pressure beds, perfect for those seeking quick results.",
+      // name: "High-Pressure Tanning Bed",
+      // description: "Experience fast, deep tanning with our high-pressure beds, perfect for those seeking quick results.",
       image: selectedMode === 'dark' ? 'https://images.unsplash.com/photo-1470259078422-826894b933aa?auto=format&fit=crop&q=80' : 'https://images.unsplash.com/photo-1590439471364-192aa70c0b53?auto=format&fit=crop&q=80'
     },
     {
@@ -323,7 +325,7 @@ export default function Page() {
     }
   ]}
   className={`p-8 shadow-lg ${selectedMode === "dark" ? "bg-gradient-to-b from-gray-800 to-black" : "bg-gradient-to-b from-white to-gray-100"}`} 
-/>
+/> */}
 
 
 <InfoSection
