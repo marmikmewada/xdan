@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import ImageKit from "imagekit";
 import { X } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const imagekit = new ImageKit({
   publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY,
@@ -13,7 +14,15 @@ const imagekit = new ImageKit({
 });
 
 export default function CreateBed() {
-  const router = useRouter();
+  const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [name, setName] = useState("");
   const [storeRef, setStoreRef] = useState([]);

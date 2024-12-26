@@ -1,8 +1,19 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 export default function UserDetailsTable() {
+  const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && (role !== "admin" && role !== "staff")) {
+      router.back();
+    }
+  }, [role, router, status]);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");

@@ -124,7 +124,8 @@ const CheckoutPage = () => {
 
       if (responseData.success) {
         await fetch("/api/emptycart",{ method: 'DELETE'})
-        navigate.push("/order-confirmation");
+        const {_id}=responseData.data||{}
+        navigate.push(`/order-confirmation/${_id}`);
       } else {
         setNotification({ type: 'error', message: responseData.message });
       }

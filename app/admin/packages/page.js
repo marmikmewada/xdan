@@ -5,9 +5,19 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Edit, Trash2 } from 'lucide-react'
+import { useSession } from "next-auth/react";
 
 export default function PackagesPage() {
-    const router = useRouter()
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const { user } = session || {};
+    const { role } = user || {};
+  
+    useEffect(() => {
+      if (status !== "loading" && role !== "admin") {
+        router.back();
+      }
+    }, [role, router, status]);
     const [packages, setPackages] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)

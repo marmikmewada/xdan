@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { X } from 'lucide-react'
 
 import ImageKit from "imagekit";
+import { useSession } from "next-auth/react";
 
 const imagekit = new ImageKit({
     publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY, // Replace with your public API key
@@ -14,7 +15,16 @@ const imagekit = new ImageKit({
 });
 
 export default function EditProductPage() {
-    const router = useRouter()
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const { user } = session || {};
+    const { role } = user || {};
+  
+    useEffect(() => {
+      if (status !== "loading" && role !== "admin") {
+        router.back();
+      }
+    }, [role, router, status]);
     const { id } = useParams()
     const [formData, setFormData] = useState({
         name: '',

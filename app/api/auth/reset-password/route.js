@@ -4,6 +4,7 @@ import { connectToDatabase,
   dbmodels } from "@/db";
 import { NextResponse } from "next/server";
 import mongoose from 'mongoose';
+import jwt from "jsonwebtoken";
 
 //http://localhost:3000/api/auth/reset-password?email=am9obkBtYWlsaW5hdG9yLmNvbQ==
 // body={
@@ -16,8 +17,15 @@ import mongoose from 'mongoose';
 // }
 export async function POST(req, res) {
   try {
-    const { email, password: new_password } = await req.json();
+    const {  password: new_password } = await req.json();
+    const { searchParams } = new URL(req.url);
 
+    const token = searchParams.get('token');
+    if (!token) {
+      return NextResponse.json({ success: false, message: 'No token provided' }, { status: 400 });
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const {email}=decoded||{}
     if (!email) {
       return NextResponse.json(
         {

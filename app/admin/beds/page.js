@@ -2,9 +2,18 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function BedList() {
-  const router = useRouter();
+  const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
   const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const [beds, setBeds] = useState([]);
   const [loading, setLoading] = useState(false);

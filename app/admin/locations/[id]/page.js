@@ -7,12 +7,23 @@ import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
 export default function ViewStorePage() {
+
   const { id } = useParams()
-  const router = useRouter()
-  const {data:session}=useSession()
-  const {user}=session||{}
-  const {role}=user||{}
-  console.log("role",role)
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { user } = session || {};
+  const { role } = user || {};
+
+  useEffect(() => {
+    if (status !== "loading" && (role !== "admin" && role !== "staff")) {
+      router.back();
+    }
+  }, [role, router, status]);
+  // const router = useRouter()
+  // const {data:session}=useSession()
+  // const {user}=session||{}
+  // const {role}=user||{}
+  // console.log("role",role)
   const [store, setStore] = useState(null)
   const [isUpdate,setIsUpdate]=useState(1)
   const [availableDates, setAvailableDates] = useState([])

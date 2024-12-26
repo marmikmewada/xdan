@@ -2,8 +2,19 @@
 import { useEffect, useState } from 'react';
  // Optional: for formatting dates
 import useStore from '@/app/store/useStore';  // Assuming your store hook for dark/light mode
+import {  useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 const BookingsPage = () => {
+  const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && (role !== "admin" && role !== "staff")) {
+      router.back();
+    }
+  }, [role, router, status]);
   const { selectedMode } = useStore();
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState(null);

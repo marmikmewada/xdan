@@ -4,9 +4,18 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import useStore from '@/app/store/useStore'; // Importing useStore for dynamic mode selection
 
+import { useSession } from "next-auth/react";
 export default function CreateCouponPage() {
+    const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
     const { selectedMode } = useStore(); // Get the selected mode (light or dark)
-    const router = useRouter();
     const [formData, setFormData] = useState({
         couponCode: '',
         percentage: '',

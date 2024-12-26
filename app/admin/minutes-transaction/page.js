@@ -1,8 +1,20 @@
 "use client";
 import { useEffect, useState } from 'react';
 import useStore from '@/app/store/useStore';  // Assuming useStore hook for dark mode
+import { useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 const AdminGetAllMinutesTransactions = () => {
+  const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
+  
   const { selectedMode } = useStore();
   const [transactions, setTransactions] = useState([]);
   const [error, setError] = useState(null);

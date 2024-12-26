@@ -3,9 +3,8 @@ import { connectToDatabase,
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
   import mongoose from 'mongoose';
-import { sendPasswordResetEmail } from "@/utils/send-mail";
 import { NextResponse } from "next/server";
-
+import jwt from "jsonwebtoken";
 //http://localhost:3001/api/auth/forgot-password
 // body={
 //   email: "abc@gmail.com"
@@ -42,16 +41,17 @@ export async function POST(req, res) {
         { status: 400 }
       );
     }
+    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // const encryptedEmail = Buffer.from(email).toString('base64'); //on frontend we have to decrypt this email using Buffer.from(encodedText, 'base64').toString('utf-8')
+    // const resetPasswordUrl = `http://localhost:3000/api/auth/reset-password?email=${encryptedEmail}`;
 
-    const encryptedEmail = Buffer.from(email).toString('base64'); //on frontend we have to decrypt this email using Buffer.from(encodedText, 'base64').toString('utf-8')
-    const resetPasswordUrl = `http://localhost:3000/api/auth/reset-password?email=${encryptedEmail}`;
-
-    await sendPasswordResetEmail(existingUser.email, existingUser.name, resetPasswordUrl);
+    // await sendPasswordResetEmail(existingUser.email, existingUser.name, resetPasswordUrl);
 
     return NextResponse.json(
       {
         success: true,
         message: "mail sent please check you mail box",
+        data:{token,user_name:existingUser?.name}
       },
       { status: 200 }
     );

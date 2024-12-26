@@ -3,8 +3,19 @@
 import { useEffect, useState } from 'react';
 import Link from "next/link";
 import useStore from '@/app/store/useStore'; // Importing useStore
+import {  useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 export default function CouponListPage() {
+    const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
     const { selectedMode } = useStore(); // Using selectedMode from the store
     const [coupons, setCoupons] = useState([]);
     const [isLoading, setIsLoading] = useState(true);

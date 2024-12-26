@@ -6,7 +6,9 @@ import useStore from "@/app/store/useStore"; // Assuming you have this Zustand s
 import { useSession } from "next-auth/react";
 
 export default function EditLocationPage() {
-    const { data: session } = useSession(); 
+    const { data: session,status } = useSession(); 
+    const { user } = session || {};
+  const { role } = user || {};
     const router = useRouter();
     const { id, date,bedId } = useParams();
     const [availableSlots, setAvailableSlots] = useState([]);
@@ -15,6 +17,12 @@ export default function EditLocationPage() {
     const [error, setError] = useState(null);
     const [notification, setNotification] = useState(null); // For showing error/success messages
     const { selectedMode } = useStore();
+
+    useEffect(() => {
+        if (status !== "loading" && (role !== "admin" && role !== "staff")) {
+          router.back();
+        }
+      }, [role, router, status]);
 
     useEffect(() => {
         const fetchSlots = async () => {

@@ -239,7 +239,7 @@ export async function POST(req) {
         : [],
       metadata: { orderId: newOrder._id.toString() },
       mode: "payment",
-      success_url: `${process.env.NEXT_PUBLIC_API_URL}/transection-successful?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${process.env.NEXT_PUBLIC_API_URL}/transection-successful?order_id=${newOrder?._id}`,
       cancel_url: `${process.env.NEXT_PUBLIC_API_URL}/checkout`,
     });
 
@@ -247,7 +247,7 @@ export async function POST(req) {
       {
         success: true,
         message: "Order placed successfully",
-        order: { ...newOrder.toObject(), stripeUrl: stripe_session.url },
+        data: { ...newOrder.toObject(), stripeUrl: stripe_session.url },
       },
       { status: 200 }
     );

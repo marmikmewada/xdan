@@ -2,8 +2,19 @@
 import { useEffect, useState } from "react";
 import useStore from "@/app/store/useStore";
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 const OrdersTransection = () => {
+  const { data: session,status } = useSession(); 
+  const { user } = session || {};
+const { role } = user || {};
+const router = useRouter();
+ useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
   const { selectedMode } = useStore();
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState(null);

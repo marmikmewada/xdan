@@ -3,9 +3,18 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import useStore from '@/app/store/useStore'; // Importing useStore
+import { useSession } from "next-auth/react";
 
 export default function AssignStaffPage() {
-    const router = useRouter();
+    const { data: session,status } = useSession(); 
+    const { user } = session || {};
+  const { role } = user || {};
+  const router = useRouter();
+   useEffect(() => {
+      if (status !== "loading" && role !== "admin") {
+        router.back();
+      }
+    }, [role, router, status]);
     const { selectedMode } = useStore(); // Using selectedMode from the store
     const [stores, setStores] = useState([]);
     const [staff, setStaff] = useState([]);

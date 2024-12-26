@@ -7,12 +7,22 @@ import { Edit, Trash2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 
 export default function LocationsPage() {
-    const {data:session}=useSession()
-  const {user}=session||{}
-  const {role}=user||{}
-  console.log("role",role)
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const { user } = session || {};
+    const { role } = user || {};
   
-    const router = useRouter()
+    useEffect(() => {
+      if (status !== "loading" && role !== "admin") {
+        router.back();
+      }
+    }, [role, router, status]);
+//     const {data:session}=useSession()
+//   const {user}=session||{}
+//   const {role}=user||{}
+//   console.log("role",role)
+  
+//     const router = useRouter()
     const [locations, setLocations] = useState([])
     const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -20,7 +30,6 @@ export default function LocationsPage() {
     const [locationToDelete, setLocationToDelete] = useState(null)
 
     useEffect(() => {
-        
          if(role!=="admin"){
             router.back()
          }

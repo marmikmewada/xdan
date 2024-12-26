@@ -5,9 +5,20 @@ import { useParams, useRouter } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useSession } from "next-auth/react";
 
 export default function ViewPackagePage() {
-    const router = useRouter()
+    const { data: session, status } = useSession();
+    const router = useRouter();
+    const { user } = session || {};
+    const { role } = user || {};
+  
+    useEffect(() => {
+      if (status !== "loading" && role !== "admin") {
+        router.back();
+      }
+    }, [role, router, status]);
+    
     const { id } = useParams()
     const [package_, setPackage] = useState(null)
     const [isLoading, setIsLoading] = useState(true)

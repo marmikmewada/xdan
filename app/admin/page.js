@@ -1,4 +1,8 @@
+"use client";
+import { useSession } from "next-auth/react";
 import Link from 'next/link';
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const DashboardIcon = ({ children }) => (
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-8 h-8 text-white hover:text-orange-500 transition-colors duration-300">
@@ -56,6 +60,17 @@ const CouponIcon = () => (
 );
 
 export default function AdminDashboard() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const { user } = session || {};
+  const { role } = user || {};
+
+  useEffect(() => {
+    if (status !== "loading" && role !== "admin") {
+      router.back();
+    }
+  }, [role, router, status]);
+
   const dashboardItems = [
     { title: 'Products', url: '/admin/products', icon: <ProductIcon /> },
     { title: 'Packages', url: '/admin/packages', icon: <PackageIcon /> },

@@ -2,9 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from "next-auth/react";
 
 export default function CreateLocationPage() {
+    const { data: session, status } = useSession();
     const router = useRouter();
+    const { user } = session || {};
+    const { role } = user || {};
+  
+    useEffect(() => {
+      if (status !== "loading" && role !== "admin") {
+        router.back();
+      }
+    }, [role, router, status]);
     const [formData, setFormData] = useState({
         name: '',
         address: '',
