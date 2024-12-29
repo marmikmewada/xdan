@@ -3,6 +3,35 @@ import { NextResponse } from 'next/server';
 import { connectToDatabase, dbmodels } from "@/db";
 import mongoose from 'mongoose';
 
+async function checkAdminOrStaff() {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  await connectToDatabase(mongoose);
+  const { userTable } = dbmodels(mongoose);
+
+  const userDetails = await userTable.findOne({ _id: session?.user?.id }).exec();
+  if (!userDetails) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  if (!["admin","staff"].includes(userDetails.role)) {
+    return NextResponse.json(
+      { success: false, message: "Forbidden" },
+      { status: 403 }
+    );
+  }
+
+  return { user: userDetails };
+}
 export async function PATCH(req) {
   try {
     const session = await auth();
@@ -10,6 +39,8 @@ export async function PATCH(req) {
     if (!session) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }
+    const roleCheck = await checkAdminOrStaff();
+    if (!roleCheck.user) return roleCheck;
 
     // Connect to the database
     await connectToDatabase(mongoose);

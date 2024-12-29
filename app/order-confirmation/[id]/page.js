@@ -28,14 +28,18 @@ const OrderConfirmationPage = () => {
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
+        await fetch("/api/emptycart", {
+          method: "DELETE",
+        });
         // Check if the email has already been sent for the current order_id
         const sentOrders = JSON.parse(localStorage.getItem("sentOrders")) || [];
     
-        // If the order has already been processed (email sent), skip sending the email
-        if (sentOrders.includes(id)) {
-          console.log("Email already sent for this order.");
-          return;
-        }
+          setLoading(false)
+          // If the order has already been processed (email sent), skip sending the email
+        // if (sentOrders.includes(id)) {
+        //   console.log("Email already sent for this order.");
+        //   return;
+        // }
     
         // Fetch the order details
         const response = await fetch(`/api/get-single-order-email/${id}`, {
@@ -49,11 +53,12 @@ const OrderConfirmationPage = () => {
         if (result.success) {
           const { userRef, _id: order_id, totalAmount, paymentMethod, paymentStatus } = result.data || {};
           const { name, email } = userRef || {};
-    
+          setLoading(false)
           // Send the email via emailjs
+          if (!sentOrders.includes(id)) {
           await emailjs.send(
-            "service_18nsupk",
-            "template_8kzmwol",
+            process.env.NEXT_PUBLIC_SERVICE_ID,
+            process.env.NEXT_PUBLIC_ORDER_TEMPLATE_ID,
             {
               to: email,
               to_name: name,
@@ -64,10 +69,11 @@ const OrderConfirmationPage = () => {
               from_name: "The Tanning Salon",
             },
             {
-              publicKey: "CZSIkt7zHm10_QmVE",
+              publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
             }
-          );
-    
+          );}
+          console.log("result.data",result.data)
+          setOrder(result.data)
           // Mark this order as processed by adding its order_id to the list
           sentOrders.push(order_id);
           localStorage.setItem("sentOrders", JSON.stringify(sentOrders));

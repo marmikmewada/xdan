@@ -36,15 +36,15 @@ export default function ForgotPassword() {
         const {token,user_name}=data?.data||{}
         console.log("token",token)
         await emailjs.send(
-            "service_18nsupk",
-            "template_y3qbo0c",
+          process.env.NEXT_PUBLIC_SERVICE_ID,
+            process.env.NEXT_PUBLIC_FORGOT_PASSWORD_TEMPLATE_ID,
             {
               to: email,
               to_name: user_name,
               reset_url:`${process.env.NEXT_PUBLIC_API_URL}/reset-password?token=${token}`,
             },
             {
-              publicKey: "CZSIkt7zHm10_QmVE",
+              publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
             }
           )
         setSuccess("Password reset email sent. Please check your inbox.");

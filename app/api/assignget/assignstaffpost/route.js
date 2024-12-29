@@ -1,13 +1,25 @@
 import { NextResponse } from 'next/server';
 import { connectToDatabase, dbmodels,  } from '@/db'; // Adjust the import path to where your db file is located
 import mongoose from 'mongoose';
+import { auth } from "@/auth";
 
 export async function POST(req) {
     try {
         // Connect to the database
         await connectToDatabase(mongoose);
         const { userTable,storeTable } = dbmodels(mongoose);
-
+        const session=await auth()
+        if (!session) {
+            return NextResponse.json({ success: false, message: "User is not authenticated" }, { status: 401 });
+          }
+          const {user:session_user}=session||{}
+          const {role}=session_user||{}
+          if(role!=="admin"){
+            return NextResponse.json(
+                { success: false, message: 'access denied' },
+                { status: 401 }
+            )
+          }
         // Get data from the request body
         const { userId, storeId } = await req.json();
 

@@ -86,7 +86,8 @@ const CheckoutPage = () => {
       const responseData = await response.json();
 
       if (responseData.success) {
-        navigate.push(responseData.order.stripeUrl)
+        console.log("stripeUrl",responseData.data.stripeUrl)
+        navigate.push(responseData.data.stripeUrl)
       } else {
         console.log(responseData.message);
         setNotification({ type: 'error', message: "Payment failed. Please try again." });

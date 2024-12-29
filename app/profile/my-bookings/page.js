@@ -48,6 +48,8 @@ const MyBookingsPage = () => {
 
   return (
     <div className={`min-h-screen ${gradientClass} ${textClass} p-8`}>
+      <br />
+      <br />
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-semibold mb-6">My Bookings</h1>
 

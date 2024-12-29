@@ -5,13 +5,43 @@ import { connectToDatabase,
   dbmodels } from "@/db";
   import mongoose from 'mongoose';
 import { NextResponse } from "next/server";
+async function checkAdminOrStaff() {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
 
+  await connectToDatabase(mongoose);
+  const { userTable } = dbmodels(mongoose);
+
+  const userDetails = await userTable.findOne({ _id: session?.user?.id }).exec();
+  if (!userDetails) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  if (!["admin"].includes(userDetails.role)) {
+    return NextResponse.json(
+      { success: false, message: "Forbidden" },
+      { status: 403 }
+    );
+  }
+
+  return { user: userDetails };
+}
 export async function DELETE(req) {
   try {
     // Connect to the database
     await connectToDatabase(mongoose);
     const { userTable, discountCouponTable} = dbmodels(mongoose);
-
+    const roleCheck = await checkAdminOrStaff();
+    if (!roleCheck.user) return roleCheck;
+    
     // Authenticate the user
     const session = await auth();
     if (!session) {

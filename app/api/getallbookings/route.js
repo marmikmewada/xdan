@@ -3,12 +3,43 @@ import { connectToDatabase, dbmodels } from "@/db"; // MongoDB models
 import mongoose from 'mongoose';
 import { NextResponse } from "next/server";
 
+async function checkAdminOrStaff() {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  await connectToDatabase(mongoose);
+  const { userTable } = dbmodels(mongoose);
+
+  const userDetails = await userTable.findOne({ _id: session?.user?.id }).exec();
+  if (!userDetails) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  if (!["admin","staff"].includes(userDetails.role)) {
+    return NextResponse.json(
+      { success: false, message: "Forbidden" },
+      { status: 403 }
+    );
+  }
+
+  return { user: userDetails };
+}
+
 export async function GET(req) {
   try {
     // Connect to the database
     await connectToDatabase(mongoose);
     const { userTable, bookingTable, storeTable } = dbmodels(mongoose);
-
+    const roleCheck = await checkAdminOrStaff();
+    if (!roleCheck.user) return roleCheck;
     // Authenticate the user
     const session = await auth();
     if (!session) {

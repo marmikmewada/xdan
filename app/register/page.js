@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import useStore from "@/app/store/useStore";
 import { FaCheck, FaTimes } from "react-icons/fa";
+import emailjs from "@emailjs/browser";
 
 export default function Register() {
   const [formData, setFormData] = useState({
@@ -109,8 +110,21 @@ export default function Register() {
       const data = await res.json();
 
       if (data.success) {
+        const { token} = data?.user || {};
+        await emailjs.send(
+          process.env.NEXT_PUBLIC_SERVICE_ID,
+          process.env.NEXT_PUBLIC_REGISTER_TEMPLATE_ID,
+          {
+            to: formData.email,
+            user_name: formData.name,
+            verification_url:`${process.env.NEXT_PUBLIC_API_URL}/verify-email?token=${token}`,
+          },
+          {
+            publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+          }
+        )
         setSuccessMessage("User registered successfully!");
-        setTimeout(() => router.push("/login"), 2000);
+        // setTimeout(() => router.push("/login"), 2000);
       } else {
         setError(data.message || "Something went wrong. Please try again.");
       }

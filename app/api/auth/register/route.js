@@ -1,6 +1,7 @@
 import { connectToDatabase, dbmodels } from "@/db";
 import { NextResponse } from "next/server";
 import mongoose from 'mongoose';
+import jwt from "jsonwebtoken";
 
 export async function POST(req) {
     try {
@@ -57,12 +58,13 @@ export async function POST(req) {
             skinType,   // Optional
             hereAbout   // Optional
         });
+        const token=jwt.sign({email,password }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         return NextResponse.json(
             {
                 success: true,
                 message: "User registered successfully",
-                user: newUser,
+                user: {...newUser,token},
             },
             { status: 201 }
         );

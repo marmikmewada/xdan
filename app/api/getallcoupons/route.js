@@ -8,12 +8,43 @@ import { connectToDatabase,
   // export const dynamic = 'force-static'
   export const dynamic = 'force-dynamic';
 
+  async function checkAdminOrStaff() {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  await connectToDatabase(mongoose);
+  const { userTable } = dbmodels(mongoose);
+
+  const userDetails = await userTable.findOne({ _id: session?.user?.id }).exec();
+  if (!userDetails) {
+    return NextResponse.json(
+      { success: false, message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  if (!["admin"].includes(userDetails.role)) {
+    return NextResponse.json(
+      { success: false, message: "Forbidden" },
+      { status: 403 }
+    );
+  }
+
+  return { user: userDetails };
+}
+
 export async function GET(req) {
   try {
     // Step 1: Connect to the database
     await connectToDatabase(mongoose);
     const { discountCouponTable } = dbmodels(mongoose);
-
+    const roleCheck = await checkAdminOrStaff();
+    if (!roleCheck.user) return roleCheck;
     // Step 2: Fetch all coupons
     const coupons = await discountCouponTable.find();  // Select relevant fields
     // console.log(coupons);

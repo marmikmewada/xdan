@@ -24,7 +24,7 @@ async function checkAdminOrStaff() {
     );
   }
 
-  if (!["admin", "staff"].includes(userDetails.role)) {
+  if (!["admin"].includes(userDetails.role)) {
     return NextResponse.json(
       { success: false, message: "Forbidden" },
       { status: 403 }

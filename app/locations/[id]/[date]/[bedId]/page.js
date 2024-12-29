@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import useStore from "@/app/store/useStore"; // Assuming you have this Zustand store set up
 import { useSession } from "next-auth/react";
+import emailjs from "@emailjs/browser";
 
 export default function EditLocationPage() {
     const { data: session } = useSession(); 
@@ -50,7 +51,6 @@ export default function EditLocationPage() {
         }
         setSelectedSlot(slot);
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -81,8 +81,28 @@ export default function EditLocationPage() {
                 const errorData = await response.json();
                 throw new Error(errorData.message || 'Failed to book the slot');
             }
-            const data = await response.json();
+            const {data} = await response.json();
             console.log("data",data)
+            // console.log(" ~ handleSubmit ~ data:", data)
+            const {userRef,bedRef,storeRef,timeSlots,date:booking_date}=data||{}
+            await emailjs.send(
+                process.env.NEXT_PUBLIC_SERVICE_ID,
+                process.env.NEXT_PUBLIC_BOOKING_TEMPLATE_ID,
+                {
+                  to: userRef.email,
+                  to_name: userRef.name,
+                  store_name: storeRef.name,
+                  booking_date: new Date(booking_date).toLocaleDateString(),
+                  bed_name: bedRef.bedName, // Consider renaming this to 'service' in your schema
+                  booking_time: timeSlots
+                    .map((slot) => `${slot.startTime} - ${slot.endTime}`)
+                    .join(", "),
+                  from_name: "The Tanning Studio",
+                },
+                {
+                  publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
+                }
+              );
             const {_id:booking_id}=data||{}
 
             setNotification({ type: 'success', message: 'Slot booked successfully!' });
@@ -93,6 +113,48 @@ export default function EditLocationPage() {
             setIsLoading(false);
         }
     };
+    // const handleSubmit = async (e) => {
+    //     e.preventDefault();
+
+    //     if (!selectedSlot) {
+    //         setNotification({ type: 'error', message: 'Please select a slot before submitting.' });
+    //         return;
+    //     }
+    //     if (!session) {
+    //         router.push("/login");
+    //         return;
+    //     }
+
+    //     setIsLoading(true);
+    //     try {
+    //         const response = await fetch(`/api/store/${id}/dates/${bedId}/slots/bookaslot`, {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify({
+    //                 date,
+    //                 timeSlots: [
+    //                     { startTime: selectedSlot.startTime, endTime: selectedSlot.endTime }
+    //                 ],
+    //             }),
+    //         });
+    //         console.log("response", response);
+
+    //         if (!response.ok) {
+    //             const errorData = await response.json();
+    //             throw new Error(errorData.message || 'Failed to book the slot');
+    //         }
+    //         const data = await response.json();
+    //         console.log("data",data)
+    //         const {_id:booking_id}=data||{}
+
+    //         setNotification({ type: 'success', message: 'Slot booked successfully!' });
+    //         router.push(`/booking-successful/${booking_id}`);
+    //     } catch (err) {
+    //         setNotification({ type: 'error', message: err.message });
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     useEffect(() => {
         if (notification) {

@@ -4,8 +4,22 @@ import { connectToDatabase,
     // cartTable, productTable, packageTable,
     dbmodels } from "@/db";
     import mongoose from 'mongoose';
+import { auth } from "@/auth";
+
 export async function GET() {
     try {
+        const session=await auth()
+        if (!session) {
+            return NextResponse.json({ success: false, message: "User is not authenticated" }, { status: 401 });
+          }
+          const {user}=session||{}
+          const {role}=user||{}
+          if(role!=="admin"){
+            return NextResponse.json(
+                { success: false, message: 'access denied' },
+                { status: 401 }
+            )
+          }
         // Connect to the database
         await connectToDatabase(mongoose);
         const { userTable,storeTable } = dbmodels(mongoose);

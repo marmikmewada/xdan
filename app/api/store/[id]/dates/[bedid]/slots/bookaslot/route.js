@@ -131,11 +131,17 @@ export async function POST(req, { params }) {
       timeSlots,
     });
 
+    const populatedBooking = await bookingTable
+    .findById(booking._id)
+    .populate("userRef")
+    .populate("storeRef")
+    .populate("bedRef");
+
     return NextResponse.json(
       {
         success: true,
         message: "Slot booked successfully.",
-        data: booking,
+        data: populatedBooking,
       },
       { status: 200 }
     );
