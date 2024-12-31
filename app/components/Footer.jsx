@@ -50,10 +50,10 @@ export default function Footer() {
               <li>
                 Registered Address: 39 Market Street, Hednesford, Cannock, Staffordshire WS12 1AY
               </li>
-              <li>
+              {/* <li>
                 <FaEnvelope className={`inline-block mr-2 ${textColor}`} />
                 <span>Hednesford@bronzebeautystudio.co.uk</span>
-              </li>
+              </li> */}
             </ul>
           </div>
 
@@ -94,17 +94,17 @@ export default function Footer() {
             <h2 className="text-2xl font-semibold mb-4">Products</h2>
             <ul className="space-y-3 text-sm">
               <li>
-                <Link href="#" className="hover:underline">
+                <Link href="/packages" className="hover:underline">
                   Minutes & Packages
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:underline">
+                <Link href="/sunbeds" className="hover:underline">
                   UV Tanning Beds
                 </Link>
               </li>
               <li>
-                <Link href="#" className="hover:underline">
+                <Link href="/products" className="hover:underline">
                   Lotions
                 </Link>
               </li>
@@ -117,15 +117,15 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li>
                 <FaPhoneAlt className={`inline-block mr-2 ${textColor}`} />
-                <span>+1 (800) 123-4567</span>
+                <span>01543 524754</span>
               </li>
               <li>
                 <FaEnvelope className={`inline-block mr-2 ${textColor}`} />
-                <span>contact@mytanningsalon.com</span>
+                <span>hednesford@bronzebeautystudio.co.uk</span>
               </li>
               <li>
                 <Link
-                  href="https://www.google.com/maps"
+                  href="https://maps.app.goo.gl/6zFXpdBxqoHkXqtJ8"
                   className={`hover:underline ${textColor}`}
                 >
                   View on Map

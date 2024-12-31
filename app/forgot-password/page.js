@@ -42,6 +42,7 @@ export default function ForgotPassword() {
               to: email,
               to_name: user_name,
               reset_url:`${process.env.NEXT_PUBLIC_API_URL}/reset-password?token=${token}`,
+              from_name:"The Tanning Salon"
             },
             {
               publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,

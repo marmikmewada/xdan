@@ -7,7 +7,7 @@ import useStore from "@/app/store/useStore";
 import { FaCheck, FaTimes } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
 
-export default function Register() {
+export default function Register({isSendMail=false}) {
   const [formData, setFormData] = useState({
     name: "",
     lastName: "",
@@ -111,6 +111,7 @@ export default function Register() {
 
       if (data.success) {
         const { token} = data?.user || {};
+if(!isSendMail){
         await emailjs.send(
           process.env.NEXT_PUBLIC_SERVICE_ID,
           process.env.NEXT_PUBLIC_REGISTER_TEMPLATE_ID,
@@ -118,17 +119,22 @@ export default function Register() {
             to: formData.email,
             user_name: formData.name,
             verification_url:`${process.env.NEXT_PUBLIC_API_URL}/verify-email?token=${token}`,
+            from_name:"The Tanning Salon"
           },
           {
             publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
           }
         )
-        setSuccessMessage("User registered successfully!");
+        setSuccessMessage("an email has been sent to your registred email, Kindly verify your email");
+      }else{
+      setSuccessMessage("User registered successfully!");
+      }
         // setTimeout(() => router.push("/login"), 2000);
       } else {
         setError(data.message || "Something went wrong. Please try again.");
       }
     } catch (error) {
+      console.log("error",error)
       setError("Error registering user. Please try again.");
     } finally {
       setLoading(false);
