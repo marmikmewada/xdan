@@ -54,7 +54,7 @@ export default function AboutPage() {
         {/* Contact Section */}
         <div className={`text-center ${textColor}`}>
           <h2 className="text-xl md:text-2xl font-semibold mb-4">Contact Us</h2>
-          <p className="mb-4 text-base md:text-lg">For any inquiries or more information, feel free to contact us via email or visit us in person.</p>
+          <p className="mb-4 text-base md:text-lg">For any Enquires or more information, feel free to contact us via email or visit us in person.</p>
           <a
             href="mailto:admin@bronzebeautystudio.co.uk"
             className={`inline-block px-6 py-2 rounded ${buttonBgColor} ${buttonTextColor} ${buttonHoverBgColor} transition duration-300`}

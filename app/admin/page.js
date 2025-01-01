@@ -86,6 +86,7 @@ export default function AdminDashboard() {
     { title: 'Beds', url: '/admin/beds', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
     { title: 'orders Transections', url: '/admin/orders-transection', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
     { title: 'Minutes Transections', url: '/admin/minutes-transaction', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
+    { title: 'Create User', url: '/admin/create-user', icon: <DashboardIcon><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V5a2 2 0 00-2-2H5z" /></DashboardIcon> },
   ];
 
   return (

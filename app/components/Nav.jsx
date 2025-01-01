@@ -7,7 +7,7 @@ import useStore from "../store/useStore";
 import { SunIcon, MoonIcon, MenuIcon, XIcon } from "lucide-react";
 import { FaShoppingCart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-
+import Image from "next/image";
 export default function Nav({ server_session_data }) {
   const router = useRouter();
   const { data: session, status, update } = useSession();
@@ -144,13 +144,14 @@ export default function Nav({ server_session_data }) {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span
+            <Image alt="logo" src={"https://ik.imagekit.io/syziko5ml/banners/37b1259e-701e-4a20-9220-63948c0cd75b.png?updatedAt=1735747408340"} width={250} height={250} className="xs:h-14 xs:pt-2 xs:pb-2 xs:w-32 sm:h-4 md:h-10 lg:w-64 lg:h-10 xl:w-72 xl:h-12"/>
+              {/* <span
                 className={`text-3xl font-extrabold ${
                   selectedMode === "dark" ? "text-white" : "text-black"
                 }`}
               >
                 MySite
-              </span>
+              </span> */}
             </Link>
           </div>
 
@@ -172,7 +173,7 @@ export default function Nav({ server_session_data }) {
               Locations
             </Link>
             
-            <Link href="/" className={navLinkClass}>
+            <Link href="/sunbeds" className={navLinkClass}>
               Sun Beds
             </Link>
 
@@ -327,7 +328,7 @@ export default function Nav({ server_session_data }) {
       </Link>
       
       <Link
-        href="/"
+        href="/sunbeds"
         onClick={closeMenu}
         className={`${navLinkClass} block px-3 py-2 rounded-md text-base font-medium`}
       >
