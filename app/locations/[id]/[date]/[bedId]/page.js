@@ -97,7 +97,7 @@ export default function EditLocationPage() {
                   booking_time: timeSlots
                     .map((slot) => `${slot.startTime} - ${slot.endTime}`)
                     .join(", "),
-                  from_name: "The Tanning Studio",
+                  from_name: "Bronze & Beauty Studio Team",
                 },
                 {
                   publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,

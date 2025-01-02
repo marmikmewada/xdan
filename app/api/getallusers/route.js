@@ -4,6 +4,7 @@ import { connectToDatabase,
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
   import mongoose from 'mongoose';
+  import { auth } from "@/auth"; // assuming auth function to get user session
 
   async function checkAdminOrStaff() {
     const session = await auth();

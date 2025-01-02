@@ -175,7 +175,7 @@ export default function Footer() {
               <FaInstagram />
             </a>
             <a
-              href="https://www.tiktok.com/@bronzebeautystudioltd (tik tok link)"
+              href="https://www.tiktok.com/@bronzebeautystudioltd"
               className={`${iconColor} ${hoverIconColor} text-2xl`}
               aria-label="TikTok"
             >

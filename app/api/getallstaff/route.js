@@ -3,6 +3,8 @@ import { NextResponse } from "next/server";
 import { connectToDatabase, 
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
+import { auth } from "@/auth"; // assuming auth function to get user session
+
   import mongoose from 'mongoose';
   async function checkAdminOrStaff() {
     const session = await auth();

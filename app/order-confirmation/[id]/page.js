@@ -66,7 +66,7 @@ const OrderConfirmationPage = () => {
               total_amount: totalAmount,
               paymentMethod,
               paymentStatus,
-              from_name: "The Tanning Salon",
+              from_name: "Bronze & Beauty Studio Team",
             },
             {
               publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,

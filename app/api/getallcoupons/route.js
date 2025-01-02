@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { connectToDatabase, 
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
+  import { auth } from "@/auth"; // assuming auth function to get user session
 
   // export const dynamic = 'force-static'
   export const dynamic = 'force-dynamic';
