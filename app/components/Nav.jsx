@@ -142,7 +142,7 @@ export default function Nav({ server_session_data }) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
-          <div className="flex items-center xs:h-14 xs:pt-2 xs:pb-2 xs:w-32 sm:h-4 md:h-10 lg:w-64 lg:h-10 xl:w-72 xl:h-12">
+          <div className="md:pt-4 flex items-center xs:h-14 xs:pt-2 xs:pb-2 xs:w-32 sm:h-4 md:h-10 lg:w-64 lg:h-10 xl:w-72 xl:h-12">
             <Link href="/" className="flex-shrink-0 flex items-center">
             <Image alt="logo" src={"https://ik.imagekit.io/syziko5ml/banners/37b1259e-701e-4a20-9220-63948c0cd75b.png?updatedAt=1735747408340"} width={250} height={250} className=""/>
               {/* <span

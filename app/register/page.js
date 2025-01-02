@@ -545,6 +545,8 @@ import Link from "next/link";
 import useStore from "@/app/store/useStore";
 import { FaCheck, FaTimes,FaTimes as FaClose,FaInfoCircle } from "react-icons/fa";
 import emailjs from "@emailjs/browser";
+import { useSession } from "next-auth/react";
+
 
 export default function Register({isSendMail=false}) {
   const [formData, setFormData] = useState({
@@ -580,7 +582,16 @@ export default function Register({isSendMail=false}) {
     uppercase: false,
     number: false,
   });
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const { user } = session || {};
+
+
+  useEffect(() => {
+    if (status !== "loading" && user) {
+      router.back();
+    }
+  }, [router, status,user]);
 
   const { selectedMode } = useStore();
 
@@ -684,7 +695,7 @@ if(!isSendMail){
   const gradientClass = selectedMode === "dark" ? "bg-gradient-to-r from-gray-800 to-black" : "bg-gradient-to-r from-white to-gray-200";
   const textColor = selectedMode === "dark" ? "text-white" : "text-black";
   const inputBg = selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800";
-  const buttonBg = selectedMode === "dark" ? "bg-gray-600 hover:bg-gray-700" : "bg-gray-200 hover:bg-gray-300";
+  const buttonBg = selectedMode === 'dark' ? 'bg-gray-600 hover:bg-gray-700' : 'bg-black hover:bg-gray-300';
   const selectClass = selectedMode === 'dark' ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-800 border-gray-400';
   const modalOverlay = selectedMode === "dark" ? "bg-black/70" : "bg-gray-600/70";
   const modalBg = selectedMode === "dark" ? "bg-gray-800" : "bg-white";

@@ -1,15 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import  useStore  from "@/app/store/useStore"; // Assuming you have a store for the selectedMode
+import { useSession } from "next-auth/react";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const { data: session, status } = useSession();
   const router = useRouter();
+  const { user } = session || {};
+
+
+  useEffect(() => {
+    if (status !== "loading" && user) {
+      router.back();
+    }
+  }, [router, status,user]);
 
   // Getting the selected mode from the store
   const { selectedMode } = useStore();
