@@ -12,7 +12,7 @@ export default  function CreateUser(){
     const { role } = user || {};
   
     useEffect(() => {
-      if (status !== "loading" && role !== "admin"&& role !== "staff") {
+      if (status !== "loading" && (role !== "admin"&& role !== "staff")) {
         router.back();
       }
     }, [role, router, status]);

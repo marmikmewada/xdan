@@ -76,6 +76,20 @@ export default function ViewPackagePage() {
     const hasMultipleImages = Array.isArray(package_.imageUrl) && package_.imageUrl.length > 1
     const currentImage = Array.isArray(package_.imageUrl) ? package_.imageUrl[currentImageIndex] : package_.imageUrl
 
+    const handleDelete = async (id) => {
+        try {
+            const response = await fetch(`/api/package/${id}`, {
+                method: 'DELETE',
+            })
+            if (!response.ok) {
+                throw new Error('Failed to delete package')
+            }
+            router.push("/admin/packages")
+        } catch (err) {
+            setError(err.message)
+        }
+    }
+
     return (
         <div className="container mx-auto px-4 py-8">
             <div className="mb-6">
@@ -148,6 +162,7 @@ export default function ViewPackagePage() {
                                 onClick={() => {
                                     // Implement delete functionality here
                                     if (confirm('Are you sure you want to delete this package?')) {
+                                        handleDelete(id)
                                         // Call delete API
                                     }
                                 }}

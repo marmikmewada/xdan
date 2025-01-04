@@ -104,6 +104,7 @@ export default function PackagesPage() {
                                 <div className="flex justify-end mt-4">
                                     <Link
                                         href={`/admin/packages/${pkg?._id}/edit`}
+                                        onClick={(e)=>e.stopPropagation()}
                                         className="text-blue-500 hover:text-blue-700 mr-2"
                                     >
                                         <Edit size={20} />

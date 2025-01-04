@@ -119,7 +119,7 @@ export default function ProductsPage() {
                             <div className="p-4">
                                 <h2 className="font-bold text-xl mb-2">{product?.name}</h2>
                                 <p className={`${textColor} text-base mb-2`}>{product?.description}</p>
-                                <p className="text-lg font-bold mb-2">${product?.price?.toFixed(2)}</p>
+                                <p className="text-lg font-bold mb-2">£{product?.price?.toFixed(2)}</p>
                                 {/* <p className={`text-sm ${textColor} mb-4`}>Category: {product?.category?.name}</p> */}
                                 <div className="flex justify-end mt-4">
                                     <button

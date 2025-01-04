@@ -10,6 +10,7 @@ import {
 import { useState } from "react";
 import useStore from "@/app/store/useStore";
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -39,6 +40,15 @@ export default function Footer() {
   return (
     <footer className={`py-16 ${gradientClass} ${textColor}`}>
       <div className="max-w-7xl mx-auto px-6 sm:px-8">
+        <div className="flex justify-center mb-8">
+          <Image
+            src="https://ik.imagekit.io/syziko5ml/banners/37b1259e-701e-4a20-9220-63948c0cd75b.png?updatedAt=1735747408340"
+            alt="Bronze & Beauty Studio Logo"
+            width={200}
+            height={100}
+            className="h-auto w-auto"
+          />
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12">
           {/* Company Information */}
           <div>
@@ -50,10 +60,6 @@ export default function Footer() {
               <li>
                 Registered Address: 39 Market Street, Hednesford, Cannock, Staffordshire WS12 1AY
               </li>
-              {/* <li>
-                <FaEnvelope className={`inline-block mr-2 ${textColor}`} />
-                <span>Hednesford@bronzebeautystudio.co.uk</span>
-              </li> */}
             </ul>
           </div>
 
@@ -195,8 +201,6 @@ export default function Footer() {
     </footer>
   );
 }
-
-
 
 
 

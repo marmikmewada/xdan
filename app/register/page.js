@@ -588,10 +588,12 @@ export default function Register({isSendMail=false}) {
 
 
   useEffect(() => {
+    if(!isSendMail){
     if (status !== "loading" && user) {
       router.back();
     }
-  }, [router, status,user]);
+  }
+  }, [router, status,user,isSendMail]);
 
   const { selectedMode } = useStore();
 
