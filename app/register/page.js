@@ -582,6 +582,8 @@ export default function Register({isSendMail=false}) {
     uppercase: false,
     number: false,
   });
+  const [notification, setNotification] = useState(null); // For showing error/success messages
+
   const { data: session, status } = useSession();
   const router = useRouter();
   const { user } = session || {};
@@ -672,19 +674,21 @@ if(!isSendMail){
             to: formData.email,
             user_name: formData.name,
             verification_url:`${process.env.NEXT_PUBLIC_API_URL}/verify-email?token=${token}`,
-            from_name:"Bronze & Beauty Studio Team"
+            from_name:"Bronze & Beauty Studio"
           },
           {
             publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
           }
         )
-        setSuccessMessage("an email has been sent to your registred email, Kindly verify your email");
+        setNotification({ type: 'success', message: 'A email has been sent to your email, please verify your email. our emails sometimes can end up in Junk please also check there' });
+        
       }else{
       setSuccessMessage("User registered successfully!");
       }
         // setTimeout(() => router.push("/login"), 2000);
       } else {
-        setError(data.message || "Something went wrong. Please try again.");
+        setNotification({ type: 'error', message: data?.message });
+        // setError(data.message || "Something went wrong. Please try again.");
       }
     } catch (error) {
       console.log("error",error)
@@ -715,6 +719,15 @@ if(!isSendMail){
     "Ad Banner",
   ];
   const services = ["UV Tanning"];
+
+  useEffect(() => {
+    if (notification) {
+        const timer = setTimeout(() => {
+            setNotification(null); // Hide notification after 3 seconds
+        }, 3000);
+        return () => clearTimeout(timer);
+    }
+}, [notification]);
 
   return (
     <>
@@ -762,11 +775,20 @@ if(!isSendMail){
       <div className={`max-w-md w-full p-8 rounded-xl shadow-lg transition-all duration-300 ease-in-out ${selectedMode === "dark" ? "bg-gray-800 text-white" : "bg-white text-gray-800"}`}>
         <h2 className="text-3xl font-semibold text-center mb-6 tracking-tight">Create an Account</h2>
 
-        {successMessage && (
+        {notification && (
+                    <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow-lg ${
+                        notification.type === 'success' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-gradient-to-b from-black to-gray-900 text-white'
+                    }`}>
+                        {notification.message}
+                    </div>
+                )}
+        {/* {successMessage && (
           <div className="bg-green-100 text-green-800 p-4 rounded-lg mb-4 shadow-md">
             {successMessage}
           </div>
-        )}
+        )} */}
 
         {error && (
           <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4 shadow-md">

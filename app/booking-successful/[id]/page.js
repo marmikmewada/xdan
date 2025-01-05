@@ -63,9 +63,9 @@ const BookingSuccessPage = ({params}) => {
             <p className="text-md mb-4">
               <strong>Store:</strong> {bookingDetails?.storeRef?.name} - {bookingDetails?.storeRef?.address}
             </p>
-            <p className="text-md mb-4">
+            {/* <p className="text-md mb-4">
               <strong>Package:</strong> {bookingDetails?.packageRef?.packageName} - ${bookingDetails?.packageRef?.price}
-            </p>
+            </p> */}
             <p className="text-md mb-4">
               <strong>Booking Date:</strong> {new Date(bookingDetails.date).toLocaleDateString()}
             </p>

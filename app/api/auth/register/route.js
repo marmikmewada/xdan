@@ -15,11 +15,12 @@ export async function POST(req) {
             dob, 
             gender, 
             skinType, 
-            hereAbout
+            hereAbout,
+            address
         } = await req.json();
 
         // Validate required fields
-        if (!name || !lastName || !email || !phone || !password || !dob || !gender) {
+        if (!name || !lastName || !email || !phone || !password || !dob || !gender || !address) {
             return NextResponse.json(
                 {
                     success: false,
@@ -56,7 +57,8 @@ export async function POST(req) {
             dob,
             gender,
             skinType,   // Optional
-            hereAbout   // Optional
+            hereAbout,   // Optional
+            address
         });
         const token=jwt.sign({email,password }, process.env.JWT_SECRET, { expiresIn: '1h' });
 

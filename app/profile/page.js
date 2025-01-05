@@ -14,6 +14,7 @@ const ProfilePage = () => {
   const [is2FAEnabled, setIs2FAEnabled] = useState(false);
   const { selectedMode } = useStore();
   const [mounted, setMounted] = useState(false);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     setMounted(true);
@@ -59,6 +60,11 @@ const ProfilePage = () => {
 
       const data = await response.json();
       if (data.success) {
+        if(!is2FAEnabled){
+        setNotification({ type: 'success', message: 'when you login to your account next time, you will need to scan the qr code on a authenticator app to enable 2fa'})
+        }else{
+          setNotification({ type: 'error', message:'2fa off'})
+        }
         setIs2FAEnabled(!is2FAEnabled);
       } else {
         console.log("Failed to update 2FA status:", data.message);
@@ -67,6 +73,15 @@ const ProfilePage = () => {
       console.log("Error updating 2FA status:", error);
     }
   };
+
+  useEffect(() => {
+    if (notification) {
+        const timer = setTimeout(() => {
+            setNotification(null); // Hide notification after 3 seconds
+        }, 3000);
+        return () => clearTimeout(timer);
+    }
+}, [notification]);
 
   if (!mounted) {
     return null;
@@ -78,6 +93,7 @@ const ProfilePage = () => {
   const borderColor = selectedMode === 'dark' ? 'border-gray-700' : 'border-gray-200';
   const linkColor = selectedMode === 'dark' ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-700';
 
+  
   if (status === "loading" || loading) {
     return (
       <div className={`${bgColor} ${textColor} min-h-screen flex items-center justify-center`}>
@@ -98,7 +114,15 @@ const ProfilePage = () => {
     <div className={`${bgColor} ${textColor} min-h-screen py-16`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-4xl font-semibold mb-8 text-center">User Profile</h1>
-        
+        {notification && (
+                    <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow-lg ${
+                        notification.type === 'success' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-gradient-to-b from-black to-gray-900 text-white'
+                    }`}>
+                        {notification.message}
+                    </div>
+                )}
         {userData && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -109,9 +133,10 @@ const ProfilePage = () => {
             <h2 className="text-2xl font-semibold mb-4">Profile Details</h2>
             <div className="space-y-2">
               <p><strong>Name:</strong> {userData.name} {userData.lastName}</p>
-              <p><strong>Minutes:</strong> {userData.minutes || "Not provided"}</p>
+              <p><strong>Available Minutes:</strong> {userData.minutes || "0"}</p>
               <p><strong>Email:</strong> {userData.email}</p>
               <p><strong>Phone:</strong> {userData.phone}</p>
+              <p><strong>SkinType:</strong> {userData.skinType || "Not provided"}</p>
               <p><strong>Date of Birth:</strong> {new Date(userData.dob).toLocaleDateString()}</p>
               <p><strong>Address:</strong> {userData.address || "Not provided"}</p>
               <div className="flex items-center mt-4">

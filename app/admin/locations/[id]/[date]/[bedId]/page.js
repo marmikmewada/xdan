@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 export default function EditLocationPage() {
     const { data: session,status } = useSession(); 
     const { user } = session || {};
-  const { role } = user || {};
+    const { role } = user || {};
     const router = useRouter();
     const { id, date,bedId } = useParams();
     const [availableSlots, setAvailableSlots] = useState([]);

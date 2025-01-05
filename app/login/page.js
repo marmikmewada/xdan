@@ -1,10 +1,11 @@
 "use client";
 
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import  useStore  from "@/app/store/useStore"; // Assuming you have a store for the selectedMode
+import useStore from "@/app/store/useStore";
 import { useSession } from "next-auth/react";
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -13,15 +14,14 @@ export default function Login() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const { user } = session || {};
-
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (status !== "loading" && user) {
       router.back();
     }
-  }, [router, status,user]);
+  }, [router, status, user]);
 
-  // Getting the selected mode from the store
   const { selectedMode } = useStore();
 
   const handleSubmit = async (e) => {
@@ -41,11 +41,10 @@ export default function Login() {
       if (!data.success) {
         setError(data.message || "Login failed. Please check your credentials.");
       } else {
-        // Check if 2FA is enabled
-        if(data?.is_twofa_redirect){
-          router.push(`/2fa-setup?email=${username}&password=${password}`)
+        if (data?.is_twofa_redirect) {
+          router.push(`/2fa-setup?email=${username}&password=${password}`);
         } else {
-          router.push('/'); // Redirect to homepage if 2FA is not enabled
+          router.push('/');
           router.refresh();
         }
       }
@@ -55,7 +54,6 @@ export default function Login() {
     }
   };
 
-  // Define gradient classes based on selectedMode
   const gradientClass = selectedMode === 'dark' ? 'bg-gradient-to-r from-gray-800 to-black' : 'bg-gradient-to-r from-white to-gray-200';
   const textColor = selectedMode === 'dark' ? 'text-white' : 'text-black';
   const inputBg = selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800';
@@ -66,7 +64,6 @@ export default function Login() {
       <div className={`max-w-md w-full p-8 rounded-xl shadow-lg transition-all duration-300 ease-in-out ${selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
         <h2 className="text-3xl font-semibold text-center mb-6 tracking-tight">Login to Your Account</h2>
 
-        {/* Error Message */}
         {error && (
           <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4 shadow-md">
             {error}
@@ -74,7 +71,6 @@ export default function Login() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Username / Email Field */}
           <div>
             <label htmlFor="username" className={`block text-sm font-medium ${textColor}`}>Email</label>
             <input
@@ -89,22 +85,33 @@ export default function Login() {
             />
           </div>
 
-          {/* Password Field */}
-          <div>
+          <div className="relative">
             <label htmlFor="password" className={`block text-sm font-medium ${textColor}`}>Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Enter your password"
-              className={`w-full px-4 py-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputBg} border-gray-300`}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                id="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                placeholder="Enter your password"
+                className={`w-full px-4 py-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputBg} border-gray-300 pr-10`}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 flex items-center pr-3 mt-2"
+              >
+                {showPassword ? (
+                  <EyeOff className="h-5 w-5 text-gray-400" />
+                ) : (
+                  <Eye className="h-5 w-5 text-gray-400" />
+                )}
+              </button>
+            </div>
           </div>
 
-          {/* Submit Button */}
           <div className="mt-8">
             <button
               type="submit"
@@ -115,7 +122,6 @@ export default function Login() {
           </div>
         </form>
 
-        {/* Register Link */}
         <div className="mt-6 text-center">
           <p className="text-sm">
             Don&apos;t have an account?{" "}
@@ -125,7 +131,6 @@ export default function Login() {
           </p>
         </div>
 
-        {/* Forgot Password Link (Optional) */}
         <div className="mt-2 text-center">
           <p className="text-sm">
             <Link href="/forgot-password" className={`text-blue-500 hover:text-blue-700 font-semibold ${textColor}`}>
@@ -137,6 +142,153 @@ export default function Login() {
     </div>
   );
 }
+
+
+// "use client";
+
+// import { useState,useEffect } from "react";
+// import { useRouter } from "next/navigation";
+// import Link from "next/link";
+// import  useStore  from "@/app/store/useStore"; // Assuming you have a store for the selectedMode
+// import { useSession } from "next-auth/react";
+// import {Eye} from "lucide-react";
+
+// export default function Login() {
+//   const [username, setUsername] = useState("");
+//   const [password, setPassword] = useState("");
+//   const [error, setError] = useState("");
+//   const { data: session, status } = useSession();
+//   const router = useRouter();
+//   const { user } = session || {};
+//   const [showPassword,setShowPassword]=useState(false)
+
+
+//   useEffect(() => {
+//     if (status !== "loading" && user) {
+//       router.back();
+//     }
+//   }, [router, status,user]);
+
+//   // Getting the selected mode from the store
+//   const { selectedMode } = useStore();
+
+//   const handleSubmit = async (e) => {
+//     e.preventDefault();
+
+//     try {
+//       const res = await fetch('/api/auth/login', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ email: username, password }),
+//       });
+
+//       const data = await res.json();
+
+//       if (!data.success) {
+//         setError(data.message || "Login failed. Please check your credentials.");
+//       } else {
+//         // Check if 2FA is enabled
+//         if(data?.is_twofa_redirect){
+//           router.push(`/2fa-setup?email=${username}&password=${password}`)
+//         } else {
+//           router.push('/'); // Redirect to homepage if 2FA is not enabled
+//           router.refresh();
+//         }
+//       }
+//     } catch (err) {
+//       console.error("Login error:", err);
+//       setError("An unexpected error occurred. Please try again.");
+//     }
+//   };
+
+//   // Define gradient classes based on selectedMode
+//   const gradientClass = selectedMode === 'dark' ? 'bg-gradient-to-r from-gray-800 to-black' : 'bg-gradient-to-r from-white to-gray-200';
+//   const textColor = selectedMode === 'dark' ? 'text-white' : 'text-black';
+//   const inputBg = selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800';
+//   const buttonBg = selectedMode === 'dark' ? 'bg-gray-600 hover:bg-gray-700' : 'bg-black hover:bg-gray-300';
+  
+  
+//   return (
+//     <div className={`min-h-screen flex items-center justify-center py-12 px-6 ${gradientClass}`}>
+//       <div className={`max-w-md w-full p-8 rounded-xl shadow-lg transition-all duration-300 ease-in-out ${selectedMode === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-gray-800'}`}>
+//         <h2 className="text-3xl font-semibold text-center mb-6 tracking-tight">Login to Your Account</h2>
+
+//         {/* Error Message */}
+//         {error && (
+//           <div className="bg-red-100 text-red-800 p-4 rounded-lg mb-4 shadow-md">
+//             {error}
+//           </div>
+//         )}
+
+//         <form onSubmit={handleSubmit} className="space-y-6">
+//           {/* Username / Email Field */}
+//           <div>
+//             <label htmlFor="username" className={`block text-sm font-medium ${textColor}`}>Email</label>
+//             <input
+//               type="email"
+//               id="username"
+//               name="username"
+//               value={username}
+//               onChange={(e) => setUsername(e.target.value)}
+//               required
+//               placeholder="Enter your email"
+//               className={`w-full px-4 py-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputBg} border-gray-300`}
+//             />
+//           </div>
+
+//           {/* Password Field */}
+//           <div>
+//             <label htmlFor="password" className={`block text-sm font-medium ${textColor}`}>Password</label>
+//             <input
+//               type={showPassword?"text":"password"}
+//               id="password"
+//               name="password"
+//               value={password}
+//               onChange={(e) => setPassword(e.target.value)}
+//               required
+//               placeholder="Enter your password"
+//               className={`w-full px-4 py-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputBg} border-gray-300`}
+//             />
+//             <button onClick={()=>setShowPassword(!showPassword)}>
+//               <Eye />
+//             </button>
+//           </div>
+
+//           {/* Submit Button */}
+//           <div className="mt-8">
+//             <button
+//               type="submit"
+//               className={`w-full py-3 px-4 font-semibold rounded-md focus:outline-none focus:ring-2 transition-all ease-in-out duration-300 ${buttonBg} text-white`}
+//             >
+//               Login
+//             </button>
+//           </div>
+//         </form>
+
+//         {/* Register Link */}
+//         <div className="mt-6 text-center">
+//           <p className="text-sm">
+//             Don&apos;t have an account?{" "}
+//             <Link href="/register" className={`text-blue-500 hover:text-blue-700 font-semibold ${textColor}`}>
+//               Register here
+//             </Link>
+//           </p>
+//         </div>
+
+//         {/* Forgot Password Link (Optional) */}
+//         <div className="mt-2 text-center">
+//           <p className="text-sm">
+//             <Link href="/forgot-password" className={`text-blue-500 hover:text-blue-700 font-semibold ${textColor}`}>
+//               Forgot Password?
+//             </Link>
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
 
 
 
