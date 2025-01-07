@@ -181,21 +181,21 @@ export default function Footer() {
         <div className="mt-12 mb-8">
           <div className="flex flex-wrap justify-center items-center gap-8">
             <Image
-              src="https://ik.imagekit.io/syziko5ml/banners/photo_6032944684868945809_y.jpg"
+              src="https://ik.imagekit.io/syziko5ml/banners/SA-Logo.png?updatedAt=1736266887655"
               alt="Certification Logo 1"
               width={120}
               height={120}
               className="h-auto w-auto object-contain"
             />
             <Image
-              src="https://ik.imagekit.io/syziko5ml/banners/photo_6032944684868945807_y.jpg"
+              src="https://ik.imagekit.io/syziko5ml/banners/Visa-Logo.png?updatedAt=1736266887164"
               alt="Certification Logo 2"
               width={120}
               height={120}
               className="h-auto w-auto object-contain"
             />
             <Image
-              src="https://ik.imagekit.io/syziko5ml/banners/photo_6032944684868945808_x.jpg"
+              src="https://ik.imagekit.io/syziko5ml/banners/Mastercard-Logo.png?updatedAt=1736266887244"
               alt="Certification Logo 3"
               width={120}
               height={120}
