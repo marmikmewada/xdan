@@ -126,7 +126,7 @@ export default function ContactPage() {
         </div>
 
         {/* Social Media Links */}
-        <div className="mt-8 text-center">
+        {/* <div className="mt-8 text-center">
           <div className="flex justify-center space-x-6">
             <a
               href="#"
@@ -150,7 +150,7 @@ export default function ContactPage() {
               <FaTiktok />
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
