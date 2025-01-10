@@ -664,6 +664,7 @@ export default function Register({isSendMail=false}) {
 
       const data = await res.json();
 
+      console.log(process.env.NEXT_PUBLIC_SERVICE_ID);
       if (data.success) {
         const { token} = data?.user || {};
 if(!isSendMail){
