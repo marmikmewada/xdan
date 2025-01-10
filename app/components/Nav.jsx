@@ -8,10 +8,10 @@ import { SunIcon, MoonIcon, MenuIcon, XIcon } from "lucide-react";
 import { FaShoppingCart } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Glitter from "@/app/components/Glitter";
+// import Glitter from "@/app/components/Glitter";
 export default function Nav({ server_session_data }) {
   const router = useRouter();
-  const [showGlitter, setShowGlitter] = useState(true);
+  // const [showGlitter, setShowGlitter] = useState(true);
   const { data: session, status, update } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartItemCount, setCartItemCount] = useState(0);
@@ -24,15 +24,15 @@ export default function Nav({ server_session_data }) {
       update(server_session_data);
     }
   }, [server_session_data]);
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setShowGlitter(scrollPosition === 0);
-    };
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const scrollPosition = window.scrollY;
+  //     setShowGlitter(scrollPosition === 0);
+  //   };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
   useEffect(() => {
     const fetchMode = async () => {
       try {
@@ -151,7 +151,7 @@ export default function Nav({ server_session_data }) {
           : "bg-gradient-to-b from-white to-gray-200"
       } text-white shadow-lg transition-colors duration-300 ease-in-out`}
     >
-      {showGlitter && <Glitter />}
+      {/* {showGlitter && <Glitter />} */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="md:pt-4 flex items-center xs:h-14 xs:pt-2 xs:pb-2 xs:w-32 sm:h-4 md:h-10 lg:w-64 lg:h-10 xl:w-72 xl:h-12">

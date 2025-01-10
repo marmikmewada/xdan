@@ -139,9 +139,9 @@ export default function Footer() {
                 <FaPhoneAlt className={`flex-shrink-0 mr-2 ${textColor}`} />
                 <span>01543 524754</span>
               </li>
-              <li className="flex items-start">
+              <li >
                 <FaEnvelope className={`flex-shrink-0 mr-2 mt-1 ${textColor}`} />
-                <span className="break-all">hednesford@bronzebeautystudio.co.uk</span>
+                <span >hednesford@bronzebeautystudio.co.uk</span>
               </li>
               <li>
                 <Link
