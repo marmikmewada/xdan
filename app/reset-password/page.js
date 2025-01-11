@@ -12,7 +12,7 @@ export default function ResetPassword() {
   const [success, setSuccess] = useState("");
   const router = useRouter();
   const searchParams = useSearchParams();
-  const windowLocation = window.location.href;
+  
   const { selectedMode } = useStore();
 
   const token = searchParams.get('token');
@@ -34,7 +34,7 @@ export default function ResetPassword() {
     }
 
     try {
-      const res = await fetch(`${windowLocation}/api/auth/reset-password?token=${token}`, {
+      const res = await fetch(`/api/auth/reset-password?token=${token}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
