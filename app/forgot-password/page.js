@@ -41,7 +41,7 @@ export default function ForgotPassword() {
             {
               to: email,
               to_name: user_name,
-              reset_url:`${process.env.NEXT_PUBLIC_API_URL}/reset-password?token=${token}`,
+              reset_url:`${window.Location.href}/reset-password?token=${token}`,
               from_name:"Bronze & Beauty Studio"
             },
             {
