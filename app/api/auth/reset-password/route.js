@@ -19,6 +19,7 @@ export async function POST(req, res) {
   try {
     const {  password: new_password } = await req.json();
     const { searchParams } = new URL(req.url);
+    console.log(searchParams);
 
     const token = searchParams.get('token');
     if (!token) {
