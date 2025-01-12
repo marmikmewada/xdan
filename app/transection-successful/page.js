@@ -15,14 +15,6 @@ export default function PaymentSuccess() {
 
   useEffect(() => {
     setMounted(true);
-    const handleEmptyCart = async () => {
-      await fetch("/api/emptycart", {
-        method: "DELETE",
-      });
-      await fetch("/api/change-payment-status");
-    };
-    handleEmptyCart();
-
     const fetchOrderDetails = async () => {
       try {
         const sentOrders = JSON.parse(localStorage.getItem("sentOrders")) || [];
@@ -73,8 +65,17 @@ export default function PaymentSuccess() {
         console.error("Error fetching order details:", error);
       }
     };
-
-    fetchOrderDetails();
+    const handleEmptyCart = async () => {
+      await fetch("/api/emptycart", {
+        method: "DELETE",
+      });
+      const response=await fetch("/api/change-payment-status");
+      const res=response.json()
+      if(res?.success){
+        fetchOrderDetails();
+      }
+    };
+    handleEmptyCart();    
   }, [id, router]);
 
   const trackOrder = () => {
