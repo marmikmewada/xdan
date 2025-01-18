@@ -75,6 +75,8 @@ const CheckoutPage = () => {
         couponCode,
       };
 
+      console.log("orderData",orderData)
+
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
@@ -112,6 +114,7 @@ const CheckoutPage = () => {
         totalAmount: totalAmount + deliveryCharges,
         couponCode,
       };
+      console.log("orderData",orderData)
 
       const response = await fetch('/api/checkout', {
         method: 'POST',
@@ -127,6 +130,7 @@ const CheckoutPage = () => {
         await fetch("/api/emptycart",{ method: 'DELETE'})
         const {_id}=responseData.data||{}
         navigate.push(`/order-confirmation/${_id}`);
+        navigate.refresh()
       } else {
         setNotification({ type: 'error', message: responseData.message });
       }
@@ -289,7 +293,7 @@ const CheckoutPage = () => {
           </div>
         )}
 
-        {orderType === 'delivery' && (
+        {orderType === 'delivery' &&paymentMethod === 'stripe' && (
           <div className="mb-6 space-y-4">
             <div>
               <label className="block text-lg font-medium mb-2">Street Address</label>

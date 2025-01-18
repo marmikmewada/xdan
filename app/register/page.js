@@ -725,7 +725,7 @@ if(!isSendMail){
     if (notification) {
         const timer = setTimeout(() => {
             setNotification(null); // Hide notification after 3 seconds
-        }, 3000);
+        }, 9000);
         return () => clearTimeout(timer);
     }
 }, [notification]);
@@ -1003,15 +1003,15 @@ if(!isSendMail){
           </div>
 
           <div>
-            <label htmlFor="city" className={`block text-sm font-medium ${textColor}`}>City</label>
+            <label htmlFor="town" className={`block text-sm font-medium ${textColor}`}>Town</label>
             <input
               type="text"
-              id="city"
-              name="city"
+              id="town"
+              name="town"
               value={formData.city}
               onChange={handleChange}
               required
-              placeholder="Enter your city"
+              placeholder="Enter your town"
               className={`w-full px-4 py-3 mt-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${inputBg} border-gray-300`}
             />
           </div>

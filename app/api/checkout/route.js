@@ -14,6 +14,7 @@ export async function POST(req) {
   try {
     const { paymentMethod, orderType, deliveryAddress, couponCode } =
       await req.json();
+      console.log("deliveryAddress",deliveryAddress)
 
     // Connect to the database
     await connectToDatabase(mongoose);
