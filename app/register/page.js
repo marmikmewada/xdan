@@ -1003,11 +1003,11 @@ if(!isSendMail){
           </div>
 
           <div>
-            <label htmlFor="town" className={`block text-sm font-medium ${textColor}`}>Town</label>
+            <label htmlFor="city" className={`block text-sm font-medium ${textColor}`}>Town</label>
             <input
               type="text"
-              id="town"
-              name="town"
+              id="city"
+              name="city"
               value={formData.city}
               onChange={handleChange}
               required
