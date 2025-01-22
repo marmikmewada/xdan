@@ -3,6 +3,7 @@ import { auth } from "@/auth"; // Assuming you have your auth middleware set up
 import { connectToDatabase, 
   // cartTable, productTable, packageTable,
   dbmodels } from "@/db";
+  import { useEffect } from "react";
 import { NextResponse } from "next/server";
 import mongoose from 'mongoose';
 

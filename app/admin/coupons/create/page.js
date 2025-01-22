@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import useStore from '@/app/store/useStore'; // Importing useStore for dynamic mode selection
+import useStore from '@/app/store/useStore'; 
+import { useEffect } from 'react';// Importing useStore for dynamic mode selection
 
 import { useSession } from "next-auth/react";
 export default function CreateCouponPage() {
