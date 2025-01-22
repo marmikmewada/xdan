@@ -36,7 +36,6 @@ export default function PaymentSuccess() {
         if (result.success) {
           const { userRef, _id: order_id, totalAmount, paymentMethod, paymentStatus } = result.data || {};
           const { name, email } = userRef || {};
-
           await emailjs.send(
             process.env.NEXT_PUBLIC_SERVICE_ID,
             process.env.NEXT_PUBLIC_ORDER_TEMPLATE_ID,
@@ -70,7 +69,7 @@ export default function PaymentSuccess() {
         method: "DELETE",
       });
       const response=await fetch("/api/change-payment-status");
-      const res=response.json()
+      const res=await response.json()
       if(res?.success){
         fetchOrderDetails();
       }
