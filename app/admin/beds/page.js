@@ -22,7 +22,7 @@ const router = useRouter();
     const fetchBeds = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${baseUrl}/api/bed`);
+        const response = await fetch(`/api/bed`);
         const data = await response.json();
         setBeds(data?.data || []);
       } catch (error) {
