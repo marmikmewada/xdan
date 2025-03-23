@@ -43,6 +43,7 @@ const router = useRouter();
       // const response = await fetch(`${baseUrl}/api/bed/${bedId}`, {
       //   method: "DELETE",
       // });
+      
       const response = await fetch(`/api/bed/${bedId}`, {
         method: "DELETE",
       });
