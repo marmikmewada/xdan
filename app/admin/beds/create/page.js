@@ -34,7 +34,7 @@ const router = useRouter();
   useEffect(() => {
     const fetchStores = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/store`);
+        const response = await fetch(`/api/store`);
         const data = await response.json();
         setStores(data?.data || []);
       } catch (error) {

@@ -40,7 +40,7 @@ const router = useRouter();
 
     try {
       setLoading(true);
-      const response = await fetch(`${baseUrl}/api/bed/${bedId}`, {
+      const response = await fetch(`/api/bed/${bedId}`, {
         method: "DELETE",
       });
 
