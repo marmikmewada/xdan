@@ -94,7 +94,7 @@ const router = useRouter();
     }
 
     try {
-      const response = await fetch(`${baseUrl}/api/bed`, {
+      const response = await fetch(`/api/bed`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bedName:name, storeRef, imageUrl }),
