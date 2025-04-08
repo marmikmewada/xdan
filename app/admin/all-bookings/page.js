@@ -18,6 +18,7 @@ const router = useRouter();
   const { selectedMode } = useStore();
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState(null);
+  const [notification, setNotification] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]); // Default to today
 
@@ -42,7 +43,7 @@ const router = useRouter();
     };
 
     fetchBookingsData();
-  }, [selectedDate]);
+  }, [selectedDate,notification]);
 
   // Define CSS class based on mode
   const gradientClass = selectedMode === 'dark' ? 'bg-gradient-to-b from-gray-800 to-black' : 'bg-gradient-to-b from-white to-gray-200';
@@ -60,6 +61,28 @@ const router = useRouter();
     return `${year}-${month}-${day}`;
   };
 
+
+  const handleCancel = async (bookingId)=>{
+    console.log("bookingId",bookingId)
+    const response = await fetch(`/api/cancelbooking`, {
+      method: 'PATCH',
+      body: JSON.stringify({bookingId})
+    })
+    const result = await response.json();
+    if(result.success){
+      setNotification({
+        type: 'success',
+        message: 'Booking cancelled successfully!',
+      });
+    }else{
+      console.log("result",result)
+      setError("failed to cancel booking")
+    }
+    setTimeout(() => {
+      setNotification(null);
+      setError(null);
+    }, 3000);
+      }
 
   return (
     <div className={`min-h-screen ${gradientClass} ${textClass} p-8`}>
@@ -85,6 +108,15 @@ const router = useRouter();
         {/* Error State */}
         {error && <div className="bg-red-100 text-red-600 p-4 rounded-lg shadow-md mb-4">{error}</div>}
 
+        {notification && (
+                    <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 z-50 px-4 py-2 rounded shadow-lg ${
+                        notification.type === 'success' 
+                            ? 'bg-green-500 text-white' 
+                            : 'bg-gradient-to-b from-black to-gray-900'
+                    }`}>
+                        {notification.message}
+                    </div>
+                )}
         {/* No Data State */}
         {bookings.length === 0 && !loading && (
           <div className="bg-gray-100 text-gray-700 p-6 rounded-lg shadow-md text-center">
@@ -103,11 +135,24 @@ const router = useRouter();
                   <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Bed</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Booking Date</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Time</th>
+                  <th
+                    className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}
+                  >
+                    Action
+                  </th>
                   {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th> */}
                 </tr>
               </thead>
               <tbody>
                 {bookings.map((booking) => {
+                  const bookingDate = new Date(booking.date);
+                  const [hours, minutes] = booking.timeSlots[0].startTime
+                    .split(":")
+                    .map(Number);
+                  const bookingStartDateTime = new Date(
+                    bookingDate.setHours(hours, minutes, 0, 0)
+                  );
+                  const isPast = new Date() > bookingStartDateTime;
                     return (
                   <tr key={booking._id} className={`${tableClass} border-t`}>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 ${inputClass}`}>{booking?.userRef?.name}</td>
@@ -119,6 +164,21 @@ const router = useRouter();
                     <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}>
                       {`${booking.timeSlots[0].startTime}: ${booking.timeSlots[0].endTime}`}
                     </td>
+                    <td
+                        className={`px-6 py-4 whitespace-nowrap text-sm ${inputClass}`}
+                      >
+                        <button
+                          className={`px-4 py-2 rounded-md text-white ${
+                            isPast
+                              ? "bg-gray-400 cursor-not-allowed"
+                              : "bg-red-500 hover:bg-red-600"
+                          }`}
+                          disabled={isPast}
+                          onClick={() => handleCancel(booking._id)} // replace with your cancel logic
+                        >
+                          Cancel
+                        </button>
+                      </td>
                     {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <button className="text-blue-600 hover:text-blue-800">View</button>
                     </td> */}
