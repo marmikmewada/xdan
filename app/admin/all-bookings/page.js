@@ -135,6 +135,7 @@ const router = useRouter();
                   <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Bed</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Booking Date</th>
                   <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Time</th>
+                  <th className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}>Minutes</th>
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}
                   >
@@ -155,7 +156,7 @@ const router = useRouter();
                   const isPast = new Date() > bookingStartDateTime;
                     return (
                   <tr key={booking._id} className={`${tableClass} border-t`}>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 ${inputClass}`}>{booking?.userRef?.name}</td>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 ${inputClass}`}>{booking?.userRef?.name} {booking?.userRef?.lastName}</td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}>{booking?.storeRef?.name}</td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}>{booking?.bedRef?.bedName}</td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}>
@@ -163,6 +164,9 @@ const router = useRouter();
                     </td>
                     <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}>
                       {`${booking.timeSlots[0].startTime}: ${booking.timeSlots[0].endTime}`}
+                    </td>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}>
+                      {booking?.minutes || 0}
                     </td>
                     <td
                         className={`px-6 py-4 whitespace-nowrap text-sm ${inputClass}`}

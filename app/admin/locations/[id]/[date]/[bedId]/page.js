@@ -12,7 +12,7 @@ export default function EditLocationPage() {
     const router = useRouter();
     const { id, date,bedId } = useParams();
     const [availableSlots, setAvailableSlots] = useState([]);
-    const [selectedSlot, setSelectedSlot] = useState(null);
+    const [selectedSlot, setSelectedSlot] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [notification, setNotification] = useState(null); // For showing error/success messages
@@ -52,11 +52,30 @@ export default function EditLocationPage() {
         }
     }, [id, date]);
     
+    // const handleSlotSelect = (slot) => {
+    //     if (slot.status !== 'available') {
+    //         return;
+    //     }
+    //     setSelectedSlot(slot);
+    // };
     const handleSlotSelect = (slot) => {
-        if (slot.status !== 'available') {
-            return;
-        }
-        setSelectedSlot(slot);
+        if (slot.status !== 'available') return;
+    
+        setSelectedSlot((prevSlots) => {
+            const exists = prevSlots?.some(
+                (s) => s?.startTime === slot?.startTime && s?.endTime === slot?.endTime
+            );
+    
+            if (exists) {
+                // Remove the slot
+                return prevSlots?.filter(
+                    (s) => !(s?.startTime === slot?.startTime && s?.endTime === slot?.endTime)
+                );
+            } else {
+                // Add the slot
+                return [...prevSlots, { startTime: slot?.startTime, endTime: slot?.endTime }];
+            }
+        });
     };
 
     const handleSubmit = async (e) => {
@@ -72,6 +91,10 @@ export default function EditLocationPage() {
         }
 
         setIsLoading(true);
+        const slots = selectedSlot.map(item => ({
+            startTime: item.startTime,
+            endTime: item.endTime
+        }));
         try {
             const response = await fetch(`/api/store/${id}/markunslots`, {
                 method: 'POST',
@@ -79,9 +102,7 @@ export default function EditLocationPage() {
                 body: JSON.stringify({
                     date,
                     bedId,
-                    slots: [
-                        { startTime: selectedSlot.startTime, endTime: selectedSlot.endTime }
-                    ],
+                    slots,
                     reason:"Unavailable for maintenance"
                 }),
             });
@@ -144,24 +165,32 @@ export default function EditLocationPage() {
                     <div className="mb-4">
                         <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Available Slots</h2>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                            {availableSlots.length === 0 ? (
-                                <p>No available slots for this date.</p>
-                            ) : (
-                                availableSlots.map((slot, index) => (
-                                    <button
-                                        key={index}
-                                        type="button"
-                                        className={`p-4 text-xs md:text-sm border rounded-lg ${buttonBg} ${buttonText} ${buttonHover} transition-colors duration-300
-                                            ${selectedSlot === slot ? 'ring-2 ring-blue-500' : ''}
-                                            ${slot.status !== 'available' ? 'cursor-not-allowed opacity-50' : ''}`}
-                                        onClick={() => handleSlotSelect(slot)}
-                                        disabled={slot.status !== 'available'}
-                                    >
-                                        {slot.startTime} - {slot.endTime}
-                                        {slot.status === 'booked' && <div className="text-sm opacity-70">unavailable</div>}
-                                    </button>
-                                ))
-                            )}
+                        {availableSlots.length === 0 ? (
+    <p>No available slots for this date.</p>
+) : (
+    availableSlots.map((slot, index) => {
+        const isSelected = selectedSlot.some(
+            (s) => s.startTime === slot.startTime && s.endTime === slot.endTime
+        );
+
+        return (
+            <button
+                key={index}
+                type="button"
+                className={`p-4 text-xs md:text-sm border rounded-lg ${buttonBg} ${buttonText} ${buttonHover} transition-colors duration-300
+                    ${isSelected ? 'ring-2 ring-blue-500' : ''}
+                    ${slot.status !== 'available' ? 'cursor-not-allowed opacity-50' : ''}`}
+                onClick={() => handleSlotSelect(slot)}
+                disabled={slot.status !== 'available'}
+            >
+                {slot.startTime} - {slot.endTime}
+                {slot.status === 'booked' && (
+                    <div className="text-sm opacity-70">unavailable</div>
+                )}
+            </button>
+        );
+    })
+)}
                         </div>
                     </div>
 
@@ -170,7 +199,7 @@ export default function EditLocationPage() {
                         <button
                             type="submit"
                             className={`w-full ${buttonBg} ${buttonText} ${buttonHover} font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300`}
-                            disabled={isLoading || !selectedSlot}
+                            disabled={isLoading || !selectedSlot.length}
                         >
                             {isLoading ? 'Marking...' : 'Mark as unavailable'}
                         </button>

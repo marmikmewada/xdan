@@ -72,6 +72,11 @@ const BookingSuccessPage = ({params}) => {
             <p className="text-md mb-6">
               <strong>Time Slot:</strong> {bookingDetails.timeSlots[0].startTime} - {bookingDetails.timeSlots[0].endTime}
             </p>
+{bookingDetails?.minutes&&
+            <p className="text-md mb-6">
+              <strong>Minutes:</strong> {bookingDetails?.minutes}
+            </p>
+}
           </div>
         )}
 

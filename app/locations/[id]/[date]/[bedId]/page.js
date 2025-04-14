@@ -16,6 +16,7 @@ export default function EditLocationPage() {
     const [error, setError] = useState(null);
     const [notification, setNotification] = useState(null); // For showing error/success messages
     const { selectedMode } = useStore();
+    const [minutes,setMinutes]=useState("")
 
     useEffect(() => {
         const fetchSlots = async () => {
@@ -62,6 +63,10 @@ export default function EditLocationPage() {
             router.push("/login");
             return;
         }
+        if(!minutes){
+            setNotification({ type: 'error', message: "Please enter minutes"});
+            return;
+        }
 
         setIsLoading(true);
         try {
@@ -103,8 +108,16 @@ export default function EditLocationPage() {
                   publicKey: process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY,
                 }
               );
+              
             const {_id:booking_id}=data||{}
-
+            await fetch(`/api/store/${id}/dates/${bedId}/slots/bookaslot`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    minutes,
+                    booking_id,
+                }),
+            })
             setNotification({ type: 'success', message: 'Slot booked successfully!' });
             router.push(`/booking-successful/${booking_id}`);
         } catch (err) {
@@ -195,6 +208,25 @@ export default function EditLocationPage() {
                 <form onSubmit={handleSubmit} className="max-w-2xl mx-auto">
                     <div className="mb-4">
                         <h2 className="text-lg md:text-xl font-semibold mb-4 text-center">Available Slots</h2>
+
+
+                        <div className="mb-4">
+        <label htmlFor="minutes" className="block text-sm font-medium mb-2">
+          How Many Minutes Do You Wish To Use On Your Booking?
+        </label>
+        <input
+          type="text"
+          id="minutes"
+          value={minutes}
+          onChange={(e) => setMinutes(e.target.value)}
+          placeholder="Enter minutes"
+          className={`w-full px-4 py-2 rounded-lg border ${
+            selectedMode === 'dark' ? "bg-gray-800 border-gray-700 text-white placeholder-gray-400" : "bg-white border-gray-300"
+          } focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        />
+      </div>
+
+
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             {availableSlots.length === 0 ? (
                                 <p>No available slots for this date.</p>

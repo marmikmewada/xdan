@@ -153,6 +153,11 @@ setTimeout(() => {
                   <th
                     className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}
                   >
+                    Minutes
+                  </th>
+                  <th
+                    className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${inputClass}`}
+                  >
                     Action
                   </th>
                 </tr>
@@ -188,6 +193,11 @@ setTimeout(() => {
                         className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}
                       >
                         {`${booking.timeSlots[0].startTime}: ${booking.timeSlots[0].endTime}`}
+                      </td>
+                      <td
+                        className={`px-6 py-4 whitespace-nowrap text-sm text-gray-500 ${inputClass}`}
+                      >
+                        {booking.minutes || 0}
                       </td>
                       <td
                         className={`px-6 py-4 whitespace-nowrap text-sm ${inputClass}`}

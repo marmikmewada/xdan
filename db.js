@@ -181,6 +181,19 @@ export const dbmodels = (mongoose) => {
   );
 
   // Booking Model
+  // const bookingSchema = new mongoose.Schema({
+  //   userRef: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+  //   storeRef: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
+  //   bedRef: { type: mongoose.Schema.Types.ObjectId, ref: "Bed" },
+  //   date: { type: Date, required: true },
+  //   timeSlots: [
+  //     {
+  //       startTime: { type: String, required: true },
+  //       endTime: { type: String, required: true },
+  //     },
+  //   ], // Array of time slots (each with startTime and endTime)
+  //   packageRef: { type: mongoose.Schema.Types.ObjectId, ref: "Package" },
+  // });
   const bookingSchema = new mongoose.Schema({
     userRef: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     storeRef: { type: mongoose.Schema.Types.ObjectId, ref: "Store" },
@@ -193,6 +206,7 @@ export const dbmodels = (mongoose) => {
       },
     ], // Array of time slots (each with startTime and endTime)
     packageRef: { type: mongoose.Schema.Types.ObjectId, ref: "Package" },
+    minutes: { type: String, required: false } //minutes of booking
   });
 
   // Unavailable Slots Model
