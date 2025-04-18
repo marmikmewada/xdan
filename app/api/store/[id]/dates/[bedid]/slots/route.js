@@ -42,12 +42,14 @@ export async function GET(req, { params }) {
       currentSlot.add(15, 'minutes');
     }
 
+    console.log("selectedDate.toDate()?",selectedDate.toDate())
     // Query to get unavailable slots for the specific store on the selected date
     const unavailableSlots = await unavailableSlotTable.find({
       storeRef: id,
       bedRef:bedid,
-      date: selectedDate.toDate(), // Match the exact date
+      date: date, // Match the exact date
     }).exec();
+console.log("unavailableSlots>>>>>>>",unavailableSlots)
 
     // Flatten all the unavailable slots into a single list of (startTime, endTime)
     const unavailableSlotTimes = [];

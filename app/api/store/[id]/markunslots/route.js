@@ -11,7 +11,7 @@ export async function POST(req, { params }) {
 
   try {
     const { date, slots, reason,bedId } = await req.json();
-
+console.log("slots,date >>>>>>>>>",slots,date)
     // Validate required fields
     if (!date || !slots || !Array.isArray(slots) || slots.length === 0) {
       return NextResponse.json(
@@ -23,15 +23,15 @@ export async function POST(req, { params }) {
       );
     }
 
-    if (!reason) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: "Reason for unavailability is required.",
-        },
-        { status: 400 }
-      );
-    }
+    // if (!reason) {
+    //   return NextResponse.json(
+    //     {
+    //       success: false,
+    //       message: "Reason for unavailability is required.",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
 
     // Connect to the database
     await connectToDatabase(mongoose);
@@ -90,8 +90,13 @@ export async function POST(req, { params }) {
 
     if (unavailableSlot) {
       // If the store already has unavailable slots for the same date, we add to the existing list
-      unavailableSlot.slots = [...unavailableSlot.slots, ...slots];
-      unavailableSlot.reason = reason;
+      const updatedSlots=[...unavailableSlot.slots, ...slots]
+      console.log("updatedSlots++++",updatedSlots)
+      unavailableSlot.slots = updatedSlots;
+      // unavailableSlot.reason = reason;
+      // '2025-05-14T00:00:00.000Z'
+      // '2025-05-13T23:00:00.000Z'
+      console.log("going to save this details unavailableSlot",unavailableSlot)
       await unavailableSlot.save();
     } else {
       // If no existing record for the specific date, create a new one

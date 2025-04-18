@@ -93,7 +93,8 @@ export default function EditLocationPage() {
         setIsLoading(true);
         const slots = selectedSlot.map(item => ({
             startTime: item.startTime,
-            endTime: item.endTime
+            endTime: item.endTime,
+            reason:"Unavailable for maintenance"
         }));
         try {
             const response = await fetch(`/api/store/${id}/markunslots`, {
@@ -102,8 +103,7 @@ export default function EditLocationPage() {
                 body: JSON.stringify({
                     date,
                     bedId,
-                    slots,
-                    reason:"Unavailable for maintenance"
+                    slots
                 }),
             });
             console.log("response", response);
@@ -117,7 +117,7 @@ export default function EditLocationPage() {
             const {_id:booking_id}=data||{}
 
             setNotification({ type: 'success', message: 'Marked as unavailable!' });
-            router.push(`/admin/locations`);
+            // router.push(`/admin/locations`);
         } catch (err) {
             setNotification({ type: 'error', message: err.message });
         } finally {
