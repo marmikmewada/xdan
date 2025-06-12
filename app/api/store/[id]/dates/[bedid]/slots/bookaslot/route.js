@@ -208,8 +208,7 @@ export async function PATCH(req) {
   try {
     const { minutes, booking_id } = await req.json();
     await connectToDatabase(mongoose);
-    const { userTable, bookingTable } =
-      dbmodels(mongoose);
+    const { userTable, bookingTable } = dbmodels(mongoose);
 
     // Authenticate the user
     const session = await auth();
@@ -237,8 +236,7 @@ export async function PATCH(req) {
       );
     }
 
-    const existingBooking = await bookingTable.findById(booking_id)
-      .exec();
+    const existingBooking = await bookingTable.findById(booking_id).exec();
     if (!existingBooking) {
       return NextResponse.json(
         {

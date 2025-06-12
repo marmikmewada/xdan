@@ -1,57 +1,69 @@
 // import { connectToDatabase } from '@/db'; // Assuming you have a utility to connect to MongoDB
 // import { unavailableSlotTable, bookingTable, userTable } from '@/db'; // Mongoose models for unavailable slots and bookings
-import { connectToDatabase, 
-  // cartTable, productTable, packageTable,
-  dbmodels } from "@/db";
-  import mongoose from 'mongoose';
-import moment from 'moment-timezone';
+
+
+import { connectToDatabase, dbmodels } from "@/db";
+import mongoose from "mongoose";
+import moment from "moment-timezone";
 
 export async function GET(req, { params }) {
-  const { id,bedid } = params; // Get the store id from the URL
+  const { id, bedid } = params; // store and bed id
   const { searchParams } = new URL(req.url);
-  const date = searchParams.get('date'); // Get the selected date from the query params
-  console.log("bedid",bedid)
+  const date = searchParams.get("date"); // selected date in query
+
+  console.log("bedid", bedid);
 
   if (!date) {
     return new Response(
-      JSON.stringify({ message: 'Date parameter is required' }),
+      JSON.stringify({ message: "Date parameter is required" }),
       { status: 400 }
     );
   }
 
   try {
-    // Connect to the database
+    // Connect DB
     await connectToDatabase(mongoose);
-    const { unavailableSlotTable,bookingTable } = dbmodels(mongoose);
+    const { unavailableSlotTable, bookingTable } = dbmodels(mongoose);
 
-    // Ensure the date is in UK timezone (GMT/BST)
-    const selectedDate = moment.tz(date, 'YYYY-MM-DD', 'Europe/London').startOf('day');
-    const endOfDay = selectedDate.clone().endOf('day');
+    // UK timezone date start
+    const selectedDate = moment.tz(date, "YYYY-MM-DD", "Europe/London").startOf("day");
+    const endOfDay = selectedDate.clone().endOf("day");
 
-    // Define store's working hours: 9:00 AM to 8:00 PM (in UK time)
-    const workStartTime = selectedDate.clone().set({ hour: 9, minute: 0, second: 0 });
-    const workEndTime = selectedDate.clone().set({ hour: 20, minute: 0, second: 0 });
+    // Determine day of the week (0 = Sunday, 6 = Saturday)
+    const dayOfWeek = selectedDate.day();
 
-    // Generate all possible 15-minute slots from 9:00 AM to 8:00 PM
+    // Set working hours based on day
+    let workStartTime, workEndTime;
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      // Weekend: 10 AM - 4 PM
+      workStartTime = selectedDate.clone().set({ hour: 10, minute: 0, second: 0 });
+      workEndTime = selectedDate.clone().set({ hour: 16, minute: 0, second: 0 });
+    } else {
+      // Weekday: 9 AM - 8 PM
+      workStartTime = selectedDate.clone().set({ hour: 9, minute: 0, second: 0 });
+      workEndTime = selectedDate.clone().set({ hour: 20, minute: 0, second: 0 });
+    }
+
+    // Generate 30-minute slots instead of 15
     const allSlots = [];
     let currentSlot = workStartTime.clone();
     while (currentSlot.isBefore(workEndTime)) {
-      const startTime = currentSlot.format('HH:mm');
-      const endTime = currentSlot.clone().add(15, 'minutes').format('HH:mm');
+      const startTime = currentSlot.format("HH:mm");
+      const endTime = currentSlot.clone().add(30, "minutes").format("HH:mm");
       allSlots.push({ startTime, endTime });
-      currentSlot.add(15, 'minutes');
+      currentSlot.add(30, "minutes");
     }
 
-    console.log("selectedDate.toDate()?",selectedDate.toDate())
-    // Query to get unavailable slots for the specific store on the selected date
+    console.log("selectedDate.toDate()?", selectedDate.toDate());
+
+    // Get unavailable slots
     const unavailableSlots = await unavailableSlotTable.find({
       storeRef: id,
-      bedRef:bedid,
-      date: date, // Match the exact date
+      bedRef: bedid,
+      date: date,
     }).exec();
-console.log("unavailableSlots>>>>>>>",unavailableSlots)
+    console.log("unavailableSlots>>>>>>>", unavailableSlots);
 
-    // Flatten all the unavailable slots into a single list of (startTime, endTime)
     const unavailableSlotTimes = [];
     unavailableSlots.forEach(slot => {
       slot.slots.forEach(unavailable => {
@@ -62,71 +74,337 @@ console.log("unavailableSlots>>>>>>>",unavailableSlots)
       });
     });
 
-    // Query to get bookings for the store on the selected date
+    // Get bookings for that date
     const bookings = await bookingTable.find({
       storeRef: id,
-      bedRef:bedid,
+      bedRef: bedid,
       date: { $gte: selectedDate.toDate(), $lt: endOfDay.toDate() },
-    }).populate('userRef', 'name'); // Populate user name from the User model
+    }).populate("userRef", "name");
 
-    // Create an object to map booked slots by their time
+    // Map booked slots by time
     const bookedSlots = {};
     bookings.forEach(booking => {
       booking.timeSlots.forEach(slot => {
         const slotKey = `${slot.startTime}-${slot.endTime}`;
-        bookedSlots[slotKey] = booking.userRef.name; // Store the user's name who booked this slot
+        bookedSlots[slotKey] = booking.userRef.name;
       });
     });
 
-    // Filter the available slots by removing the unavailable and booked slots
+    // Filter available slots (remove unavailable and booked)
     const availableSlots = allSlots.filter(slot => {
       const slotKey = `${slot.startTime}-${slot.endTime}`;
       const isUnavailable = unavailableSlotTimes.some(
-        unavailableSlot => unavailableSlot.startTime === slot.startTime && unavailableSlot.endTime === slot.endTime
+        us => us.startTime === slot.startTime && us.endTime === slot.endTime
       );
-      return !isUnavailable && !bookedSlots[slotKey]; // Only keep slots that are not unavailable or already booked
+      return !isUnavailable && !bookedSlots[slotKey];
     });
 
-    // Include user names for booked slots
+    // Map all slots with status and booking info
     const slotsWithBookings = allSlots.map(slot => {
       const slotKey = `${slot.startTime}-${slot.endTime}`;
       if (bookedSlots[slotKey]) {
         return {
           ...slot,
-          bookedBy: bookedSlots[slotKey], // Add the user who booked this slot
-          status: 'booked', // Mark as booked
+          bookedBy: bookedSlots[slotKey],
+          status: "booked",
         };
       } else if (!unavailableSlotTimes.some(
-        unavailableSlot => unavailableSlot.startTime === slot.startTime && unavailableSlot.endTime === slot.endTime
+        us => us.startTime === slot.startTime && us.endTime === slot.endTime
       )) {
         return {
           ...slot,
-          status: 'available', // Mark as available
+          status: "available",
         };
       } else {
         return {
           ...slot,
-          status: 'unavailable', // Mark as unavailable
+          status: "unavailable",
         };
       }
     });
 
-    // Respond with the available slots along with booking details
+    console.log("Final slotsWithBookings:", slotsWithBookings);
+
     return new Response(
       JSON.stringify({ slots: slotsWithBookings }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
       }
     );
   } catch (error) {
     console.error(error);
     return new Response(
-      JSON.stringify({ message: 'An error occurred while fetching available slots.' }),
+      JSON.stringify({ message: "An error occurred while fetching available slots." }),
       { status: 500 }
     );
   }
 }
+
+
+
+
+
+
+// import { connectToDatabase, 
+//   // cartTable, productTable, packageTable,
+//   dbmodels } from "@/db";
+// import mongoose from 'mongoose';
+// import moment from 'moment-timezone';
+
+// export async function GET(req, { params }) {
+//   const { id,bedid } = params; // Get the store id from the URL
+//   const { searchParams } = new URL(req.url);
+//   const date = searchParams.get('date'); // Get the selected date from the query params
+//   console.log("bedid",bedid)
+
+//   if (!date) {
+//     return new Response(
+//       JSON.stringify({ message: 'Date parameter is required' }),
+//       { status: 400 }
+//     );
+//   }
+
+//   try {
+//     // Connect to the database
+//     await connectToDatabase(mongoose);
+//     const { unavailableSlotTable,bookingTable } = dbmodels(mongoose);
+
+//     // Ensure the date is in UK timezone (GMT/BST)
+//     const selectedDate = moment.tz(date, 'YYYY-MM-DD', 'Europe/London').startOf('day');
+//     const endOfDay = selectedDate.clone().endOf('day');
+
+//     // Define store's working hours: 9:00 AM to 8:00 PM (in UK time)
+//     const workStartTime = selectedDate.clone().set({ hour: 9, minute: 0, second: 0 });
+//     const workEndTime = selectedDate.clone().set({ hour: 20, minute: 0, second: 0 });
+
+//     // Generate all possible 15-minute slots from 9:00 AM to 8:00 PM
+//     const allSlots = [];
+//     let currentSlot = workStartTime.clone();
+//     while (currentSlot.isBefore(workEndTime)) {
+//       const startTime = currentSlot.format('HH:mm');
+//       const endTime = currentSlot.clone().add(15, 'minutes').format('HH:mm');
+//       allSlots.push({ startTime, endTime });
+//       currentSlot.add(15, 'minutes');
+//     }
+
+//     console.log("selectedDate.toDate()?",selectedDate.toDate())
+//     // Query to get unavailable slots for the specific store on the selected date
+//     const unavailableSlots = await unavailableSlotTable.find({
+//       storeRef: id,
+//       bedRef:bedid,
+//       date: date, // Match the exact date
+//     }).exec();
+//     console.log("unavailableSlots>>>>>>>",unavailableSlots)
+
+//     // Flatten all the unavailable slots into a single list of (startTime, endTime)
+//     const unavailableSlotTimes = [];
+//     unavailableSlots.forEach(slot => {
+//       slot.slots.forEach(unavailable => {
+//         unavailableSlotTimes.push({
+//           startTime: unavailable.startTime,
+//           endTime: unavailable.endTime,
+//         });
+//       });
+//     });
+
+//     // Query to get bookings for the store on the selected date
+//     const bookings = await bookingTable.find({
+//       storeRef: id,
+//       bedRef:bedid,
+//       date: { $gte: selectedDate.toDate(), $lt: endOfDay.toDate() },
+//     }).populate('userRef', 'name'); // Populate user name from the User model
+
+//     // Create an object to map booked slots by their time
+//     const bookedSlots = {};
+//     bookings.forEach(booking => {
+//       booking.timeSlots.forEach(slot => {
+//         const slotKey = `${slot.startTime}-${slot.endTime}`;
+//         bookedSlots[slotKey] = booking.userRef.name; // Store the user's name who booked this slot
+//       });
+//     });
+
+//     // Filter the available slots by removing the unavailable and booked slots
+//     const availableSlots = allSlots.filter(slot => {
+//       const slotKey = `${slot.startTime}-${slot.endTime}`;
+//       const isUnavailable = unavailableSlotTimes.some(
+//         unavailableSlot => unavailableSlot.startTime === slot.startTime && unavailableSlot.endTime === slot.endTime
+//       );
+//       return !isUnavailable && !bookedSlots[slotKey]; // Only keep slots that are not unavailable or already booked
+//     });
+
+//     // Include user names for booked slots
+//     const slotsWithBookings = allSlots.map(slot => {
+//       const slotKey = `${slot.startTime}-${slot.endTime}`;
+//       if (bookedSlots[slotKey]) {
+//         return {
+//           ...slot,
+//           bookedBy: bookedSlots[slotKey], // Add the user who booked this slot
+//           status: 'booked', // Mark as booked
+//         };
+//       } else if (!unavailableSlotTimes.some(
+//         unavailableSlot => unavailableSlot.startTime === slot.startTime && unavailableSlot.endTime === slot.endTime
+//       )) {
+//         return {
+//           ...slot,
+//           status: 'available', // Mark as available
+//         };
+//       } else {
+//         return {
+//           ...slot,
+//           status: 'unavailable', // Mark as unavailable
+//         };
+//       }
+//     });
+
+//     // *** Added this line to log the final slots before returning ***
+//     console.log("Final slotsWithBookings:", slotsWithBookings);
+
+//     // Respond with the available slots along with booking details
+//     return new Response(
+//       JSON.stringify({ slots: slotsWithBookings }),
+//       {
+//         status: 200,
+//         headers: { 'Content-Type': 'application/json' },
+//       }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     return new Response(
+//       JSON.stringify({ message: 'An error occurred while fetching available slots.' }),
+//       { status: 500 }
+//     );
+//   }
+// }
+
+
+// import { connectToDatabase, 
+//   // cartTable, productTable, packageTable,
+//   dbmodels } from "@/db";
+//   import mongoose from 'mongoose';
+// import moment from 'moment-timezone';
+
+// export async function GET(req, { params }) {
+//   const { id,bedid } = params; // Get the store id from the URL
+//   const { searchParams } = new URL(req.url);
+//   const date = searchParams.get('date'); // Get the selected date from the query params
+//   console.log("bedid",bedid)
+
+//   if (!date) {
+//     return new Response(
+//       JSON.stringify({ message: 'Date parameter is required' }),
+//       { status: 400 }
+//     );
+//   }
+
+//   try {
+//     // Connect to the database
+//     await connectToDatabase(mongoose);
+//     const { unavailableSlotTable,bookingTable } = dbmodels(mongoose);
+
+//     // Ensure the date is in UK timezone (GMT/BST)
+//     const selectedDate = moment.tz(date, 'YYYY-MM-DD', 'Europe/London').startOf('day');
+//     const endOfDay = selectedDate.clone().endOf('day');
+
+//     // Define store's working hours: 9:00 AM to 8:00 PM (in UK time)
+//     const workStartTime = selectedDate.clone().set({ hour: 9, minute: 0, second: 0 });
+//     const workEndTime = selectedDate.clone().set({ hour: 20, minute: 0, second: 0 });
+
+//     // Generate all possible 15-minute slots from 9:00 AM to 8:00 PM
+//     const allSlots = [];
+//     let currentSlot = workStartTime.clone();
+//     while (currentSlot.isBefore(workEndTime)) {
+//       const startTime = currentSlot.format('HH:mm');
+//       const endTime = currentSlot.clone().add(15, 'minutes').format('HH:mm');
+//       allSlots.push({ startTime, endTime });
+//       currentSlot.add(15, 'minutes');
+//     }
+
+//     console.log("selectedDate.toDate()?",selectedDate.toDate())
+//     // Query to get unavailable slots for the specific store on the selected date
+//     const unavailableSlots = await unavailableSlotTable.find({
+//       storeRef: id,
+//       bedRef:bedid,
+//       date: date, // Match the exact date
+//     }).exec();
+// console.log("unavailableSlots>>>>>>>",unavailableSlots)
+
+//     // Flatten all the unavailable slots into a single list of (startTime, endTime)
+//     const unavailableSlotTimes = [];
+//     unavailableSlots.forEach(slot => {
+//       slot.slots.forEach(unavailable => {
+//         unavailableSlotTimes.push({
+//           startTime: unavailable.startTime,
+//           endTime: unavailable.endTime,
+//         });
+//       });
+//     });
+
+//     // Query to get bookings for the store on the selected date
+//     const bookings = await bookingTable.find({
+//       storeRef: id,
+//       bedRef:bedid,
+//       date: { $gte: selectedDate.toDate(), $lt: endOfDay.toDate() },
+//     }).populate('userRef', 'name'); // Populate user name from the User model
+
+//     // Create an object to map booked slots by their time
+//     const bookedSlots = {};
+//     bookings.forEach(booking => {
+//       booking.timeSlots.forEach(slot => {
+//         const slotKey = `${slot.startTime}-${slot.endTime}`;
+//         bookedSlots[slotKey] = booking.userRef.name; // Store the user's name who booked this slot
+//       });
+//     });
+
+//     // Filter the available slots by removing the unavailable and booked slots
+//     const availableSlots = allSlots.filter(slot => {
+//       const slotKey = `${slot.startTime}-${slot.endTime}`;
+//       const isUnavailable = unavailableSlotTimes.some(
+//         unavailableSlot => unavailableSlot.startTime === slot.startTime && unavailableSlot.endTime === slot.endTime
+//       );
+//       return !isUnavailable && !bookedSlots[slotKey]; // Only keep slots that are not unavailable or already booked
+//     });
+
+//     // Include user names for booked slots
+//     const slotsWithBookings = allSlots.map(slot => {
+//       const slotKey = `${slot.startTime}-${slot.endTime}`;
+//       if (bookedSlots[slotKey]) {
+//         return {
+//           ...slot,
+//           bookedBy: bookedSlots[slotKey], // Add the user who booked this slot
+//           status: 'booked', // Mark as booked
+//         };
+//       } else if (!unavailableSlotTimes.some(
+//         unavailableSlot => unavailableSlot.startTime === slot.startTime && unavailableSlot.endTime === slot.endTime
+//       )) {
+//         return {
+//           ...slot,
+//           status: 'available', // Mark as available
+//         };
+//       } else {
+//         return {
+//           ...slot,
+//           status: 'unavailable', // Mark as unavailable
+//         };
+//       }
+//     });
+
+//     // Respond with the available slots along with booking details
+//     return new Response(
+//       JSON.stringify({ slots: slotsWithBookings }),
+//       {
+//         status: 200,
+//         headers: { 'Content-Type': 'application/json' },
+//       }
+//     );
+//   } catch (error) {
+//     console.error(error);
+//     return new Response(
+//       JSON.stringify({ message: 'An error occurred while fetching available slots.' }),
+//       { status: 500 }
+//     );
+//   }
+// }
 
 
 
